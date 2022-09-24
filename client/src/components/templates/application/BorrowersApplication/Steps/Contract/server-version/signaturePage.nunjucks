@@ -1,0 +1,81 @@
+<style>
+    .signature-form .field {
+        display: block;
+        width: auto;
+        padding: 0;
+    }
+
+    .signature-form .field img {
+        min-height: 50px;
+        width: 90%;
+    }
+
+    .signature-form table,
+    .signature-form table tr,
+    .signature-form table tr td {
+        border: none;
+    }
+</style>
+
+<div class="signature-form no-break">
+    <p class="signature-note">
+        <b>
+          BY SIGNING BELOW ELECTRONICALLY, I CONFIRM THAT I HAVE RECEIVED, READ,
+          AND UNDERSTAND THE FEDERAL TRUTH IN LENDING DISCLOSURE AND THIS
+          AGREEMENT, THAT I WILL KEEP A COPY OF THE FEDERAL TRUTH IN LENDING
+          DISCLOSURE AND OF THIS AGREEMENT FOR MY RECORDS, AND THAT I AGREE TO
+          THIS AGREEMENT.
+        </b>
+    </p>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">
+                            <img src="{{signatureimg}}" alt="user's signature"/>
+                        </div>
+                        <div class="label">Borrower Signature</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="value">
+                            <img src="{{signatureimg}}" alt="user's signature"/>
+                        </div>
+                        <div class="label">Cosigner Signature</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">Temeka Adams</div>
+                        <div class="label">Borrower Full Name</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="value">Patricia Jones</div>
+                        <div class="label">Cosigner Full Name</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">11/11/2022</div>
+                        <div class="label">Date</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="value">11/11/2022</div>
+                        <div class="label">Date</div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

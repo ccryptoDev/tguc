@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width initial-scale=1.0"/>
+    <meta name="x-apple-disable-message-reformatting"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+          rel="stylesheet">
+    <title>TGUC Financial</title>
+    <style type="text/css">
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .wrapper {
+            box-sizing: border-box;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .title p {
+            font-size: 16px;
+        }
+
+        p {
+            text-align: left;
+            color: #60666d;
+            font-size: 16px;
+        }
+
+        .footer div {
+            line-height: 1.5;
+            color: #60666d;
+        }
+
+        .footer-logo {
+            line-height: 1;
+        }
+
+        .contact-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .phone-number,
+        .email-address {
+            font-style: italic;
+        }
+
+        .footer-logo-text {
+            font-size: 9px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <table class="main" width="100%">
+        <tbody>
+        <tr>
+            <td>
+                <div class="title">
+                    <p>Dear {{ firstName }},</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="body">
+                    <p>Call me with any needs you might have. We are here to get more money in your pocket.</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="footer">
+                    <hr>
+                    <div class="contact-name">Brandi Hickson</div>
+                    <div>Senior Vice President of Sales & Marketing</div>
+                    <div>TGUC Financial</div>
+                    <div class="phone-number">877-744-1396</div>
+                    <div class="email-address">Bhickson@tgucfinancial</div>
+                    <div class="footer-logo">
+                        <img src="{{baseUrl}}/images/Logo.png" alt="tgucfinancial">
+                        <div class="footer-logo-text">
+                            TGUC Financial
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

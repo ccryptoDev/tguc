@@ -1,0 +1,95 @@
+<style>
+    .paymentSchedule-wrapper {
+        width: 100%;
+        border-bottom: 1px solid #ccc;
+    }
+
+    h4 {
+        margin: 0;
+        font-weight: bold;
+        line-height: 1.5;
+        text-transform: upperCase;
+    }
+    .payment-schedule-table {
+        min-width: 600px;
+    }
+
+    .payment-schedule-table td,
+    .payment-schedule-table th {
+        text-align: center;
+    }
+
+    .payment-schedule-table tr td:first-child {
+        width: 200px;
+    }
+
+    .payment-schedule-table tr td:nth-child(2) {
+        width: 30%;
+    }
+
+    .prepayment-options {
+        list-style: none;
+    }
+</style>
+<div class="paymentSchedule-wrapper">
+    <h3>Your Payment Schedule will be:</h3>
+    <div class="schedule-table">
+        <table class="payment-schedule-table">
+            <thead>
+                <tr>
+                    <th>
+                        <b>Number of Payments</b>
+                    </th>
+                    <th>
+                        <b>Amount of Payments</b>
+                    </th>
+                    <th>
+                        <b>When Payments Are Due</b>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>$671.98</td>
+                    <td>
+                        Monthly, beginning 30 days after the first
+                        date any of your loan proceeds are disbursed.
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <p>
+        <b>Secured: </b>
+          This loan is secured by the goods purchased with the loan proceeds.
+        </p>
+    <p>
+        <b>Late Charge: </b>
+          If payments are made more than 10 days late, (15 days in NE) buyer may
+          be charged a late fee of: 5% of the unpaid portion of your monthly
+          payment or $25, whichever is less in AR, NM, and UT; $10 in FL; $15 in
+          NC and WI.
+        </p>
+    <p>
+        <b>Prepayment: </b>
+          If you pay off early, you
+        </p>
+    <ul class="prepayment-options">
+        <li>
+            <p>&#x2610; may &#x2612; will not have to pay a penalty.</p>
+        </li>
+        <li>
+            <p>
+              &#x2612; may &#x2610; will not be entitled to a refund of part of
+              the finance charge.
+            </p>
+        </li>
+    </ul>
+    <p>
+          See your contract documents for any additional information about
+          nonpayment, default, any required repayment in full before the
+          scheduled date, and prepayment refunds and penalties.
+        </p>
+</div>

@@ -1,0 +1,14 @@
+<style>
+
+    .attachment .field {
+        margin-top: 50px;
+    }
+</style>
+<div class="attachment new-page">
+    <h4 class="text-center">ATTACHMENT A 
+</h4>
+    <p class="text-center">Description of Collateral </p>
+    <div class="field">
+        <div class="value"></div>
+    </div>
+</div>

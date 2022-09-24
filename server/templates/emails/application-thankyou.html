@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TGUC credit application # {{ applicationNo }}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+		body{ font-family:Arial, Helvetica, sans-serif}
+      .wrapper {
+        border: 5px solid #eee;
+        border-radius: 5px;
+      }
+
+      .emailLogo {
+        height: 40px;
+        max-height: 40px;
+        width: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        color: rgb(47, 97, 183);
+        font-size: 30px;
+        font-weight: 700;
+      }
+
+      .emailLayout {
+        margin: 0 auto;
+        max-width: 600px;
+        min-width: 320px;
+        width: auto;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+
+      .emailLayoutMargins {
+        margin-bottom: 50px;
+      }
+
+      .emailSignature {
+        margin-top: 30px;
+        text-align: left;
+        color: #60666d;
+        font-size: 16px;
+      }
+
+      .emailBodyOuterDiv {
+        color: #60666d;
+        font-size: 16px;
+        text-align: left;
+      }
+
+      .emailGreetings {
+        margin-bottom: 30px;
+        font-style: normal;
+        font-weight: normal;
+        color: #60666d;
+        font-size: 20px;
+        text-align: left;
+      }
+
+      p {
+        text-align: left;
+        color: #60666d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="emailLayout">
+        <div class="emailLayoutMargins">
+          <div class="emailBodyOuterDiv">
+            <h2 class="emailGreetings">Dear {{ userName }},</h2>
+            <div class="emailBodyMessage">
+              Thank you for applying with TGUC Financial for the financing of your home improvement project.  Your loan request is being processed by our team, and we will email a final decision within the next business day (excludes weekends and holidays).
+              <br />
+              <br />
+              Thank you again for your interest of doing business with TGUC Financial!
+            </div>
+          </div>
+          <div class="emailSignature">
+            Thank you,
+            <br />
+            <br />
+
+            TGUC Financial<br />
+
+            <img class="emailLogo" src="{{baseUrl}}/images/Logo.png" alt="tgucfinancial">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

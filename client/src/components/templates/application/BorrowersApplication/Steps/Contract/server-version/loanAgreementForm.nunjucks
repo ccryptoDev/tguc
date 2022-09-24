@@ -1,0 +1,144 @@
+<style>
+    .loan-agreement {
+        margin: 40px 0;
+    }
+
+    .heading {
+        margin-bottom: 20px;
+    }
+
+    table td {
+        width: 30%;
+    }
+
+    .loan-agreement table,
+    .loan-agreement table tr,
+    .loan-agreement table tr td {
+        border: none;
+    }
+
+    .creditor-field {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .creditor-field .label,
+    .creditor-field .value {
+        display: inline-block;
+    }
+
+    .creditor-field .value {
+        width: auto;
+    }
+
+    .loan-agreement .field {
+        display: block;
+    }
+
+    .loan-agreement .field .label {
+        display: block;
+        text-align: left;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .loan-agreement .field .value {
+        display: block;
+        border-bottom: 1px solid #000;
+        min-height: 20px;
+        display: flex;
+        padding-bottom: 4px;
+    }
+</style>
+
+<div class="loan-agreement">
+
+    <div class="creditor-field">
+        <div class="label">Creditor:</div>
+        <div class="value">TGUC Financial</div>
+    </div>
+
+    <div class="heading text-center">
+        <h4>
+            <b>LOAN AGREEMENT</b>
+        </h4>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="label">Date:</div>
+                        <div class="value">11/11/2022</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Term:</div>
+                        <div class="value">12 months</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Amount Financed:</div>
+                        <div class="value">$2,000</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="label">Borrower Name:</div>
+                        <div class="value">Temeka Adams</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Borrower Address:</div>
+                        <div class="value">8180 Briarwood St Stanton, AL 90680</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Loan #:</div>
+                        <div class="value">1243</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="label">Cosigner Name:</div>
+                        <div class="value">Patricia Jones</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Cosigner Address:</div>
+                        <div class="value">8180 Briarwood St Stanton, AL 90680</div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="label">Service Provider Name:</div>
+                        <div class="value">TGUC Financial</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="field">
+                        <div class="label">Service Provider Address:</div>
+                        <div class="value">
+          4362 Blue Diamond Rd #102-348 Las Vegas, NV 89139
+        </div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>

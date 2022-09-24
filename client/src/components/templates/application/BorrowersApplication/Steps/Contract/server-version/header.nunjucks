@@ -1,0 +1,36 @@
+<style>
+    .heading h4 {
+        text-align: center;
+        line-height: 2;
+        margin: 20px 0;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .creditor-field {
+        display: flex;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .creditor-field .label {
+        margin-right: 10px;
+    }
+    .creditor-field .value {
+        border-bottom: 1px solid #000;
+        width: 100%;
+    }
+</style>
+<div>
+    <div class="heading">
+        <h4>
+            <b>FEDERAL TRUTH-IN-LENDING DISCLOSURES</b>
+        </h4>
+    </div>
+    <div class="creditor-field">
+        <div class="label">
+            <b>Creditor:</b>
+        </div>
+        <div class="value">Creditor Name</div>
+    </div>
+</div>

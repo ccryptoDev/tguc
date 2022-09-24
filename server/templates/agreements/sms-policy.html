@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Sms Policy</title>
+    <style>
+      :root,
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .document-wrapper {
+        background-color: white;
+        padding: 2em 6em;
+        width: 21cm;
+        min-height: 29.7cm;
+        font-size: 1.1em;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.4em;
+        margin-top: 1.4em;
+      }
+      p {
+        line-height: 1.6em;
+      }
+      .contract-container {
+        font-size: 0.8em;
+      }
+
+      .container-pdf {
+        height: 11in;
+        width: 8.5in;
+      }
+
+      .contract-container .title {
+        font-weight: 700;
+        font-size: 2em;
+        text-align: center;
+      }
+
+      .user-info {
+        width: 100%;
+      }
+
+      .info-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .info-header .info-header-item {
+        display: flex;
+        justify-content: space-between;
+        width: 25%;
+      }
+      .info-header .info-header-item div {
+        display: inline-block;
+      }
+      .info-header .info-header-field {
+        border-bottom: 1px solid #000;
+        flex-grow: 1;
+        margin-left: 10px;
+      }
+      .info-body {
+      }
+      .info-body .info-body-item {
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 0;
+      }
+      .info-body .info-body-item .info-body-field {
+        border-bottom: 1px solid #000;
+      }
+      .info-body .info-body-item .info-body-value {
+        flex: 1 1 auto;
+        padding-left: 8px;
+        border-bottom: 1px solid #000;
+      }
+
+      .descriptionOfServices {
+        width: 100%;
+        padding: 5px;
+        padding-bottom: 10%;
+        box-sizing: border-box;
+        border: 1px solid #000;
+      }
+
+      .table {
+        border: 2px solid #000;
+      }
+
+      .table-heading {
+        text-align: center;
+      }
+
+      .table-cubes {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .table-cubes-item {
+        flex: 1 1 20%;
+        display: flex;
+        padding: 2px 4px;
+        border: 1px solid #000;
+        word-break: break-word;
+      }
+      .table-cubes-item:nth-child(1),
+      .table-cubes-item:nth-child(2) {
+        border: 2px solid #000;
+        background: #ccc;
+      }
+      .table-cubes-item:nth-child(1) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(3) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(5) {
+        border-right: none;
+        border-left: none;
+      }
+      .table-cubes-item-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+      .table-cubes-item-unit {
+        text-align: center;
+        margin-top: 10px;
+        border-bottom: 1px solid #000;
+      }
+
+      .table {
+        width: 100%;
+      }
+
+      .schedule-table {
+        display: flex;
+        flex-direction: column;
+      }
+      .schedule-table .schedule-heading {
+        padding: 4px 4px 0;
+      }
+      .schedule-table .schedule-body {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        word-break: break-word;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+      }
+      .schedule-table .schedule-body .schedule-item-1,
+      .schedule-table .schedule-body .schedule-item-2 {
+        flex: 1 1 25%;
+      }
+      .schedule-table .schedule-body .schedule-item-3 {
+        flex: 1 1 50%;
+      }
+      .schedule-table .schedule-body .schedule-item-header {
+        white-space: nowrap;
+      }
+      .schedule-table .schedule-body .schedule-item-header,
+      .schedule-table .schedule-body .schedule-item-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #000;
+        min-height: 30px;
+        padding: 0 4px;
+      }
+
+      .table-footer-item {
+        padding-left: 5px;
+      }
+
+      .table-footer-item:nth-child(3) {
+        border-right: none;
+      }
+
+      .table-itemization .table-body {
+        padding: 10px 30px;
+        border-top: 2px solid #000;
+      }
+
+      .table-itemization .table-body .table-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .table-itemization .table-body .table-col:last-child {
+        width: 20%;
+        border-bottom: 1px solid #000;
+      }
+
+      .terms .heading {
+        text-decoration: underline;
+      }
+      .terms-body {
+        -webkit-column-width: 47%;
+        -moz-column-width: 47%;
+        column-width: 47%;
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+        -webkit-column-gap: 6%;
+        -moz-column-gap: 6%;
+        column-gap: 6%;
+      }
+      .terms-item-signatures {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .terms-item-signatures .terms-item-signature {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        font-weight: bold;
+      }
+      .terms-item-signatures .terms-item-signature .terms-item-signature-value {
+        flex: 1 1 auto;
+        border-bottom: 1px solid #000;
+        min-width: 50px;
+        max-width: 100px;
+      }
+      .terms-item-signatures
+        .terms-item-signature
+        .terms-item-signature-value
+        .signature {
+        width: 100%;
+        height: auto;
+      }
+
+      .arbitration {
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #000;
+      }
+
+      .notice {
+        border: 1px solid #000;
+        padding: 0 5px;
+      }
+
+      .notice-to-buyer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 2%;
+      }
+
+      .signatures {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 10%;
+        grid-row-gap: 30px;
+        align-items: flex-end;
+      }
+      .signatures .signature-field {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: 100%;
+        border-bottom: 1px solid #000;
+      }
+
+      .signatures .signature-field .signatureDate {
+        display: inline-block;
+        margin-left: auto;
+        margin-bottom: 0px !important;
+      }
+
+      .signatures .signature-field .signature {
+        width: 79%;
+        height: auto;
+      }
+      .signatures .signature-labels {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 10px;
+      }
+
+      .signatures-table {
+        padding: 0 5px;
+        border: 1px solid #000;
+        width: 100%;
+      }
+      .signatures-table-underline {
+        color: transparent;
+        border-bottom: 1px solid #000;
+        word-break: break-all;
+      }
+      .signatures-table .assignment {
+        display: flex;
+        justify-content: space-between;
+      }
+      .signatures-table .signatures {
+        display: grid;
+        grid-template-columns: 25% 25% 20% 15%;
+        grid-column-gap: 5%;
+      }
+      .signatures-table .signatures div {
+        border-top: 1px solid #000;
+        padding-top: 5px;
+      }
+
+      @media (max-width: 1301px) {
+      }
+      @media (max-width: 1200px) {
+        .signatures .signature-field .signature {
+          width: 70%;
+          height: auto;
+        }
+      }
+      @media (max-width: 1092px) {
+      }
+      @media (max-width: 990px) {
+        .signatures .signature-field .signature {
+          width: 67%;
+          height: auto;
+        }
+      }
+      @media (max-width: 825px) {
+      }
+      @media (max-width: 767px) {
+        .notice-to-buyer {
+          display: block;
+        }
+        .terms .terms-body {
+          column-count: 1;
+        }
+        .signatures {
+          display: block;
+        }
+        .signatures .signature-item {
+          margin-bottom: 30px;
+        }
+        .signatures-table .assignment,
+        .signatures-table .signatures {
+          display: block;
+        }
+        .signatures-table .signatures div {
+          margin-top: 20px;
+        }
+      }
+      @media (max-width: 450px) {
+      }
+
+      /*================== efta =================*/
+      .efta__container {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background-color: hsla(0, 0%, 24%, 0.8);
+        z-index: 99;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: auto;
+      }
+      .efta__close {
+        position: fixed;
+        top: 5px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #c7452e;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .efta__container--hidden {
+        display: none;
+      }
+      .efta__wrapper {
+        background-color: white;
+        padding: 50px;
+        width: 210mm;
+        height: 297mm;
+      }
+      .efta__document {
+        background-color: white;
+        color: black;
+        width: 100%;
+      }
+      .efta__header {
+        font-weight: bold;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: center;
+      }
+      .efta__body {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: justify;
+      }
+      .efta__body strong {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+      .efta__list {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="document-wrapper">
+      <h1>Alchemy SMS Text Message Policy</h1>
+
+      <div>
+        <p>
+          <strong>Calls and Text Messages from Alchemy</strong>: By providing us
+          your wireless (cell) telephone number, you expressly consent to
+          receiving telephone calls from us concerning your contract, including
+          calls to collect what you owe. Live calls may be made by one of our
+          employees. Calls may also be made by a prerecorded, auto-dialed voice
+          or text message as applicable law allows. Your consent covers all
+          types of calls related to your contract. We do not charge you for such
+          calls. Your wireless carrier may charge you for our incoming calls and
+          text messages according to your plan.
+        </p>
+        <h1>Opt-out or stop</h1>
+        <p>
+          If you wish to stop receiving text messages from Alchemy, reply STOP
+          to any text message sent.
+        </p>
+        <h1>Help or Support</h1>
+        <p>
+          If at any time you need contact information or information on how to
+          stop text messages, reply to any text message sent by replying
+          <strong>HELP</strong>.
+        </p>
+        <p>
+          Any questions regarding this policy or to have a copy of the policy
+          mailed to your address of record please contact:
+        </p>
+        <p>Alchemy</p>
+        <p>10100 Santa Monica Blvd, Los Angeles</p>
+        <p>contact@alchemylms.com</p>
+        <p>1-888-965-2737</p>
+        <p>
+          Alchemy is licensed by the California Department of Business Oversight
+          pursuant to the California Financing Law. License number 605 4855.
+        </p>
+
+        <p>Date: {{ today }}</p>
+        <p>Ip: {{ ip }}</p>
+      </div>
+    </main>
+  </body>
+</html>

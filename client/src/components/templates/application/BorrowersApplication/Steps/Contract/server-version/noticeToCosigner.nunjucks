@@ -1,0 +1,105 @@
+<style>
+    .signature-form .field {
+        display: block;
+        width: auto;
+        padding: 0;
+    }
+
+    .signature-form .field img {
+        min-height: 50px;
+        width: 90%;
+    }
+
+    .signature-form table,
+    .signature-form table tr,
+    .signature-form table tr td {
+        border: none;
+    }
+</style>
+
+<div class="signature-form new-page">
+    <h4>NOTICE TO COSIGNER</h4>
+    <p>You are being asked to guarantee this debt. Think carefully before you do. If the borrower
+doesn’t pay the debt, you will have to. Be sure you can afford to pay if you have to, and that you
+want to accept this responsibility.</p>
+    <p>You may have to pay up to the full amount of the debt if the borrower does not pay. You may
+also have to pay late fees or collection costs, which increase this amount. </p>
+    <p>The creditor can collect this debt from you without first trying to collect from the borrower. The
+creditor can use the same collection methods against you that can be used against the borrower,
+such as suing you, garnishing your wages, etc. If this debt is ever in default, that fact may
+become a part of your credit record.</p>
+    <p>This notice is not the contract that makes you liable for the debt.</p>
+    <p class="text-center">* * * * *</p>
+    <p>I have been given a completed copy of this notice and of the agreement that obligates the
+borrower and cosigner on this debt. 
+</p>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">
+                            <img src="{{signatureimg}}" alt="user's signature"/>
+                        </div>
+                        <div class="label">Borrower Signature</div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">Temeka Adams</div>
+                        <div class="label">Borrower Full Name</div>
+                    </div>
+                </td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">11/11/2022</div>
+                        <div class="label">Date</div>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">
+                            <img src="{{signatureimg}}" alt="user's signature"/>
+                        </div>
+                        <div class="label">Cosigner Signature</div>
+                    </div>
+                </td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">Patricia Jones</div>
+                        <div class="label">Cosigner Full Name</div>
+                    </div>
+                </td>
+                <td></td>
+
+            </tr>
+
+            <tr>
+                <td>
+                    <div class="field">
+                        <div class="value">11/11/2022</div>
+                        <div class="label">Date</div>
+                    </div>
+                </td>
+                <td></td>
+
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>

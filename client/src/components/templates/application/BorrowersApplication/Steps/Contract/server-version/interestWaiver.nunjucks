@@ -1,0 +1,99 @@
+<style>
+</style>
+
+<div class="signature-form new-page">
+    <h4 class="text-center">INTEREST WAIVER PROMOTION TERMS</h4>
+            <p>These terms describe your offer for an Interest Waiver Promotion on your Loan. Capitalized
+terms used but not defined in these terms have the meanings provided in your Loan Agreement. </p>
+            <p>
+                <b>Your promotion.</b> We will waive the finance charges accrued on your Principal Balance and will
+apply any paid finance charges towards your Principal Balance, if you pay an amount equal to
+your entire Principal Balance before the end of the Promotional Period. <i class="underline">If you do not pay an
+amount equal to your entire Principal Balance before the end of the Promotional Period, or if
+you make a late payment during the Promotional Period, you will be responsible for all finance
+charges that accrued during the Promotional Period and any finance charges that accrue after
+the end of the Promotional Period in accordance with the terms of your Loan Agreement.</i>
+                    </p>
+                    <p>
+                        <b>Your Promotional Period.</b> Your “Promotional Period” is _________ (_________) months from
+the date of the Initial Disbursement.</p>
+                    <p>
+                        <b>Payments are required during the Promotional Period.</b> Your Monthly Payments, which
+include finance charges and principal, will be billed during the Promotional Period, and you must
+pay such amounts in full when due. However, if you pay an amount equal to your entire
+Principal Balance before the end of the Promotional Period, we will waive the accrued finance
+charges and will apply any paid finance charges towards your Principal Balance.</p>
+                    <p>
+                        <b>Paying only your required Monthly Payments will <span class="underline">NOT</span> qualify you for the Interest Waiver
+Promotion.</b> Paying only your required Monthly Payments will <span class="underline">
+                            <i>NOT</i>
+                        </span> result in your payment of an
+amount equal to your entire Principal Balance before the end of the Promotional Period. To
+qualify for the Interest Waiver Promotion, you must make payments in excess of your required
+Monthly Payments to pay an amount equal to your entire Principal Balance before the end of the
+Promotional Period. </p>
+                    <p>
+                        <b>Your periodic statements contain important information about qualifying for the Interest
+Waiver Promotion.</b> The front page of each periodic statement during the Promotional Period
+will identify the amount you must pay and the date by which you must pay it to qualify for the
+Interest Waiver Promotion.</p>
+                    <p>
+
+                        <b>BY SIGNING BELOW ELECTRONICALLY, I CONFIRM THAT I HAVE RECEIVED,
+READ, AND UNDERSTAND THESE INTEREST WAIVER PROMOTION TERMS,
+THAT I WILL KEEP A COPY FOR MY RECORDS, AND THAT I AGREE TO SUCH
+TERMS.</b>
+                    </p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">
+                                            <img src="{{signatureimg}}" alt="user's signature"/>
+                                        </div>
+                                        <div class="label">Borrower Signature</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">
+                                            <img src="{{signatureimg}}" alt="user's signature"/>
+                                        </div>
+                                        <div class="label">Cosigner Signature</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">Temeka Adams</div>
+                                        <div class="label">Borrower Full Name</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">Patricia Jones</div>
+                                        <div class="label">Cosigner Full Name</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">11/11/2022</div>
+                                        <div class="label">Date</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field">
+                                        <div class="value">11/11/2022</div>
+                                        <div class="label">Date</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>

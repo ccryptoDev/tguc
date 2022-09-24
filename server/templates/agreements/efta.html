@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .checkbox-container {
+        display: inline-block;
+        margin-left: 15px;
+        position: relative;
+        padding-left: 25px;
+        font-size: 1rem;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .checkbox-container:first-child {
+        margin-left: 0;
+      }
+      .checkbox-container input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+
+      .check-mark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 15px;
+        width: 15px;
+        background-color: #fff;
+        border: 1px solid #000;
+      }
+
+      .check-mark::after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      .checkbox-container input:checked ~ .check-mark::after {
+        display: block;
+      }
+
+      .checkbox-container .check-mark::after {
+        left: 4px;
+        top: 0;
+        width: 4px;
+        height: 8px;
+        border: solid #000;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+
+    </style>
+  </head>
+  <body>
+    <span class="modal__title">
+      <h4 style="margin: 0px; text-align: center">
+        ACH, Credit and Debit Card Payment Authorization Form
+      </h4>
+    </span>
+
+    <div class="modal__content" style="padding: 0 10px 0 10px">
+      <div class="esigndiv">
+        <p>
+          In this Authorization, “I,” “me” and “my” mean the person who signs
+          this Authorization below. “You,” and “your” means
+          <strong>Alchemy</strong>, or any assignee.
+        </p>
+
+        <p>
+          By signing below, I authorize you to initiate a one-time charge and/or
+          regularly scheduled recurring charges against my credit card or debit
+          card account identified below, or a one-time charge and/or regularly
+          scheduled recurring charges by ACH debit entry from my deposit account
+          identified below, and to credit those amounts (when received by you)
+          to the amounts due from me to you under
+          <strong style="white-space: nowrap"
+            >RETAIL INSTALLMENT CONTRACT</strong
+          >, Account Number:
+          <strong>{{ applicationReference }}</strong>. If
+          necessary, I also authorize you to initiate transactions to correct
+          any erroneous payment transaction. I also authorize you to initiate a
+          one-time transaction to collect a fee of
+          <strong>$25</strong>
+          if any payment is rejected by my bank due to insufficient funds in my
+          account or available credit on my credit card account, and/or to
+          collect any late fee due under my contract identified above. I
+          understand that each transaction will appear on my bank statement.
+        </p>
+
+        <p>
+          <strong
+            >Type of Payment (check applicable box and complete information):
+          </strong>
+        </p>
+
+        <div>
+          <label class="checkbox-container">Credit or Debit Card Payment
+            <input type="checkbox" checked disabled/>
+            <span class="check-mark"></span>
+          </label>
+        </div>
+        <br />
+
+        <div style="border: 1px solid #000; padding: 10px;">
+          <strong><p>Credit/Debit Card Information</p></strong>
+
+          <div style="display: grid; grid-template-columns: 200px auto;">
+          {% if resign === false %}
+            <span>
+              Account Type: 
+            </span>
+            <div style="display: inline-block;">
+              <label class="checkbox-container">Visa
+                <input type="checkbox" {% if cardIssuer === 'Visa' %}
+                checked {% endif %} disabled/>
+                <span class="check-mark"></span>
+              </label>
+              <label class="checkbox-container">MasterCard
+                <input type="checkbox" {% if cardIssuer === 'Mastercard' %} checked
+                {% endif %} disabled/>
+                <span class="check-mark"></span>
+              </label>
+  
+              <label class="checkbox-container">Amex
+                <input type="checkbox" {% if cardIssuer === 'American Express' %}
+                checked {% endif %} disabled/>
+                <span class="check-mark"></span>
+              </label>
+  
+              <label class="checkbox-container">Discover
+                <input type="checkbox" {% if cardIssuer === 'Discover' %} checked {%
+                  endif %} disabled/>
+                <span class="check-mark"></span>
+              </label>
+  
+              <label class="checkbox-container">Other
+                <input type="checkbox" {% if not( cardIssuer === 'Visa' or
+                cardIssuer === 'Mastercard' or cardIssuer === 'American Express' or
+                cardIssuer === 'Discover' ) %} checked {% endif %} disabled/>
+                <span class="check-mark"></span>
+              </label>
+            </div>
+              
+              <span> Card Issuer Name:</span>
+              <span>{{ cardIssuer }}</span>
+            {% endif %}
+              <span>Cardholder Name:</span>
+              <span>{{ cardHolder }}</span>
+            
+              <span> Card Account Number: </span>
+              <span>{{ cardNumber }}</span>
+
+              <span> Card Expiration Date: </span>
+              <span>{{ expirationMonth }}/{{ expirationYear }}</span>
+
+              <span>CVV:</span>
+              <span>{{ cardCode }}</span>
+          </div>
+          <br />
+
+          <div>
+            Cardholder Billing Address:
+            <div>
+              <div style="padding-left: 40px; display: grid; grid-template-columns: 150px auto;">
+                <span> Address:</span> 
+                <span>{{ street }}</span>
+                
+                <span>City:</span>
+                <span>{{ city }}</span>
+                
+                <span>State:</span>
+                <span>{{ selectedState }}</span>
+                
+                <span>Zip Code:</span>
+                <span>{{ zipCode }}</span>
+                
+                <span>Phone No.:</span>
+                <span>{{ phoneNumber }}</span>
+              </div>
+            </div>
+          </div>
+          </div>
+          <br />
+        </div>
+
+        <strong><p>Payment Frequency:</p></strong>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <div>
+            <label class="checkbox-container">One-Time Payment
+              <input type="checkbox" {% if selectedOffer.downPayment > 0 %}
+              checked {% endif %} disabled/>
+              <span class="check-mark"></span>
+            </label>
+          </div>
+          <div>
+            {% if selectedOffer.downPayment > 0 %}
+            <label style="margin-left: 80px;">Payment date:<strong>{{ todayDate }}</strong></label</label>
+            {% else %}
+            <label>Payment date: ____________________ </label>
+            {% endif %}
+          </div>
+          <div>
+            {% if selectedOffer.downPayment > 0 %}
+            <label style="margin-left: 80px;">Payment amount: <strong>${{ selectedOffer.downPayment }}</strong></label>
+            {% else %}
+            <label>Payment amount: ____________________</label>
+            {% endif %}
+          </div>
+        </div>
+        <br />
+
+        <div>
+          <label class="checkbox-container">Recurring Payments.
+            <input type="checkbox" checked disabled/>
+            <span class="check-mark"></span>
+          </label>
+          My payments, in the amount of {% if selectedOffer.promoSelected %}
+          <strong
+            >${{ selectedOffer.promoMonthlyPayment }}
+            </strong
+          >
+          {% else %}
+          <strong
+            >${{ selectedOffer.monthlyPayment }}</strong
+          >
+          {% endif %} , will start on
+          <strong>{{ loanStartDate }}</strong
+          >, and will occur monthly thereafter for a total of {% if
+          selectedOffer.promoSelected %}
+          <strong
+            >{{ selectedOffer.promoTerm }}</strong
+          >
+          {% else %}
+          <strong>{{ selectedOffer.term }}</strong>
+          {% endif %} months. If any payment date falls on a weekend or holiday,
+          I understand and agree that the payment may be executed on the next
+          business day. If my payment amount changes, I will receive notice from
+          you at least 10 days prior to the payment being collected. If the
+          outstanding balance I owe on my contract identified above is less than
+          the payment amount stated above, I understand and agree that the final
+          payment will be an amount equal to my total outstanding balance.
+        </div>
+
+        <div style="margin-top: 200px">
+          <ol>
+            <li>
+              I authorize you to initiate the credit card, debit card or ACH
+              payment(s) described in this authorization form according to the
+              terms outlined above. If I have authorized recurring payments, I
+              understand that this authorization will remain in effect until my
+              contract identified above is paid in full or I cancel this
+              authorization in writing (at
+              <strong
+                >400 Spectrum Center Drive, Suite 350, Irvine CA 92618</strong
+              >). I agree to notify you in writing of any changes in my account
+              information or termination of this authorization at least three
+              (3) business days prior to the next billing date. I may also
+              notify the financial institution that holds my deposit account to
+              stop payments under this authorization at least three (3) business
+              days before a scheduled payment date. This payment authorization
+              is for the type of payment indicated above. I certify that I am an
+              authorized user of any credit or debit card identified above, or
+              an authorized signer on any deposit account identified above, and
+              that I will not dispute any scheduled payment provided the
+              transaction corresponds to the terms of this authorization form. I
+              request the financial institution that holds the account to honor
+              all payments initiated in accordance with this authorization form.
+              I acknowledge receipt of a completed copy of this authorization
+              form for my records.
+            </li>
+          </ol>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <span>
+          SIGNATURE:
+          <img style="max-width: 100%; height: auto;" width="300" height="200" src="{{ signature }}" />
+          </span>
+          <span style="margin-left: 80px;"> DATE: {{ todayDate }}</span>
+        </div>
+        <div>PRINT NAME: {{ firstName }} {{ lastName }}</div>
+      </div>
+      <p style="margin: 10px" class="ipDatePdf">Ip: {{ ip }}</p>
+    </div>
+  </body>
+</html>

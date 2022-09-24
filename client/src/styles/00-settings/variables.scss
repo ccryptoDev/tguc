@@ -1,0 +1,14 @@
+:root {
+  // application
+  --header-height: 74px;
+  --footer-height: 155px;
+  --content-height: calc(100vh - (var(--footer-height) + var(--header-height)));
+  --page-width: 1180px;
+  --stepper-width: 880px;
+
+  // admin
+  --sidenav-open-width: 240px;
+  --admin-header-height: 74px;
+  --admin-main-height: calc(100vh - var(--admin-header-height));
+  --sidenav-folded-width: 50px;
+}

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <style>
+      :root,
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .document-wrapper {
+        background-color: white;
+        padding: 2em 6em;
+        width: 21cm;
+        min-height: 29.7cm;
+        font-size: 1.1em;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.4em;
+        margin-top: 1.4em;
+      }
+      p {
+        line-height: 1.6em;
+      }
+      .contract-container {
+        font-size: 0.8em;
+      }
+
+      .container-pdf {
+        height: 11in;
+        width: 8.5in;
+      }
+
+      .contract-container .title {
+        font-weight: 700;
+        font-size: 2em;
+        text-align: center;
+      }
+
+      .user-info {
+        width: 100%;
+      }
+
+      .info-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .info-header .info-header-item {
+        display: flex;
+        justify-content: space-between;
+        width: 25%;
+      }
+      .info-header .info-header-item div {
+        display: inline-block;
+      }
+      .info-header .info-header-field {
+        border-bottom: 1px solid #000;
+        flex-grow: 1;
+        margin-left: 10px;
+      }
+      .info-body {
+      }
+      .info-body .info-body-item {
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 0;
+      }
+      .info-body .info-body-item .info-body-field {
+        border-bottom: 1px solid #000;
+      }
+      .info-body .info-body-item .info-body-value {
+        flex: 1 1 auto;
+        padding-left: 8px;
+        border-bottom: 1px solid #000;
+      }
+
+      .descriptionOfServices {
+        width: 100%;
+        padding: 5px;
+        padding-bottom: 10%;
+        box-sizing: border-box;
+        border: 1px solid #000;
+      }
+
+      .table {
+        border: 2px solid #000;
+      }
+
+      .table-heading {
+        text-align: center;
+      }
+
+      .table-cubes {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .table-cubes-item {
+        flex: 1 1 20%;
+        display: flex;
+        padding: 2px 4px;
+        border: 1px solid #000;
+        word-break: break-word;
+      }
+      .table-cubes-item:nth-child(1),
+      .table-cubes-item:nth-child(2) {
+        border: 2px solid #000;
+        background: #ccc;
+      }
+      .table-cubes-item:nth-child(1) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(3) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(5) {
+        border-right: none;
+        border-left: none;
+      }
+      .table-cubes-item-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+      .table-cubes-item-unit {
+        text-align: center;
+        margin-top: 10px;
+        border-bottom: 1px solid #000;
+      }
+
+      .table {
+        width: 100%;
+      }
+
+      .schedule-table {
+        display: flex;
+        flex-direction: column;
+      }
+      .schedule-table .schedule-heading {
+        padding: 4px 4px 0;
+      }
+      .schedule-table .schedule-body {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        word-break: break-word;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+      }
+      .schedule-table .schedule-body .schedule-item-1,
+      .schedule-table .schedule-body .schedule-item-2 {
+        flex: 1 1 25%;
+      }
+      .schedule-table .schedule-body .schedule-item-3 {
+        flex: 1 1 50%;
+      }
+      .schedule-table .schedule-body .schedule-item-header {
+        white-space: nowrap;
+      }
+      .schedule-table .schedule-body .schedule-item-header,
+      .schedule-table .schedule-body .schedule-item-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #000;
+        min-height: 30px;
+        padding: 0 4px;
+      }
+
+      .table-footer-item {
+        padding-left: 5px;
+      }
+
+      .table-footer-item:nth-child(3) {
+        border-right: none;
+      }
+
+      .table-itemization {
+        margin-top: 8em;
+      }
+      .table-itemization .table-body {
+        padding: 10px 30px;
+        border-top: 2px solid #000;
+      }
+
+      .table-itemization .table-body .table-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .table-itemization .table-body .table-col:last-child {
+        width: 20%;
+        border-bottom: 1px solid #000;
+      }
+
+      .terms .heading {
+        text-decoration: underline;
+      }
+      .terms-body {
+        -webkit-column-width: 47%;
+        -moz-column-width: 47%;
+        column-width: 47%;
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+        -webkit-column-gap: 6%;
+        -moz-column-gap: 6%;
+        column-gap: 6%;
+      }
+      .terms-item-signatures {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .terms-item-signatures .terms-item-signature {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        font-weight: bold;
+      }
+      .terms-item-signatures .terms-item-signature .terms-item-signature-value {
+        flex: 1 1 auto;
+        border-bottom: 1px solid #000;
+        min-width: 50px;
+        max-width: 100px;
+      }
+      .terms-item-signatures
+        .terms-item-signature
+        .terms-item-signature-value
+        .signature {
+        width: 100%;
+        height: auto;
+      }
+
+      .arbitration {
+        padding: 10px;
+        margin: 0 0 10px;
+        border: 1px solid #000;
+      }
+
+      .notice {
+        border: 1px solid #000;
+        padding: 0 5px;
+      }
+
+      .notice-to-buyer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 2%;
+      }
+
+      .signatures {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 10%;
+        grid-row-gap: 30px;
+        align-items: flex-end;
+      }
+      .signatures .signature-field {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: 100%;
+        border-bottom: 1px solid #000;
+      }
+
+      .signatures .signature-field .signatureDate {
+        display: inline-block;
+        margin-left: auto;
+        margin-bottom: 0px !important;
+      }
+
+      .signatures .signature-field .signature {
+        width: 79%;
+        height: auto;
+      }
+      .signatures .signature-labels {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 10px;
+      }
+
+      .signatures-table {
+        padding: 0 5px;
+        border: 1px solid #000;
+        width: 100%;
+      }
+      .signatures-table-underline {
+        color: transparent;
+        border-bottom: 1px solid #000;
+        word-break: break-all;
+      }
+      .signatures-table .assignment {
+        display: flex;
+        justify-content: space-between;
+      }
+      .signatures-table .signatures {
+        display: grid;
+        grid-template-columns: 25% 25% 20% 15%;
+        grid-column-gap: 5%;
+      }
+      .signatures-table .signatures div {
+        border-top: 1px solid #000;
+        padding-top: 5px;
+      }
+
+      @media (max-width: 1301px) {
+      }
+      @media (max-width: 1200px) {
+        .signatures .signature-field .signature {
+          width: 70%;
+          height: auto;
+        }
+      }
+      @media (max-width: 1092px) {
+      }
+      @media (max-width: 990px) {
+        .signatures .signature-field .signature {
+          width: 67%;
+          height: auto;
+        }
+      }
+      @media (max-width: 825px) {
+      }
+      @media (max-width: 767px) {
+        .notice-to-buyer {
+          display: block;
+        }
+        .terms .terms-body {
+          column-count: 1;
+        }
+        .signatures {
+          display: block;
+        }
+        .signatures .signature-item {
+          margin-bottom: 30px;
+        }
+        .signatures-table .assignment,
+        .signatures-table .signatures {
+          display: block;
+        }
+        .signatures-table .signatures div {
+          margin-top: 20px;
+        }
+      }
+      @media (max-width: 450px) {
+      }
+
+      /*================== efta =================*/
+      .efta__container {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background-color: hsla(0, 0%, 24%, 0.8);
+        z-index: 99;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: auto;
+      }
+      .efta__close {
+        position: fixed;
+        top: 5px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #c7452e;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .efta__container--hidden {
+        display: none;
+      }
+      .efta__wrapper {
+        background-color: white;
+        padding: 50px;
+        width: 210mm;
+        height: 297mm;
+      }
+      .efta__document {
+        background-color: white;
+        color: black;
+        width: 100%;
+      }
+      .efta__header {
+        font-weight: bold;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: center;
+      }
+      .efta__body {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: justify;
+      }
+      .efta__body strong {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+      .efta__list {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        text-align: left;
+      }
+    </style>
+    <title>RIC</title>
+  </head>
+  <body>
+    <main class="document-wrapper">
+      <section class="container">
+        <div class="contract-container">
+          <div class="title">RETAIL INSTALLMENT CONTRACT</div>
+          <div class="user-info">
+            <div class="info-header">
+              <div class="info-header-item">
+                <div>Date:</div>
+                <div class="info-header-field">
+                  {{ selectedOffer.fundingDate }}
+                </div>
+              </div>
+              <div class="info-header-item">
+                <div>No.:</div>
+                <div class="info-header-field">
+                  {{ screenTracking.applicationReference }}
+                </div>
+              </div>
+            </div>
+
+            <br />
+
+            <div class="info-body">
+              <div class="info-body-item">
+                <div class="info-body-field">
+                  Buyer Name,<br />
+                  Address & Phone:
+                </div>
+                <div class="info-body-value">
+                  {{ userData.fullName }} - {{ userData.street }} {{
+                  userData.city }}, {{ userData.state }}, {{ userData.zipCode }}
+                </div>
+              </div>
+              <div class="info-body-item">
+                <div class="info-body-field">
+                  Co-Buyer Name,<br />
+                  Address & Phone:
+                </div>
+                <div class="info-body-value"></div>
+              </div>
+              <div class="info-body-item">
+                <div class="info-body-field">
+                  Seller Name,<br />
+                  Address & Phone: Alchemy -
+                </div>
+                <div class="info-body-value">
+                  {{ provider.practiceName }} - {{ provider.streetAddress }} {{
+                  provider.city }}, {{ provider.stateCode }}, {{
+                  provider.zipCode }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="paragraph">
+            The Buyer (and Co-Buyer, if any) is referred to as “you” or “your”.
+            The Seller (and after assignment of this Contract, to the assignee,
+            if any) is referred to as “we” or “our” or “us”. This Contract may
+            be transferred by the Seller. You, the Buyer (and Co-Buyer, if any),
+            may buy the services and, if applicable, related goods described
+            below for cash or on credit. The cash price is shown below as “Cash
+            Price.” The credit price is shown below as “Total Sale Price.” By
+            signing this Contract, you choose to buy the services (and related
+            goods, if any) on credit as described in this Contract. The Federal
+            Truth in Lending Disclosures below are also part of this Contract.
+          </div>
+
+          <br />
+
+          <div class="descriptionOfServices">
+            <div>
+              Description of the services (and related goods, if any) financed
+              (collectively, “Services”):
+            </div>
+            <div>Alchemy Services</div>
+          </div>
+          <br />
+          <div class="primaryUse">
+            Primary Use for Which Purchased: [X] Personal, Family or Household [
+            ] Agricultural [ ] Business
+          </div>
+          <br />
+          <div class="table">
+            <div class="table-heading">
+              <strong>FEDERAL TRUTH-IN-LENDING DISCLOSURES</strong>
+            </div>
+            <div class="table-cubes">
+              <div class="table-cubes-item">
+                <div class="table-cubes-item-content">
+                  <div>
+                    <strong>ANNUAL PERCENTAGE RATE</strong><br />The cost of
+                    your credit as a yearly rate.
+                  </div>
+                  <div class="table-cubes-item-unit">
+                    {{ selectedOffer.interestRate }}%
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-cubes-item">
+                <div class="table-cubes-item-content">
+                  <div>
+                    <strong>FINANCE CHARGE</strong><br />The dollar amount the
+                    credit will cost you.
+                  </div>
+                  <div class="table-cubes-item-unit">
+                    ${{ selectedOffer.financeCharge.toFixed(2) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-cubes-item">
+                <div class="table-cubes-item-content">
+                  <div>
+                    <strong>Amount Financed</strong><br />The amount of credit
+                    provided to you or on your behalf.
+                  </div>
+                  <div class="table-cubes-item-unit">
+                    ${{ selectedOffer.financedAmount.toFixed(2) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-cubes-item">
+                <div class="table-cubes-item-content">
+                  <div>
+                    <strong>Total of Payments</strong><br />The amount you will
+                    have paid after you have made all payments as scheduled.
+                  </div>
+                  <div class="table-cubes-item-unit">
+                    ${{ (selectedOffer.totalLoanAmount -
+                    selectedOffer.downPayment).toFixed(2) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-cubes-item">
+                <div class="table-cubes-item-content">
+                  <div>
+                    <strong>Total Sale Price</strong><br />The total cost of
+                    your purchase on credit, including your down payment of:
+                  </div>
+                  <div>
+                    <div class="table-cubes-item-unit">
+                      ${{ selectedOffer.downPayment.toFixed(2) }} is
+                    </div>
+                    <div class="table-cubes-item-unit">
+                      ${{ (selectedOffer.totalLoanAmount).toFixed(2) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="schedule-table">
+              <div class="schedule-heading">
+                <strong>Your Payment Schedule Will Be:</strong>
+              </div>
+              <div class="schedule-body">
+                <div class="schedule-item-1">
+                  <div class="schedule-item-header">
+                    <strong>Number of Payments</strong>
+                  </div>
+                  <div class="schedule-item-row">
+                    {{ paymentScheduleInfo.regularPayments.numberOfPayments }}
+                    payments
+                  </div>
+                  <div class="schedule-item-row">
+                    {{ paymentScheduleInfo.lastPayment.numberOfPayments }} final
+                    payment
+                  </div>
+                </div>
+                <div class="schedule-item-2">
+                  <div class="schedule-item-header">
+                    <strong>Amount of Each Payment</strong>
+                  </div>
+                  <div class="schedule-item-row">
+                    ${{ paymentScheduleInfo.regularPayments.amount.toFixed(2) }}
+                  </div>
+                  <div class="schedule-item-row">
+                    ${{ paymentScheduleInfo.lastPayment.amount.toFixed(2) }}
+                  </div>
+                </div>
+                <div class="schedule-item-3">
+                  <div class="schedule-item-header">
+                    <strong>When Payments Are Due</strong>
+                  </div>
+                  <div class="schedule-item-row">
+                    {{ paymentScheduleInfo.regularPayments.due }}
+                  </div>
+                  <div class="schedule-item-row">
+                    {{ paymentScheduleInfo.lastPayment.due }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-footer-item">
+              <strong>Late Payment:</strong>
+              You must pay a late charge on any installment not paid in full
+              within 10 days after the date the payment is due. The charge will
+              be $10.
+            </div>
+            <div class="table-footer-item">
+              <strong>Prepayment:</strong>
+              If you pay off your debt early, you will not have to pay a
+              penalty.
+            </div>
+            <div class="table-footer-item">
+              <strong
+                >Please read this Contract for additional information on
+                security interests, non-payment, default, our right to require
+                repayment of your debt in full before the scheduled maturity
+                date, and prepayment rebates and penalties.
+              </strong>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="paragraph">
+            <strong
+              >[<i class="fas fa-check"></i>] {{ selectedOffer.promoTerm }}
+              Month SAME AS CASH PROMOTION. If this box is checked, this
+              Contract includes a same as cash feature. </strong
+            >Finance charges will accrue on the amount financed from the date of
+            this Contract.
+            <strong
+              >However, if you repay the amount financed in full within
+              <span> {{ selectedOffer.promoTerm }} </span>
+              calendar months from the date of this Contract (“promotional
+              period”), we will waive and/or rebate all finance charges.</strong
+            >
+            If you do not repay the entire amount financed within the
+            promotional period, you are responsible for paying all accrued
+            finance charges. During the promotional period, you are required to
+            pay at least the amount of the scheduled payments reflected in the
+            payment schedule above.
+            <strong
+              >You must pay more than the scheduled payments during the
+              promotional period, however, in order to avoid paying finance
+              charges. Paying only the amount of the scheduled payment will not
+              pay the amount financed in full before the promotional period
+              expires.</strong
+            >
+            If you are delinquent in paying any amount of a scheduled payment
+            during the promotional period or otherwise fail to meet your
+            obligations under this Contract during any promotional period, we
+            may cancel the promotion, require you to pay all accrued finance
+            charges, and continue to impose finance charges on the outstanding
+            balance pursuant to this Contract.
+          </div>
+
+          <br />
+
+          <div class="table table-itemization">
+            <div class="table-heading">ITEMIZATION OF THE AMOUNT FINANCED</div>
+            <div class="table-body">
+              <div class="table-row">
+                <div class="table-col">
+                  1. Price of Services (Excluding Sales Tax)
+                </div>
+                <div class="table-col">
+                  {{ selectedOffer.loanAmount.toFixed(2) }}
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-col">2. Sales Tax</div>
+                <div class="table-col">
+                  {{ selectedOffer.salesTax.toFixed(2) }}
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-col">
+                  <strong>3. Cash Price (1+2)</strong>
+                </div>
+                <div class="table-col">
+                  <strong
+                    >{{ (selectedOffer.loanAmount +
+                    selectedOffer.salesTax).toFixed(2) }}</strong
+                  >
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-col">4. Less: Cash Down Payment</div>
+                <div class="table-col">
+                  {{ selectedOffer.downPayment.toFixed(2) }}
+                </div>
+              </div>
+              <div class="table-row">
+                <div class="table-col">
+                  <strong
+                    >5. Unpaid Balance of Cash Price/Amount Financed
+                    (3-4)</strong
+                  >
+                </div>
+                <div class="table-col">
+                  <strong
+                    >{{ (selectedOffer.loanAmount + selectedOffer.salesTax -
+                    selectedOffer.downPayment).toFixed(2) }}</strong
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br />
+
+          <div class="terms">
+            <div class="heading"><strong> Additional Terms:</strong></div>
+            <div class="terms-body">
+              <div class="terms-item">
+                <strong>1. Promise to Pay.</strong> You promise to pay us the
+                amount financed as disclosed above, together with finance charge
+                and any other fees or amounts that may become due under this
+                Contract, in accordance with the Payment Schedule in the Truth
+                in Lending Disclosures. The amount financed is equal to the cost
+                of the Services, less any down payment you have paid. Each Buyer
+                under this contract is jointly and severally obligated to keep
+                all promises in this Contract, including the promise to pay the
+                full amount owed.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>2. Finance Charges:</strong> Finance charges will be
+                calculated on a simple interest basis at the rate of
+                <span class="underline">{{ selectedOffer.apr }}%</span> per
+                year. The finance charges you pay will depend on how you make
+                the payments. Your actual finance charges may be more than the
+                disclosed finance charges if you make the payments late or in
+                less than the scheduled amount. Finance charges are earned on a
+                daily basis at 1/365th of the annual contract rate (1/366th in a
+                leap year). This daily rate is then applied to the unpaid
+                balance of the Amount Financed then outstanding, which does not
+                include late charges, or returned check charges.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>3. Late Charge and Returned Payment Charge:</strong>
+                When we accept a late payment, that does not excuse your default
+                or mean that you can keep making payments late. You will pay a
+                late charge on each late payment as shown in the Truth in
+                Lending Disclosures. If any payment you give us is unpaid for
+                any reason, you agree to pay a returned payment charge of $15.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>4. Waivers and Releases:</strong> To the extent
+                permitted by applicable law, (i) We can waive or delay enforcing
+                any of our rights without losing them; (ii) We can waive or
+                delay enforcing a right as to one of you without waiving it as
+                to the other; and (iii) We need not give anyone notice of the
+                waiver, delay or release.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>5. Default:</strong> You will be in default if you do
+                not make any payment in full when due. You will be in default if
+                you do not keep any other agreement in this Contract. If you are
+                in default, subject to any notice and right to cure, we may
+                require you to pay at once the unpaid Amount Financed, the
+                earned and unpaid part of the Finance Charge and all other
+                amounts due under this Contract. You agree to pay reasonable
+                fees of an attorney who is not our salaried employee, plus
+                collection costs we incur at any time in collecting amounts you
+                owe under this Contract, including during any bankruptcy
+                proceedings or upon any appeal, to the extent not prohibited by
+                law.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>6. General:</strong> This Contract contains the entire
+                agreement between you and us relating to the sale and financing
+                of the Services. Any change in this Contract must be written and
+                signed by you and us.
+                <div class="terms-item-signatures">
+                  <div class="terms-item-signature">
+                    <div>Buyer signs:</div>
+                    <div class="terms-item-signature-value">
+                      <img class="signature" src="{{ signature }}" />
+                    </div>
+                  </div>
+                </div>
+                Federal law and the law of the state of Buyer’s address shown in
+                this Contract apply to this Contract. If that law does not allow
+                all the agreements in this Contract, the ones that are not
+                allowed will be void. The rest of this Contract will still be
+                good.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong
+                  >7. Seller’s Disclaimer of Warranties: Unless the Seller makes
+                  a written warranty, or enters into a service contract within
+                  90 days from the date of this Contract, the Seller makes no
+                  warranties, express or implied, on the Services, and there
+                  will be no implied warranties of merchantability or of fitness
+                  for a particular purpose. This provision does not affect any
+                  warranties covering the Services that the manufacturer may
+                  provide.</strong
+                >
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>8. Telephone and Collection Calls:</strong> By providing
+                us your wireless (cell) telephone number, you expressly consent
+                to receiving telephone calls from us concerning your contract,
+                including calls to collect what you owe. Live calls may be made
+                by one of our employees. Calls may also be made by a
+                prerecorded, auto-dialed voice or text message as applicable law
+                allows. Your consent covers all types of calls related to your
+                contract. We do not charge you for such calls. Your wireless
+                carrier will charge you for our incoming calls and text messages
+                according to your plan.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>9. Credit Reports.</strong> We may obtain a credit
+                report on you at any time in the future to review your
+                information and activity regarding this Contract. We may report
+                information about your account to credit bureaus. As required by
+                law, you are hereby notified that a negative credit report
+                reflecting on your credit record may be submitted to a credit
+                reporting agency if you fail to fulfill the terms of your credit
+                obligations.
+                <strong
+                  >Late payments, missed payments, or other defaults on your
+                  account may be reflected in your credit report.</strong
+                >
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>10. Assignment.</strong> You may not assign or transfer
+                your rights or obligations under this Contract without our
+                express prior written consent. You agree that we may assign its
+                rights under this Contract at any time, without notice, and any
+                assignment will be binding and inure to the benefit of all of
+                the respective legal representatives, successors and assigns.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong
+                  >11. NOTICE TO ACTIVE DUTY SERVICE MEMBERS AND
+                  DEPENDENTS.</strong
+                >
+                Federal law provides important protections to members of the
+                Armed Forces and their dependents relating to extensions of
+                consumer credit. In general, the cost of consumer credit to a
+                member of the Armed Forces and his or her dependent may not
+                exceed an annual percentage rate of 36 percent. This rate must
+                include, as applicable to the credit transaction or account: The
+                costs associated with credit insurance premiums; fees for
+                ancillary products sold in connection with the credit
+                transaction; any application fee charged (other than certain
+                application fees for specified credit transactions or accounts);
+                and any participation fee charged (other than certain
+                participation fees for a credit card account).
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                Call us toll free at (insert number) for a disclosure of: (a) a
+                statement of the Military Annual Percentage Rate, and (b) your
+                payment obligations (payment schedule) applicable to this
+                extension of credit.
+              </div>
+
+              <br />
+
+              <div class="terms-item">
+                <strong>Covered Borrower Savings Clause.</strong> If you are a
+                “covered borrower,” as that term is defined by 32 C.F.R. §
+                232.3(g), and if any contract provision not identified herein is
+                contrary to the rights and protections afforded to you by the
+                federal Military Lending Act, 10 U.S.C. § 987, and its
+                implementing regulations, 32 C.F.R. Part 232, then the
+                conflicting provisions or proscribed terms are inoperative, and
+                will have no force or effect. All remaining contract terms and
+                provisions not proscribed will remain in full force and effect.
+              </div>
+
+              <br />
+            </div>
+          </div>
+
+          <div class="arbitration">
+            <p>
+              <strong
+                >ARBITRATION PROVISION: This Arbitration Provision significantly
+                affects your rights in any dispute with us. Please read this
+                Arbitration Provision carefully before you sign the
+                Contract.</strong
+              >
+            </p>
+            <ul>
+              <li>
+                <p>
+                  <strong
+                    >EITHER YOU OR WE MAY CHOOSE TO HAVE ANY DISPUTE BETWEEN US
+                    DECIDED BY ARBITRATION AND NOT IN COURT.</strong
+                  >
+                </p>
+              </li>
+              <li>
+                <p>
+                  <strong
+                    >IF A DISPUTE IS ARBITRATED, YOU WILL GIVE UP YOUR RIGHT TO
+                    PARTICIPATE AS A CLASS REPRESENTATIVE OR CLASS MEMBER ON ANY
+                    CLASS CLAIM YOU MAY HAVE AGAINST US.</strong
+                  >
+                </p>
+              </li>
+              <li>
+                <p>
+                  <strong
+                    >THE INFORMATION YOU AND WE MAY OBTAIN IN DISCOVERY FROM
+                    EACH OTHER IN ARBITRATION IS GENERALLY MORE LIMITED THAN IN
+                    A LAWSUIT.</strong
+                  >
+                </p>
+              </li>
+              <li>
+                <p>
+                  <strong
+                    >OTHER RIGHTS THAT YOU AND WE WOULD HAVE IN COURT MAY NOT BE
+                    AVAILABLE IN ARBITRATION.</strong
+                  >
+                </p>
+              </li>
+            </ul>
+            <p>
+              <strong
+                >Any claim or dispute, whether in contract, tort or otherwise
+                (including the interpretation and scope of this clause and the
+                arbitrability of any issue), between you and us or our
+                employees, agents, successors or assigns, which arises out of or
+                relates in any manner to this Contract or any resulting
+                relationship (including any such relationship with third parties
+                who do not sign this Arbitration Provision, such as an assignee
+                of the Contract) shall, at your or our election (or the election
+                of any such third party), be resolved by neutral, binding
+                arbitration and not by a court action. Any claim or dispute is
+                to be arbitrated on an individual basis and not as a class
+                action. You expressly waive any right you may have to arbitrate
+                a class action. This is called the “class action
+                waiver.”</strong
+              >
+            </p>
+            <p>
+              <strong
+                >You may choose the applicable rules of either the American
+                Arbitration Association (“AAA”), JAMS, or another arbitration
+                organization, subject to our approval. We waive the right to
+                require you to arbitrate an individual claim if the amount you
+                seek to recover qualifies as a small claim under applicable law.
+                You may obtain a copy of the rules of the AAA by visiting its
+                web site (<a href="https://www.adr.org" style="color: blue"
+                  >www.adr.org</a
+                >) or of JAMS by visiting its website (<a
+                  href="https://www.jamsadr.com"
+                  style="color: blue"
+                  >www.jamsadr.com</a
+                >). You can also refer to the websites to learn how to file for
+                arbitration.</strong
+              >
+            </p>
+            <p>
+              <strong
+                >The arbitrators shall be attorneys or retired judges and shall
+                be selected in accordance with the applicable rules of the
+                chosen arbitration organization. The arbitrator shall apply
+                substantive governing law and the applicable statute of
+                limitations. The arbitration award shall be in writing. The
+                arbitration hearing shall be conducted in the federal court
+                district in which you reside, or such other place convenient to
+                you as required by the rules of the chosen arbitration
+                organization. If you demand arbitration first, you will pay the
+                filing fee if the chosen arbitration organization requires it.
+                We will advance and/or pay any other fees and costs required by
+                the rules of the chosen arbitration organization.</strong
+              >
+            </p>
+            <p>
+              <strong
+                >The arbitrator’s award shall be final and binding on all
+                parties. There shall be a limited right to appeal to the extent
+                allowed by the Federal Arbitration Act. The amount we pay may be
+                reimbursed in whole or in part by decision of the arbitrator if
+                the arbitrator finds that any of your claims is
+                frivolous.</strong
+              >
+            </p>
+            <p>
+              <strong
+                >This Arbitration Provision relates to an agreement that
+                evidences a transaction involving interstate commerce. Any
+                arbitration under this Arbitration Provision shall be governed
+                by the Federal Arbitration Act (9 U.S.C. § 1 et. seq.).</strong
+              >
+            </p>
+          </div>
+
+          <div class="arbitration">
+            <p>
+              <strong
+                >Neither you nor we waive the right to arbitrate by exercising
+                self-help remedies, filing suit, or seeking or obtaining
+                provisional remedies from a court. Judgment upon the award
+                rendered by the arbitrator may be entered in any court having
+                jurisdiction.</strong
+              >
+            </p>
+            <p>
+              <strong
+                >If any part of this Arbitration Provision other than the Class
+                Action Waiver is found by a court or arbitrator to be
+                unenforceable, the remainder shall be enforceable. If the Class
+                Action Waiver is found by a court or arbitrator to be
+                unenforceable, the remainder of this Arbitration Provision shall
+                be unenforceable. This Arbitration Provision shall survive the
+                termination of any contractual agreement between you and us,
+                whether by default or repayment in full.</strong
+              >
+            </p>
+          </div>
+
+          <br />
+          <div class="notice">
+            <strong
+              >NOTICE: ANY HOLDER OF THIS CONSUMER CREDIT CONTRACT IS SUBJECT TO
+              ALL CLAIMS AND DEFENSES WHICH THE DEBTOR COULD ASSERT AGAINST THE
+              SELLER OF GOODS OR SERVICES OBTAINED PURSUANT HERETO OR WITH THE
+              PROCEEDS HEREOF. RECOVERY HEREUNDER BY THE DEBTOR SHALL NOT EXCEED
+              AMOUNTS PAID BY THE DEBTOR HEREUNDER.</strong
+            >
+          </div>
+          <br />
+          <br />
+          <strong>NOTICE TO BUYER:</strong>
+          <div class="notice-to-buyer">
+            <div class="list">
+              <p>
+                <strong
+                  >(1) Do not sign this agreement before you read it or if
+                  contains any blank spaces to be filled in.
+                </strong>
+              </p>
+              <p>
+                <strong
+                  >(2) You are entitled to a completely filled-in copy of this
+                  agreement.</strong
+                >
+              </p>
+              <p>
+                <strong
+                  >(3) You can prepay the full amount due under this agreement
+                  at any time.</strong
+                >
+              </p>
+              <p>
+                <strong
+                  >(4) If you desire to pay off in advance the full amount due,
+                  the amount which is outstanding will be furnished upon
+                  request.</strong
+                >
+              </p>
+            </div>
+            <div class="acknowledgement">
+              <p>
+                <strong
+                  >CAUTION – IT IS IMPORTANT THAT YOU READ THROUGH THIS CONTRACT
+                  BEFORE YOU SIGN IT. BY SIGNING, YOU AGREE TO ALL TERMS OF THE
+                  CONTRACT.</strong
+                >
+              </p>
+              <p>
+                <strong
+                  >BY SIGNING BELOW, YOU ACKNOWLEDGE THAT YOU HAVE READ AND
+                  AGREE TO THIS ENTIRE CONTRACT, INCLUDING THE ARBITRATION
+                  PROVISION ABOVE. YOU ALSO ACKNOWLEDGE RECEIPT OF A TRUE AND
+                  COMPLETELY FILLED IN COPY OF THIS CONTRACT AT THE TIME YOU
+                  SIGN IT.</strong
+                >
+              </p>
+            </div>
+          </div>
+
+          <div class="signatures">
+            <div class="signature-item">
+              <div class="signature-field">
+                X<img class="signature" src="{{ signature }}" />
+                <p class="signatureDate">{{ date }}</p>
+              </div>
+              <div class="signature-labels">
+                <div>Buyer Signs</div>
+                <div>Date</div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="signatures-table">
+            <p>
+              Negotiation and Assignment: For value received the undersigned
+              Seller does hereby sell, assign and transfer to
+              <span class="signatures-table-underline"
+                >___________________________________________________________________</span
+              >
+              subject to the terms and conditions of the separate agreement
+              between the Parties.
+            </p>
+            <div class="assignment">
+              <div>Assignment is made:</div>
+              <div><span class="underline"></span> With Recourse</div>
+              <div><span class="underline"></span> Without Recourse</div>
+              <div><span class="underline"></span> With Limited Recourse</div>
+            </div>
+            <br />
+            <br />
+            <div class="signatures">
+              <div>Seller</div>
+              <div>By</div>
+              <div>Title</div>
+              <div>Date</div>
+            </div>
+            <p>IP: {{userData.ip}}</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<style>
+    .heading {
+        text-align: left;
+        margin: 0 0 10px;
+    }
+
+    table {
+        width: 100%;
+    }
+</style>
+<div class="itimization-wrapper new-page">
+    <div class="no-break start-page">
+        <div class="heading">
+            <b>ITEMIZATION OF THE AMOUNT FINANCED OF $</b>
+        </div>
+        <div class="table-container">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="table-col">$0</td>
+                        <td class="table-col">Amount given to you directly</td>
+                    </tr>
+                    <tr>
+                        <td class="table-col">$0</td>
+                        <td class="table-col">Amount paid on your account</td>
+                    </tr>
+                    <tr>
+                        <td class="table-col" colspan="2">
+                  Amount paid to others on your behalf:
+                </td>
+                    </tr>
+                    <tr>
+                        <td class="table-col">$_____</td>
+                        <td class="table-col">to _____________________</td>
+                    </tr>
+                    <tr>
+                        <td class="table-col">$0</td>
+                        <td class="table-col">Prepaid finance charge</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>E-signature</title>
+    <style>
+      :root,
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      .document-wrapper {
+        background-color: white;
+        padding: 2em 6em;
+        width: 21cm;
+        min-height: 29.7cm;
+        font-size: 1.1em;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.4em;
+        margin-top: 1.4em;
+      }
+      p {
+        line-height: 1.6em;
+      }
+      .contract-container {
+        font-size: 0.8em;
+      }
+
+      .container-pdf {
+        height: 11in;
+        width: 8.5in;
+      }
+
+      .contract-container .title {
+        font-weight: 700;
+        font-size: 2em;
+        text-align: center;
+      }
+
+      .user-info {
+        width: 100%;
+      }
+
+      .info-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .info-header .info-header-item {
+        display: flex;
+        justify-content: space-between;
+        width: 25%;
+      }
+      .info-header .info-header-item div {
+        display: inline-block;
+      }
+      .info-header .info-header-field {
+        border-bottom: 1px solid #000;
+        flex-grow: 1;
+        margin-left: 10px;
+      }
+      .info-body {
+      }
+      .info-body .info-body-item {
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 0;
+      }
+      .info-body .info-body-item .info-body-field {
+        border-bottom: 1px solid #000;
+      }
+      .info-body .info-body-item .info-body-value {
+        flex: 1 1 auto;
+        padding-left: 8px;
+        border-bottom: 1px solid #000;
+      }
+
+      .descriptionOfServices {
+        width: 100%;
+        padding: 5px;
+        padding-bottom: 10%;
+        box-sizing: border-box;
+        border: 1px solid #000;
+      }
+
+      .table {
+        border: 2px solid #000;
+      }
+
+      .table-heading {
+        text-align: center;
+      }
+
+      .table-cubes {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+      .table-cubes-item {
+        flex: 1 1 20%;
+        display: flex;
+        padding: 2px 4px;
+        border: 1px solid #000;
+        word-break: break-word;
+      }
+      .table-cubes-item:nth-child(1),
+      .table-cubes-item:nth-child(2) {
+        border: 2px solid #000;
+        background: #ccc;
+      }
+      .table-cubes-item:nth-child(1) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(3) {
+        border-left: none;
+        border-right: none;
+      }
+      .table-cubes-item:nth-child(5) {
+        border-right: none;
+        border-left: none;
+      }
+      .table-cubes-item-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+      .table-cubes-item-unit {
+        text-align: center;
+        margin-top: 10px;
+        border-bottom: 1px solid #000;
+      }
+
+      .table {
+        width: 100%;
+      }
+
+      .schedule-table {
+        display: flex;
+        flex-direction: column;
+      }
+      .schedule-table .schedule-heading {
+        padding: 4px 4px 0;
+      }
+      .schedule-table .schedule-body {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        word-break: break-word;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+      }
+      .schedule-table .schedule-body .schedule-item-1,
+      .schedule-table .schedule-body .schedule-item-2 {
+        flex: 1 1 25%;
+      }
+      .schedule-table .schedule-body .schedule-item-3 {
+        flex: 1 1 50%;
+      }
+      .schedule-table .schedule-body .schedule-item-header {
+        white-space: nowrap;
+      }
+      .schedule-table .schedule-body .schedule-item-header,
+      .schedule-table .schedule-body .schedule-item-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #000;
+        min-height: 30px;
+        padding: 0 4px;
+      }
+
+      .table-footer-item {
+        padding-left: 5px;
+      }
+
+      .table-footer-item:nth-child(3) {
+        border-right: none;
+      }
+
+      .table-itemization .table-body {
+        padding: 10px 30px;
+        border-top: 2px solid #000;
+      }
+
+      .table-itemization .table-body .table-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .table-itemization .table-body .table-col:last-child {
+        width: 20%;
+        border-bottom: 1px solid #000;
+      }
+
+      .terms .heading {
+        text-decoration: underline;
+      }
+      .terms-body {
+        -webkit-column-width: 47%;
+        -moz-column-width: 47%;
+        column-width: 47%;
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+        -webkit-column-gap: 6%;
+        -moz-column-gap: 6%;
+        column-gap: 6%;
+      }
+      .terms-item-signatures {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .terms-item-signatures .terms-item-signature {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        font-weight: bold;
+      }
+      .terms-item-signatures .terms-item-signature .terms-item-signature-value {
+        flex: 1 1 auto;
+        border-bottom: 1px solid #000;
+        min-width: 50px;
+        max-width: 100px;
+      }
+      .terms-item-signatures
+        .terms-item-signature
+        .terms-item-signature-value
+        .signature {
+        width: 100%;
+        height: auto;
+      }
+
+      .arbitration {
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #000;
+      }
+
+      .notice {
+        border: 1px solid #000;
+        padding: 0 5px;
+      }
+
+      .notice-to-buyer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 2%;
+      }
+
+      .signatures {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 10%;
+        grid-row-gap: 30px;
+        align-items: flex-end;
+      }
+      .signatures .signature-field {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        width: 100%;
+        border-bottom: 1px solid #000;
+      }
+
+      .signatures .signature-field .signatureDate {
+        display: inline-block;
+        margin-left: auto;
+        margin-bottom: 0px !important;
+      }
+
+      .signatures .signature-field .signature {
+        width: 79%;
+        height: auto;
+      }
+      .signatures .signature-labels {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 10px;
+      }
+
+      .signatures-table {
+        padding: 0 5px;
+        border: 1px solid #000;
+        width: 100%;
+      }
+      .signatures-table-underline {
+        color: transparent;
+        border-bottom: 1px solid #000;
+        word-break: break-all;
+      }
+      .signatures-table .assignment {
+        display: flex;
+        justify-content: space-between;
+      }
+      .signatures-table .signatures {
+        display: grid;
+        grid-template-columns: 25% 25% 20% 15%;
+        grid-column-gap: 5%;
+      }
+      .signatures-table .signatures div {
+        border-top: 1px solid #000;
+        padding-top: 5px;
+      }
+
+      @media (max-width: 1301px) {
+      }
+      @media (max-width: 1200px) {
+        .signatures .signature-field .signature {
+          width: 70%;
+          height: auto;
+        }
+      }
+      @media (max-width: 1092px) {
+      }
+      @media (max-width: 990px) {
+        .signatures .signature-field .signature {
+          width: 67%;
+          height: auto;
+        }
+      }
+      @media (max-width: 825px) {
+      }
+      @media (max-width: 767px) {
+        .notice-to-buyer {
+          display: block;
+        }
+        .terms .terms-body {
+          column-count: 1;
+        }
+        .signatures {
+          display: block;
+        }
+        .signatures .signature-item {
+          margin-bottom: 30px;
+        }
+        .signatures-table .assignment,
+        .signatures-table .signatures {
+          display: block;
+        }
+        .signatures-table .signatures div {
+          margin-top: 20px;
+        }
+      }
+      @media (max-width: 450px) {
+      }
+
+      /*================== efta =================*/
+      .efta__container {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background-color: hsla(0, 0%, 24%, 0.8);
+        z-index: 99;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: auto;
+      }
+      .efta__close {
+        position: fixed;
+        top: 5px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #c7452e;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .efta__container--hidden {
+        display: none;
+      }
+      .efta__wrapper {
+        background-color: white;
+        padding: 50px;
+        width: 210mm;
+        height: 297mm;
+      }
+      .efta__document {
+        background-color: white;
+        color: black;
+        width: 100%;
+      }
+      .efta__header {
+        font-weight: bold;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: center;
+      }
+      .efta__body {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        margin-bottom: 1.5em;
+        text-align: justify;
+      }
+      .efta__body strong {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+      .efta__list {
+        font-family: 'Calibri', sans-serif !important;
+        font-size: 11pt;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="document-wrapper">
+      <h1>Consent to Receive Electronic Disclosures</h1>
+
+      <p>
+        In this Consent to Receive Electronic Disclosures, “you” and “your”
+        refer to each customer who wants to purchase services and related
+        products from us; “we,” “us” and “our” refer Alchemy.
+      </p>
+      <br />
+      <p>
+        We need to provide you with certain disclosures and information
+        concerning your purchase and any related financing transaction. In order
+        to deliver these disclosures and information to you in an electronic
+        format, you must first read this Consent to Receive Electronic
+        Disclosures and affirmatively consent to receive disclosures
+        electronically. Your consent to receive electronic disclosures allows us
+        to give you federal and state disclosures concerning your purchase and
+        any related financing transaction in the electronic format described
+        below and to communicate with you electronically. Please read this
+        consent carefully. If you do not wish to receive such information in
+        electronic format, you should not consent, and we will provide the
+        information in paper form.
+      </p>
+      <br />
+      <p>
+        <strong>Records Covered by Consent; Electronic Signature:</strong>
+        By consenting to receive electronic disclosures, you agree that we may
+        send you communications, information and disclosures concerning your
+        purchase and any related financing transaction electronically
+        (“Records”). If you are financing your purchase with us, the Records
+        will include a retail installment credit agreement and related Truth in
+        Lending disclosures. You also agree to execute all documents to be
+        signed in connection with your purchase with an electronic signature.
+      </p>
+      <br />
+      <p>
+        <strong>Receiving a Paper Copy:</strong>
+        You may request a paper copy of the Records at the time of your purpose
+        or by emailing us at
+        <a href="mailto: FinanceSupport@alchemy.net">
+          FinanceSupport@alchemy.net
+        </a>
+        calling us at
+        <span class="phone">1-888-965-2737</span>, or writing us at 400 Spectrum
+        Center Drive, Ste 350, Irvine, CA 92618. You will not be charged a fee
+        for the first paper copy of a Record.
+      </p>
+      <br />
+      <p>
+        <strong
+          >Withdrawing Your Consent to Receive Electronic Records:
+        </strong>
+        You may withdraw your consent to receive electronic Records, without
+        charge, by emailing us at
+        <a href="mailto: FinanceSupport@alchemy.net">
+          FinanceSupport@alchemy.net
+        </a>
+        calling us at
+        <br />
+        <span class="phone">1-888-965-2737</span>, or writing us at 400 Spectrum
+        Center Drive, Ste 350, Irvine, CA 92618. Your withdrawal of consent will
+        be effective as soon as possible, but no later than 5 business days
+        after we receive a request as provided above.
+      </p>
+      <br />
+      <p style="margin-top: 10em">
+        <strong>Hardware and Software Requirements:</strong>
+        In order to receive, access and retain Records electronically, you will
+        need to have the following hardware and software:
+      </p>
+
+      <ul>
+        <li>Internet access with 128-bit encryption</li>
+        <li>An active email account</li>
+        <li>
+          Software that permits you to receive and view Portable Document Format
+          (PDF) files, such as Adobe Acrobat Reader (available for free download
+          at
+          <a href="http://get.adobe.com/reader/">
+            http://get.adobe.com/reader/
+          </a>
+          )
+        </li>
+        <li>Ability to print and/or download and store documents</li>
+      </ul>
+      <br />
+      <p>
+        By agreeing to the terms of this Consent to Electronic Records,
+        Signatures, Disclosures, and Communication, You Consent to the
+        following: You
+      </p>
+
+      <ul>
+        <li>
+          Acknowledge that You have the technical ability to access and retain
+          the Electronic Records in the designated formats described above;
+        </li>
+        <li>
+          Acknowledge that You have read the information about Electronic
+          Records, Signatures, Disclosures, and Communications;
+        </li>
+        <li>
+          Consent to having (i) legally required disclosures, agreements,
+          Account information, notices, statements, and other information
+          provided or made available to You in electronic form and (ii) doing
+          business with Us electronically;
+        </li>
+        <li>
+          Acknowledge that You may request a paper copy of an Electronic Record
+          at no charge to You; and
+        </li>
+        <li>
+          Indicate Your intent to utilize electronic signatures to apply for
+          credit and agree to transactions on Your Account.
+        </li>
+      </ul>
+
+      <p>Date: {{ today }}</p>
+      <p>Ip: {{ ip }}</p>
+    </main>
+  </body>
+</html>

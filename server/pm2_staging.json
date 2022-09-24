@@ -1,0 +1,17 @@
+{
+  "apps": [
+    {
+      "name": "tguc-financial",
+      "script": "dist/src/main.js",
+      "watch": false,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss.SSS",
+      "out_file": "~/.pm2/logs/tguc_financial.log",
+      "error_file": "~/.pm2/logs/tguc_financial.log",
+      "max_memory_restart": "512M",
+      "env": {
+        "NODE_ENV": "test",
+        "PORT": 13000
+      }
+    }
+  ]
+}

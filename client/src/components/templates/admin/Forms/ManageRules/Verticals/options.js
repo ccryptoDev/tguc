@@ -1,0 +1,68 @@
+export const optionsZip = [
+  { label: "75080", id: "1", value: "75080" },
+  { label: "75123", id: "2", value: "75123" },
+  { label: "01302", id: "3", value: "01302" },
+  { label: "07423", id: "4", value: "07423" },
+];
+
+export const verticalsOptions = [
+  { label: "Bathroom Remodeling", id: "1", value: "Bathroom Remodeling" },
+  { label: "Closet Contractors", id: "2", value: "Closet Contractors" },
+  { label: "Concrete Patio", id: "3", value: "Concrete Patio" },
+  { label: "Deck Builders", id: "4", value: "Deck Builders" },
+  { label: "Driveway Quotes", id: "5", value: "Driveway Quotes" },
+  { label: "Electricians", id: "6", value: "Electricians" },
+  { label: "Fencing Quotes", id: "7", value: "Fencing Quotes" },
+  {
+    label: "Basement Finishing Quotes",
+    id: "8",
+    value: "Basement Finishing Quotes",
+  },
+  { label: "Fire Protection", id: "9", value: "Fire Protection" },
+  { label: "Floor Installation", id: "10", value: "Floor Installation" },
+  {
+    label: "Remodeling Contractor",
+    id: "11",
+    value: "Remodeling Contractor",
+  },
+  { label: "Gutter Quotes", id: "12", value: "Gutter Quotes" },
+  { label: "Home Automation", id: "14", value: "Home Automation" },
+  { label: "Home Gym Equipment", id: "15", value: "Home Gym Equipment" },
+  { label: "Home Security", id: "17", value: "Home Security" },
+  {
+    label: "Home Theater Installation",
+    id: "18",
+    value: "Home Theater Installation",
+  },
+  { label: "HVAC", id: "19", value: "HVAC" },
+  { label: "Kitchen Remodeling", id: "20", value: "Kitchen Remodeling" },
+  { label: "Landscape Design", id: "22", value: "Landscape Design" },
+  { label: "Paint House Exterior", id: "23", value: "Paint House Exterior" },
+  { label: "Paint House Interior", id: "24", value: "Paint House Interior" },
+  { label: "Plumbing", id: "25", value: "Plumbing" },
+  {
+    label: "Pool and Spa, Hot Tub Repair, Pool Contractor Pages",
+    id: "26",
+    value: "Pool and Spa, Hot Tub Repair, Pool Contractor Pages",
+  },
+  { label: "Roofing", id: "27", value: "Roofing" },
+  {
+    label: "Septic Systems Quotes",
+    id: "28",
+    value: "Septic Systems Quotes",
+  },
+  { label: "Siding", id: "29", value: "Siding" },
+  { label: "Solar Panel Quotes", id: "30", value: "Solar Panel Quotes" },
+  {
+    label: "Sprinkler and Irrigation Quotes",
+    id: "31",
+    value: "Sprinkler and Irrigation Quotes",
+  },
+  { label: "Water Filtration", id: "32", value: "Water Filtration" },
+  { label: "Water Well Services", id: "33", value: "Water Well Services" },
+  {
+    label: "Windows and Doors & Window Replacement Pages",
+    id: "34",
+    value: "Windows and Doors & Window Replacement Pages",
+  },
+];

@@ -1,0 +1,55 @@
+:root {
+  // --
+  --color-main: #231f20;
+  --color-gray-1: #b7b7b7;
+  --color-gray-2: #ebebeb;
+  --color-background-white: #fff;
+  --color-background-gray: #f9f9f9;
+  --color-background-blue: #fcfcff;
+
+  --color-purple-1: #4b4ebc;
+  --color-purple-2: #7274cb;
+  --color-purple-3: #a9aadf;
+  --color-purple-4: #cfd0ed;
+
+  --color-blue-1: #3672bd;
+  --color-blue-2: #6c9bd5;
+  --color-blue-3: #a7c4e6;
+  --color-blue-4: #cfdff2;
+
+  --color-pink-1: #ba71bc;
+  --color-pink-2: #cb93cc;
+  --color-pink-3: #dcb6dd;
+  --color-pink-4: #ecd9ed;
+
+  --color-red-1: #b63a4d;
+  --color-red-2: #d06c7b;
+  --color-red-3: #e3a6af;
+  --color-red-4: #efcdd2;
+
+  --color-yellow-1: #b6933a;
+  --color-yellow-2: #d0b46c;
+  --color-yellow-3: #e3d2a6;
+  --color-yellow-4: #efe5cd;
+
+  --color-green-1: #4da696;
+  --color-green-2: #58b69f;
+  --color-green-3: #8ecdbd;
+  --color-green-4: #c3e5dc;
+
+  // --- old colors
+  --color: #1e83be;
+  --color-primary: #1e84be;
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-primary-hover: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.2)
+    ),
+    #1e84be;
+  --color-grey-1: #b7b7b7;
+  --color-success: #2ecc71;
+  --color-danger: #e74c3c;
+  --color-info: #3498db;
+  --color-warning: #ffbe76;
+}

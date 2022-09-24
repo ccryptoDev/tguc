@@ -1,0 +1,47 @@
+import React from "react";
+import styled from "styled-components";
+import Form from "./Form";
+
+const Wrapper = styled.div``;
+
+const Introduction = () => {
+  return (
+    <Wrapper>
+      <p className="text-align underline">
+        <b>Please read this carefully and keep a copy for your records.</b>
+      </p>
+      <p>
+        This Loan Agreement (“Agreement”) contains important information about
+        your loan (“Loan”) with us. By electronically signing this Agreement or
+        accepting the Loan from us, you agree to this Agreement. The borrower
+        (and any cosigner, if applicable) who signs this Agreement or accepts
+        the Loan from us is identified individually and collectively as “you” or
+        “your,” and TGUC Financial Inc., is identified as “we,” “us,” or “our.”
+      </p>
+      <p>
+        If you have questions, you may contact our customer support team at
+        support@tgucfinancial.com. After your Loan proceeds are disbursed, you
+        will receive a welcome email and a letter from us with instructions for
+        establishing your online loan account (“Online Account”). You can view
+        information about your Loan and make payments by logging into your
+        Online Account.
+      </p>
+      <p>
+        IF A COSIGNER SIGNS BELOW, BORROWER AND COSIGNER CERTIFY THAT THEY
+        INTEND TO APPLY FOR JOINT CREDIT AND BE JOINTLY AND SEVERALLY LIABLE FOR
+        THIS LOAN.
+      </p>
+      <p>
+        <b>
+          THIS AGREEMENT INCLUDES AN ARBITRATION AGREEMENT IN SECTION 11.
+          ARBITRATION IS A METHOD OF RESOLVING DISPUTES. UNLESS YOU ACT PROMPTLY
+          TO REJECT THE ARBITRATION AGREEMENT, IT WILL AFFECT YOUR RIGHTS, IF
+          THERE IS A DISPUTE.
+        </b>
+      </p>
+      <hr />
+    </Wrapper>
+  );
+};
+
+export default Introduction;

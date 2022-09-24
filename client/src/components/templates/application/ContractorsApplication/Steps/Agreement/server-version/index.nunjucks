@@ -1,0 +1,22 @@
+<div class="page">
+    <table style="border: none; padding: 0">
+        <thead style="border: none; padding: 0">
+            <tr style="border: none; padding: 0">
+                <td style="border: none; margin-bottom: 20px">
+                    <h4 style="text-align: center;margin:0; padding:0;">TGUC Dealers's Agreement </h4>
+                </td>
+            </tr>
+        </thead>
+        <tbody style="border: none; padding: 0">
+            <tr style="border: none; padding: 0">
+                <td style="border: none; padding: 0">
+
+                    <div class="contract-wrapper">
+                        {% include "./dealersAgreement.nunjucks" %}
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

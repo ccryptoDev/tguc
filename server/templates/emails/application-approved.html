@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Application Approved</title>
+    <style>
+      body{ font-family:Arial, Helvetica, sans-serif}
+      .emailLogo {
+        height: 40px;
+        max-height: 40px;
+        width: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Dear {{name}},</h1>
+      <p>Congratulations on being approved for ${{ amount }}. A few more minutes is all that it will take to get the financing of your home improvement project completed. Your next step is to log back into your application, select from a variety of personalized loan offers, and finalize your loan agreement.
+      </p>
+      <p>Thank you,</p>
+      <p>TGUC Financial</p>
+      <p>
+        <img class="emailLogo" src="{{baseUrl}}/images/Logo.png" alt="tgucfinancial">
+      </p>
+    </div>
+  </body>
+</html>
