@@ -121,4 +121,10 @@ export class User {
 
   @Column({ type: 'double precision', nullable: true })
   requestedAmount: number;
+
+  @Column({ nullable: true })
+  propertyOwnership: boolean;
+
+  @Column({ nullable: true })
+  income: number;
 }

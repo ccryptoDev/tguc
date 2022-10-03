@@ -249,7 +249,7 @@ export class UserDocumentsService {
         await this.sendGridService.sendEmail(
           `${fromName} <${fromEmail}>`,
           user.email,
-          `TGUC credit application`,
+          `TGUC Financial Contractor Application Under Review`,
           html,
           requestId,
         );

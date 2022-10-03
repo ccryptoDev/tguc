@@ -130,6 +130,8 @@ export class ScreenTracking {
     type: 'enum',
     enum: [
       'address-information',
+      'document-upload',
+      'contract-signed',
       'connect-bank',
       'waiting-for-approve',
       'select-offer',
@@ -137,17 +139,21 @@ export class ScreenTracking {
       'sign-contract',
       'social-security-number',
       'thank-you',
+      'declined',
     ],
   })
   lastScreen:
     | 'address-information'
+    | 'document-upload'
+    | 'contract-signed'
     | 'connect-bank'
     | 'waiting-for-approve'
     | 'select-offer'
     | 'payment-details'
     | 'sign-contract'
     | 'social-security-number'
-    | 'thank-you';
+    | 'thank-you'
+    | 'declined';
 
   @Column({ nullable: true })
   lockCreditTier: string;

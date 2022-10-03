@@ -24,6 +24,7 @@ import { AppService } from '../../app.service';
 import { ScreenTracking } from '../screen-tracking/entities/screen-tracking.entity';
 import { PaymentManagement } from '../../loans/payments/payment-management/payment-management.entity';
 import { PracticeManagement } from '../../admin/dashboard/practice-management/entities/practice-management.entity';
+import { AdminDashboardService } from '../../admin/dashboard/services/dashboard.service';
 import crypto from 'crypto';
 import { ESignature } from '../esignature/entities/esignature.entity';
 import { S3Service } from '../../file-storage/services/s3.service';
@@ -56,6 +57,7 @@ export class UserService {
     private readonly userActivityService: ActivityService,
     private readonly appService: AppService,
     private readonly logger: LoggerService,
+    private readonly dashboardService: AdminDashboardService,
   ) {}
 
   async getUserByEmail(email: string) {
@@ -274,6 +276,8 @@ export class UserService {
           zipCode: user.zip,
           street: user.street,
           requestedAmount: user.requestedAmount,
+          propertyOwnership: (user.ownership === 'yes' ? true : false),
+          income : user.income,
         },
       );
 
@@ -406,7 +410,6 @@ export class UserService {
       anticipatedFinancedAmount: st?.offerData?.financedAmount ?? 0,
       preDTIdebt: st?.preDTIMonthlyAmount ?? 0,
       preDTIdebtPercent: st?.preDTIPercentValue ?? 0,
-      declineReasons: st?.declineReasons,
     };
 
     return userInfo;
@@ -586,11 +589,13 @@ export class UserService {
       {};
     const role: any = await this.rolesModel.findOne(user.role);
     const pms = await this.paymentManagementModel.find({ user: user.id });
+    const practiceManagement = user?.practiceManagement as PracticeManagement;
 
     const response = {
       userId,
       screenTrackings: sts,
       paymentManagements: pms,
+      practiceManagement: practiceManagement,
       ...user,
       ...role,
     };
@@ -708,7 +713,7 @@ export class UserService {
       where: {
         id: userId,
       },
-      relations: ['screenTracking'],
+      relations: ['screenTracking', 'screenTracking.practiceManagement'],
     });
     if (!user) {
       const errorMessage = `user id ${userId} not found`;
@@ -738,6 +743,28 @@ export class UserService {
           isAwaitingWorkCompletion: false,
         },
       );
+    }
+    // send email notification
+    const contractorEmail =  user.screenTracking.practiceManagement.email;
+    const contractorData = {
+      loanAmout : 10000, // TODO: Make loanAmount Dynamic
+      consumerFirstName : user.firstName,
+      consumerLastName : user.lastName,
+      consumerApplication : user.screenTracking.applicationReference,
+      salesmanOrContractorFullName : user.screenTracking.practiceManagement.contactName,
+      contractorFirstName : user.screenTracking.practiceManagement.contactName,
+      contractorBusinessName: user.screenTracking.practiceManagement.practiceName,
+    }
+    if (contractorEmail) {
+      await this.dashboardService.sendEmailFunction(contractorEmail, "approval-email-contractor", contractorData, requestId)
+    }
+    const salesmanEmail = user.screenTracking.practiceManagement.email; // TODO: Change to sales agent data
+    const salesmanData = {
+      ...contractorData,
+      salesAgentFirstName : user.screenTracking.practiceManagement.contactName,
+    }
+    if (salesmanEmail) {
+      await this.dashboardService.sendEmailFunction(contractorEmail, "approval-email-sale-agent", salesmanData, requestId)
     }
     return pm;
   }
@@ -769,6 +796,35 @@ export class UserService {
         isAwaitingWorkCompletion: false,
       },
     );
+
+    const contractorEmail =  user?.screenTracking?.practiceManagement?.email;
+    const borrowerEmail =  user?.screenTracking?.practiceManagement?.email;
+    const salesmanEmail =  user?.screenTracking?.practiceManagement?.email;
+    const data = {
+      loanAmout : 10000, // TODO: Make loanAmount Dynamic
+      consumerFirstName : user?.firstName,
+      consumerLastName : user?.lastName,
+      consumerApplication : user?.screenTracking?.applicationReference,
+      salesmanOrContractorFullName : user?.screenTracking?.practiceManagement?.contactName,
+      contractorFirstName : user?.screenTracking?.practiceManagement?.contactName,
+      contractorBusinessName: user?.screenTracking?.practiceManagement?.practiceName,
+      salesAgentFirstName: "",
+      salesAgentLastName: "",
+      reasons: "Not Provided"
+    }
+    if (contractorEmail) {
+      await this.dashboardService.sendEmailFunction(contractorEmail, "denied-email-contractor", data, requestId)
+    }
+    if (borrowerEmail) {
+      await this.dashboardService.sendEmailFunction(contractorEmail, "denied-email-borrower", data, requestId)
+    }
+    if (salesmanEmail) {
+      await this.dashboardService.sendEmailFunction(contractorEmail, "denied-email-sales-agent", data, requestId)
+    }
+    if (contractorEmail || borrowerEmail || salesmanEmail) {
+      await this.dashboardService.sendEmailFunction("support@tgucfinancial.com", "denied-email-tguc", data, requestId);
+      await this.dashboardService.sendEmailFunction("brandi@tgucfinancial.com", "denied-email-tguc", data, requestId);
+    }
     return sc;
   }
 }

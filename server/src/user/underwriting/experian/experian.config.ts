@@ -8,6 +8,13 @@ const experian = {
   exp_subscriber_code: '2222222',
 };
 
+experian.exp_url = 'https://uat-us-api.experian.com';
+experian.exp_username = 'uatschung@creditcorp.com.au';
+experian.exp_password = 'Bobandwilliam1';
+experian.exp_client_id = 'pPva1gGGhGzjKlP3DSc09up1xos5psRv';
+experian.exp_client_secret = '5HjyPT7skiPdj5bx';
+experian.exp_subscriber_code = '2938334';
+
 if (
   process.env.NODE_ENV == 'production' ||
   process.env.NODE_ENV == 'prod' ||
