@@ -452,6 +452,25 @@ export async function loginToPlain(publicToken: string) {
   return response;
 }
 
+export async function changeContractorLastScreen(
+  screenId: string,
+  lastScreen: string
+) {
+  let response: IResponse = { data: null, error: null };
+  try {
+    response = await getRequester().post(
+      `${baseUrl}/api/application/changeContractorLastScreen`,
+      {
+        screenId,
+        lastScreen,
+      }
+    );
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+}
+
 export async function changeUserLastScreen(userId: string, lastScreen: string) {
   let response: IResponse = { data: null, error: null };
   try {
@@ -494,16 +513,26 @@ export async function sendCompletedApplicationEmail(userId: string) {
   return response;
 }
 
-export async function updateBusinessData(screenTrackingId: string, body: any) {
+interface IUpdateBusinessData {
+  yearsInBusiness: string;
+  city: string;
+  email: string;
+  name: string;
+  phone: string;
+  state: string;
+  street: string;
+  tin: string;
+  website: string;
+  zip: string;
+  screenTrackingId: string;
+}
+
+export async function updateBusinessData(body: IUpdateBusinessData) {
   let response: IResponse = { data: null, error: null };
-  const data = {
-    ...body,
-    screenTrackingId,
-  };
   try {
     response = await getRequester().patch(
       `${baseUrl}/api/application/updateBusinessData`,
-      data
+      body
     );
   } catch (error) {
     response.error = error;
@@ -645,6 +674,27 @@ export async function fetchBorrowerDocumentsApi(userId: string) {
     response = await getRequester().get(
       `${baseUrl}/api/application/dashboard`,
       { params: { userId } }
+    );
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+}
+
+interface IInstntDecision {
+  formKey: string;
+  instntJwt: string;
+  transactionId: string;
+  decision: string;
+  screenTrackingId: string;
+}
+
+export async function postInstntDecisionApi(decision: IInstntDecision) {
+  let response: IResponse = { data: null, error: null };
+  try {
+    response = await getRequester().post(
+      `${baseUrl}/api/application/instnt`,
+      decision
     );
   } catch (error) {
     response.error = error;

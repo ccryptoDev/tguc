@@ -26,8 +26,8 @@ type IButtonsWrapper = {
   className?: string;
 };
 
-const Buttons = ({ children, className }: IButtonsWrapper) => {
+const ButtonsWrapper = ({ children, className }: IButtonsWrapper) => {
   return <Wrapper className={className}>{children}</Wrapper>;
 };
 
-export default Buttons;
+export default ButtonsWrapper;
