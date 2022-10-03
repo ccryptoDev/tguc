@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
 import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import { getUser } from "../../../../api/admin-dashboard/index";
@@ -10,27 +9,6 @@ import { routes } from "../../../../routes/Admin/routes.config";
 import { H4 as Heading } from "../../../atoms/Typography";
 import Table from "../../../atoms/Table/Details-horizontal";
 import Card from "../../../atoms/Cards/Large";
-
-const ReasonsCard = styled.div`
-  padding: 8px;
-  box-shadow: 0px 0.5px 1.75px rgba(0, 0, 0, 0.039),
-    0px 1.85px 6.25px rgba(0, 0, 0, 0.19);
-  border-radius: 6px;
-  background: #fff;
-  overflow: hidden;
-  h2 {
-    font-weight: medium;
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-  p {
-    border-bottom: 1px solid #efefef;
-    padding: 6px 2px;
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-`;
 
 const Styles = styled.div`
   .heading {
@@ -114,17 +92,6 @@ const Details = () => {
           </Card>
         ) : (
           ""
-        )}
-        {user && user?.declineReasons?.length > 0 && !loading && (
-          <div style={{ marginTop: "8px" }}>
-            <ReasonsCard>
-              <h2>Denied reasons</h2>
-              {user?.declineReasons[0]?.reasons &&
-                user?.declineReasons[0].reasons.map((reason: string) => (
-                  <p key={uuid()}>{reason}</p>
-                ))}
-            </ReasonsCard>
-          </div>
         )}
         {user && !user?.paymentManagements?.length && !loading ? (
           <Heading className="heading">This user has no loans yet</Heading>

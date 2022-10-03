@@ -23,25 +23,35 @@ export default ({
   street = "--",
   unitApt = "--",
   userReference = "--",
-  contractorReference = '--',
+  contractorReference = "--",
   practiceName = "--",
   financingStatus,
-}) => [
-  { label: "User Reference", value: userReference },
-  { label: "Name", value: `${firstName} ${lastName}` },
-  { label: "Email Address", value: email },
-  { label: "Phone Number", value: formatPhoneNumber(phones[0]) },
-  // eslint-disable-next-line
-  { label: "Date of Birth", value: formatDate(dateOfBirth) },
-  { label: "Address", value: `${street}` },
-  { label: "City", value: city },
-  { label: "State", value: state },
-  { label: "Social Security Number", value: ssnNumber },
-  { label: "Registration Date", value: formatDate(createdAt) },
-  { label: "Last Profile Updated Date", value: formatDate(updatedAt) },
-  { label: "Anticipated Financed Amount", value: requestedAmount },
-  { label: "Financing Reference Number", value: loanReference },
-  { label: "Contractor", value: contractorReference },
-  { label: "Contractor Business", value: practiceName },
-  { label: financingStatus, value: parsePaymentStatus(status) },
-];
+  isAdmin,
+}) =>
+  [
+    { label: "User Reference", value: userReference, id: "1" },
+    { label: "Name", value: `${firstName} ${lastName}`, id: "2" },
+    { label: "Email Address", value: email, id: "3" },
+    { label: "Phone Number", value: formatPhoneNumber(phones[0]), id: "4" },
+    { label: "Date of Birth", value: formatDate(dateOfBirth), id: "5" },
+    { label: "Address", value: `${street}`, id: "6" },
+    { label: "City", value: city, id: "7" },
+    { label: "State", value: state, id: "8" },
+    { label: "Social Security Number", value: ssnNumber, id: "9" },
+    { label: "Registration Date", value: formatDate(createdAt), id: "10" },
+    {
+      label: "Last Profile Updated Date",
+      value: formatDate(updatedAt),
+      id: "11",
+    },
+    { label: "Anticipated Financed Amount", value: requestedAmount, id: "12" },
+    { label: "Financing Reference Number", value: loanReference, id: "13" },
+    { label: "Contractor", value: contractorReference, id: "14" },
+    { label: "Contractor Business", value: practiceName, id: "15" },
+    { label: financingStatus, value: parsePaymentStatus(status), id: "16" },
+  ].filter((item) => {
+    if (isAdmin) {
+      return item;
+    }
+    return item.id !== "9";
+  });

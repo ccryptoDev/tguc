@@ -1,6 +1,8 @@
 import React from "react";
+import { getAdminRoles } from "../../../../../helpers";
 
-const Thead = () => {
+const Thead = ({ role }: any) => {
+  const adminRoles = getAdminRoles();
   return (
     <tr>
       <th>Application</th>
@@ -12,7 +14,7 @@ const Thead = () => {
       <th>Email Address</th>
       <th>Contractor</th>
       <th>Contractor Business</th>
-      <th>Action</th>
+      {role && role !== adminRoles.MerchantStaff ? <th> Action</th> : <></>}
     </tr>
   );
 };

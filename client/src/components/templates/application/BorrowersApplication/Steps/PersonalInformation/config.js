@@ -7,7 +7,7 @@ import { states } from "../../../select-options";
 export const initForm = ({
   firstName = "",
   lastName = "",
-  mobilePhone = "",
+  phone = "",
   dateOfBirth = "",
   ssnNumber = "",
   email = "",
@@ -15,7 +15,7 @@ export const initForm = ({
   return {
     firstName: { value: firstName, message: "", required: true },
     lastName: { value: lastName, message: "", required: true },
-    mobilePhone: { value: mobilePhone, message: "", required: true },
+    phone: { value: phone, message: "", required: true },
     dateOfBirth: { value: dateOfBirth, message: "", required: true },
     ssnNumber: { value: ssnNumber, message: "", required: true },
     email: { value: email, message: "", required: true },
@@ -45,14 +45,14 @@ export const renderFields = (form, edit = false) =>
       message: form.lastName.message,
     },
     {
-      value: form.mobilePhone.value,
-      name: "mobilePhone",
+      value: form.phone.value,
+      name: "phone",
       component: FormattedField,
       label: "Mobile Phone",
       mask: "_",
       format: "+1 (###) ### ####",
       placeholder: "+1 (###) ### ####",
-      message: form.mobilePhone.message,
+      message: form.phone.message,
     },
     {
       value: form.ssnNumber.value,

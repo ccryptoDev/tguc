@@ -20,7 +20,7 @@ import DenyApplicationForm from "../../Forms/DenyApplication/Deny";
 import { getAdminRoles } from "../../../../../helpers";
 
 const adminRoles = getAdminRoles();
-const Rows = ({ items = [], role }: any) => {
+const Rows = ({ items = [], role, cb }: any) => {
   const [itemsList, setItemsList] = useState<any>([]);
   useEffect(() => {
     setItemsList(items);
@@ -29,15 +29,8 @@ const Rows = ({ items = [], role }: any) => {
     return <></>;
   }
 
-  const callback = (screenTrackingId: string) => {
-    if (screenTrackingId) {
-      const index = findIndex(itemsList, { screenTrackingId });
-      if (index !== -1) {
-        const list = cloneDeep(itemsList);
-        list.splice(index, 1);
-        setItemsList(list);
-      }
-    }
+  const callback = () => {
+    cb();
   };
   return itemsList.map(
     ({
@@ -140,7 +133,7 @@ const Rows = ({ items = [], role }: any) => {
                       </TriggerButton>
                     }
                     modalContent={ApproveForm}
-                    state={{ data: { id: screenTrackingId } }}
+                    state={{ id: screenTrackingId }}
                     modalTitle="Application Approval"
                     cb={callback}
                   />
@@ -151,7 +144,7 @@ const Rows = ({ items = [], role }: any) => {
                       </TriggerButton>
                     }
                     modalContent={DenyApplicationForm}
-                    state={{ data: { id: screenTrackingId } }}
+                    state={{ id: screenTrackingId }}
                     modalTitle="Application Denial"
                     cb={callback}
                   />

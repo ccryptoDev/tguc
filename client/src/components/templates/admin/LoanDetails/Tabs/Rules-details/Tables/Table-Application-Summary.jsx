@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { AdminTableWrapper } from "../../../../../../atoms/Table/Table-paginated";
-import { formatCurrency } from "../../../../../../../utils/formats";
 
 const TableWrapper = styled(AdminTableWrapper)`
   table tbody tr td:first-child {
@@ -9,41 +8,32 @@ const TableWrapper = styled(AdminTableWrapper)`
   }
 `;
 
-const ApplicationSummaryTable = ({ report }) => {
-  const score = report?.user?.creditScore;
+const ApplicationSummaryTable = ({ message, passed, userValue }) => {
   return (
     <TableWrapper>
       <table>
         <tbody>
           <tr>
             <td>
-              <b>Score</b>
+              <b>Message</b>
             </td>
-            <td>{score}</td>
+            <td>{message}</td>
           </tr>
           <tr>
             <td>
-              <b>DTI</b>
+              <b>Passed</b>
             </td>
-            <td>15.5%</td>
+            <td>
+              <div className={passed ? "success" : "danger"}>
+                {passed ? "yes" : "no"}
+              </div>
+            </td>
           </tr>
           <tr>
             <td>
-              <b>PTI</b>
+              <b>User Value</b>
             </td>
-            <td>4.74%</td>
-          </tr>
-          <tr>
-            <td>
-              <b>Total GMI</b>
-            </td>
-            <td>{formatCurrency(7500)}</td>
-          </tr>
-          <tr>
-            <td>
-              <b>Disposable Income</b>
-            </td>
-            <td>{formatCurrency(5615.14)}</td>
+            <td>{userValue}</td>
           </tr>
         </tbody>
       </table>

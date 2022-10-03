@@ -78,9 +78,6 @@ const FormComponent = ({
         setLoading(false);
         moveToNextStep();
       });
-      /*       await mockRequest();
-      setLoading(false);
-      moveToNextStep(); */
     } else {
       setForm(validatedForm);
     }

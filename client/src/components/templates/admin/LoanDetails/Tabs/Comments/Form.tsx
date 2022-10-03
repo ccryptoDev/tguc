@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Table from "../../../../../atoms/Table/Details-vertical";
 import TextField from "../../../../../molecules/Form/Fields/TextField";
 import TextArea from "../../../../../molecules/Form/Fields/TextArea";
-import Buttons from "../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../atoms/Buttons/Button";
 import { postCommentApi } from "../../../../../../api/admin-dashboard";
 import { initForm } from "./config";

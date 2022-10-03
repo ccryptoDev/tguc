@@ -6,6 +6,7 @@ import { converter } from "../Rules-details/parsers";
 import { getAdminRoles } from "../../../../../../helpers/index";
 import { useUserData } from "../../../../../../contexts/admin";
 import SummaryTable from "./Tables/Table-Application-Summary";
+import ContractorSummaryTable from "./Tables/Table-Contractor-Application-Summary";
 
 const Wrapper = styled.div`
   font-family: "Poppins";
@@ -87,63 +88,52 @@ const renderFields = (obj, property) => {
   );
 };
 
+const renderTable = (midDesk) => {
+  const render = (obj) => {
+    return Object.keys(obj).map((property) => {
+      if (obj[property]) {
+        if (Array.isArray(obj[property]) && obj[property].length) {
+          return renderArray(obj, property, render);
+        }
+        if (typeof obj[property] === "object") {
+          return renderObjects(obj, property, render);
+        }
+        return renderFields(obj, property);
+      }
+      return <></>;
+    });
+  };
+  return render(midDesk);
+};
+
 const CreditReport = ({ state }) => {
-  const { user } = useUserData();
   const midDesk = state?.midDesk;
-
-  // DEFINE ADMIN ROLE
-  const role = user?.user?.data?.role?.roleName;
-  const adminRoles = getAdminRoles();
-
-  const renderMidDesk = () => {
-    const render = (obj) => {
-      return Object.keys(obj).map((property) => {
-        if (obj[property]) {
-          if (Array.isArray(obj[property]) && obj[property].length) {
-            return renderArray(obj, property, render);
-          }
-          if (typeof obj[property] === "object") {
-            return renderObjects(obj, property, render);
-          }
-          return renderFields(obj, property);
-        }
-        return <></>;
-      });
-    };
-    return render(midDesk);
-  };
   const report = state?.creditReport;
-  const renderRules = () => {
-    const render = (obj) => {
-      return Object.keys(obj).map((property) => {
-        if (obj[property]) {
-          if (Array.isArray(obj[property]) && obj[property].length) {
-            return renderArray(obj, property, render);
-          }
-          if (typeof obj[property] === "object") {
-            return renderObjects(obj, property, render);
-          }
-          return renderFields(obj, property);
-        }
-        return <></>;
-      });
-    };
-    return render(report);
-  };
+  const instnt = state?.instnt;
+  const practice = state?.practiceManagement;
 
   return (
     <Wrapper>
       <Heading text="Application Summary" />
-      <SummaryTable />
+
       {state?.screenTracking.isContractor ? (
-        <Heading text="MidDesk Business Report" />
+        <>
+          <ContractorSummaryTable report={report} practice={practice} />
+          <Heading text="Middesk Report" />
+          {renderTable(midDesk)}
+        </>
       ) : (
-        ""
+        <SummaryTable report={report} />
       )}
-      <Heading text="Middesk Report" />
-      {renderMidDesk()}
+
       <Heading text="Experian US Consumer Credit Report" />
-      {renderRules()}
+      {renderTable(report)}
+      {instnt && (
+        <>
+          <Heading text="Instnt" />
+          {renderTable(instnt)}
+        </>
+      )}
     </Wrapper>
   );
 };

@@ -70,14 +70,14 @@ const ChooseProviderForm = ({
   const [loading, setLoading] = useState(false);
   const { screenTrackingId, user } = useUserData();
   const userName = user?.data?.firstName;
-  console.log(user);
+
   const fetchOffers = async () => {
     setLoading(true);
-    const result = await fetchBorrowerOfferApi({
-      screenTrackingId,
-      amount: +user?.data?.paymentManagement?.requestedAmount,
-    });
-    setOffers(result);
+    // const result = await fetchBorrowerOfferApi({
+    //   screenTrackingId,
+    //   amount: +user?.data?.paymentManagement?.requestedAmount,
+    // });
+    setOffers(mockOffers);
     setLoading(false);
   };
 
@@ -93,7 +93,7 @@ const ChooseProviderForm = ({
       skipAutoPay: false,
       screenTrackingId,
     };
-    const result = await selectOfferApi(payload);
+    // const result = await selectOfferApi(payload);
 
     setLoading(false);
     moveToNextStep();
@@ -101,10 +101,10 @@ const ChooseProviderForm = ({
 
   const calculateOffers = async (amount: string) => {
     setLoading(true);
-    const result = await fetchBorrowerOfferApi({
-      screenTrackingId,
-      amount: +amount,
-    });
+    // const result = await fetchBorrowerOfferApi({
+    //   screenTrackingId,
+    //   amount: +amount,
+    // });
     setLoading(false);
   };
 

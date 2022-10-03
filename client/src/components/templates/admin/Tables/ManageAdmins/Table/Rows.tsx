@@ -26,6 +26,7 @@ const Rows = ({ items = [], cb }: any) => {
       id = "",
       phone = "--",
       userName = "--",
+      role = "--",
     }) => {
       return (
         <tr key={id}>
@@ -66,7 +67,7 @@ const Rows = ({ items = [], cb }: any) => {
                   userName,
                   phoneNumber: phone,
                   id,
-                  role: getAdminRoles().SuperAdmin,
+                  role,
                 },
               }}
               modalTitle="Update Admin"

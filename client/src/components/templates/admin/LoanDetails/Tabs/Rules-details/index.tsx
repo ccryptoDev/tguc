@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Heading from "../../../../../molecules/Typography/admin/DetailsHeading";
-import Rule, { IRuleProps } from "./Rule";
-import Modal from "../../../../../organisms/Modal/Regular/ModalAndTriggerButton";
-import TriggerButton from "../../../../../atoms/Buttons/TriggerModal/Trigger-button-edit";
-import EditIcon from "../../../../../atoms/Icons/SvgIcons/Edit";
-import Form from "./ModalForm";
+import { IRuleProps } from "./Rule";
+import SummaryTable from "./Tables/Table-Application-Summary";
+import { H5, Hr } from "../../../../../atoms/Typography";
 
 const Wrapper = styled.div`
   font-family: "OpenSans";
@@ -20,14 +18,16 @@ const Wrapper = styled.div`
   .heading-wrapper {
     display: flex;
   }
+  h5 {
+    margin-top: 2rem;
+  }
 `;
 
 const RulesDetails = ({ state }: { state: any }) => {
   const [rules, setRules] = useState<any[]>([]);
 
   useEffect(() => {
-    // const details = state?.screenTracking?.rulesDetails.ruleData;
-    const details = state?.rulesDetails.ruleData;
+    const details = state?.rulesDetails?.ruleData;
 
     if (details) {
       // PARSE RULES TO ARRAY
@@ -37,32 +37,25 @@ const RulesDetails = ({ state }: { state: any }) => {
       });
       setRules(rulesArray);
     }
-  }, [state?.rulesDetails.ruleData]);
+  }, [state?.rulesDetails?.ruleData]);
 
   return (
     <Wrapper>
       <Heading text="Rules" />
-      {/* <Modal
-        button={
-          <TriggerButton className="edit-btn" style={{ width: "3rem" }}>
-            <EditIcon />
-          </TriggerButton>
-        }
-        modalContent={Form}
-      /> */}
       <div>
-        {rules.length
-          ? rules.map((item: IRuleProps) => {
-              return (
-                <div key={item.ruleId} className="rule-wrapper">
-                  <div className="heading-wrapper">
-                    <div className="heading">Rule: {item.ruleId}</div>
-                  </div>
-                  <Rule {...item} />
-                </div>
-              );
-            })
-          : ""}
+        {rules.length ? (
+          rules.map((item: IRuleProps) => {
+            return (
+              <>
+                <H5>Rule: {item?.description}</H5>
+                <Hr />
+                <SummaryTable {...item} />
+              </>
+            );
+          })
+        ) : (
+          <b>No rules available at the moment.</b>
+        )}
       </div>
     </Wrapper>
   );

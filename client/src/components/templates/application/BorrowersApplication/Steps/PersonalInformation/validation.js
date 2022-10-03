@@ -29,11 +29,11 @@ export const validateForm = (form) => {
           isValid = false;
           newForm.dateOfBirth.message = message;
         }
-      } else if (key === "mobilePhone") {
+      } else if (key === "phone") {
         const message = validatePhone(newForm[key].value);
         if (message) {
           isValid = false;
-          newForm.mobilePhone.message = message;
+          newForm.phone.message = message;
         }
       } else if (key === "email") {
         const emailIsValid = validateEmail(newForm.email.value);
@@ -58,12 +58,12 @@ export const validateForm = (form) => {
 
 export const validateDriversLicense = (files) => {
   if (!files.frontSide) {
-    return true;
+    return false;
   }
 
   if (!files.backSide) {
-    return true;
+    return false;
   }
 
-  return false;
+  return true;
 };
