@@ -28,6 +28,7 @@ import { SendGridService } from '../email/services/sendgrid.service';
 import { NunjucksService } from '../html-parser/services/nunjucks.service';
 import { ConfigService } from '@nestjs/config';
 import { TwilioService } from '../sms/services/twilio.service';
+import { InstntModule } from '../user/underwriting/instnt/instnt.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TwilioService } from '../sms/services/twilio.service';
     ]),
     CountersModule,
     LoggerModule,
+    forwardRef(() => InstntModule),
     forwardRef(() => LoansModule),
     forwardRef(() => UserModule),
     FileStorageModule,
@@ -74,4 +76,4 @@ import { TwilioService } from '../sms/services/twilio.service';
     PracticeManagementService,
   ],
 })
-export class AdminModule {}
+export class AdminModule { }

@@ -165,6 +165,13 @@ export class AdminService {
         : (context.roleName === 'Merchant Staff'
           ? 'emails/agent-welcome.html'
           : 'emails/admin-welcome.html');
+
+    const subject =
+      context.roleName === 'Merchant'
+      ? 'Welcome as a qualified TGUC Contractor!'
+        : (context.roleName === 'Merchant Staff'
+          ? 'TGUC Financial Agent Invite'
+          : 'TGUC Financial Application');
     const html: string = await this.nunjucksService.htmlToString(
       template,
       context,
@@ -174,7 +181,7 @@ export class AdminService {
     await this.sendGridService.sendEmail(
       `${fromName} <${fromEmail}>`,
       context.email,
-      context.roleName === 'Merchant Staff' ? 'TGUC Financial Agent Invite' : 'TGUC Financial Application',
+      subject,
       html,
       requestId,
     );

@@ -53,8 +53,8 @@ import { Roles } from '../../../authentication/roles/roles.decorator';
 import { Role } from '../../../authentication/roles/role.enum';
 import { DenyDto } from '../validation/deny.dto';
 import { ConfigService } from '@nestjs/config';
-import { PracticeManagement } from "../../../admin/dashboard/practice-management/entities/practice-management.entity";
-
+import { PracticeManagement } from '../../../admin/dashboard/practice-management/entities/practice-management.entity';
+import { ExperianService } from '../../../user/underwriting/experian/services/experian.service';
 @Controller('/api/application')
 export class ApplicationController {
   constructor(
@@ -71,9 +71,10 @@ export class ApplicationController {
     private readonly sendGridService: SendGridService,
     private readonly nunjucksService: NunjucksService,
     private readonly configService: ConfigService,
+    private readonly experianService: ExperianService,
     @InjectRepository(User)
     private readonly userModel: Repository<User>,
-  ) { }
+  ) {}
 
   @ApiCreatedResponse({ type: ApplyResponse })
   @ApiBadRequestResponse({ type: BadRequestResponse })
@@ -146,46 +147,17 @@ export class ApplicationController {
           newScreenTracking,
         );
         let screenTracking: ScreenTracking =
-          this.screenTrackingModel.create(newScreenTracking);
+          await this.screenTrackingModel.create(newScreenTracking);
         screenTracking = await this.screenTrackingModel.save(screenTracking);
         user.screenTracking = screenTracking.id;
         await this.userModel.save(user);
-        if (applyDto.firstName.toLocaleUpperCase() == 'JONATHAN') {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'pending',
-            '1',
-          );
-        } else if (applyDto.firstName.toLocaleUpperCase() == 'STARR') {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'pending',
-            '1',
-          );
-        } else {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'pending',
-            '1',
-          );
-          const context = {
-            firstName: applyDto.firstName,
-            baseUrl: Config().baseUrl,
-          };
-          const html: string = await this.nunjucksService.htmlToString(
-            'emails/denial.html',
-            context,
-          );
-          const fromName = this.configService.get<string>('sendGridFromName');
-          const fromEmail = this.configService.get<string>('sendGridFromEmail');
-          /*           await this.sendGridService.sendEmail(
-            `${fromName} <${fromEmail}>`,
-            user.email,
-            'TGUC Financial Application',
-            html,
-            request.id,
-          ); */
-        }
+
+        await this.applicationService.underwriteContractor(
+          screenTracking,
+          user,
+          request.id,
+        );
+
         this.logger.log(
           'Response status 201',
           `${ApplicationController.name}#apply`,
@@ -234,7 +206,10 @@ export class ApplicationController {
         );
       }
       if (applyDto.referredBy) {
-        const referrer = await this.adminService.getAdminById(applyDto.referredBy, request.id);
+        const referrer = await this.adminService.getAdminById(
+          applyDto.referredBy,
+          request.id,
+        );
         const pm = referrer?.practiceManagement as PracticeManagement;
         applyDto.practiceManagement = pm?.id;
       }
@@ -278,26 +253,37 @@ export class ApplicationController {
           this.screenTrackingModel.create(newScreenTracking);
         screenTracking = await this.screenTrackingModel.save(screenTracking);
         user.screenTracking = screenTracking.id;
-        await this.userModel.save(user);
-        if (applyDto.firstName.toLocaleUpperCase() == 'JONATHAN') {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'approved',
-            '1',
-          );
-        } else if (applyDto.firstName.toLocaleUpperCase() == 'STARR') {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'pending',
-            '1',
-          );
-        } else {
-          await this.paymentManagementService.createPaymentManagement(
-            screenTracking,
-            'denied',
-            '1',
-          );
-        }
+        const createdUser = await this.userModel.save(user);
+
+
+        // const paymentManagement =
+        //   await this.paymentManagementService.createPaymentManagement(
+        //     screenTracking,
+        //     'approved',
+        //     '1',
+        //   );
+        // const html: string = await this.nunjucksService.htmlToString(
+        //   'emails/application-approved-borrower.html',
+        //   {
+        //     name: `${applyDto.firstName} ${applyDto.lastName}`,
+        //     amount: paymentManagement?.principalAmount,
+        //     baseUrl: Config().baseUrl,
+        //   },
+        // );
+        // const applicationNumber = createdUser?.userReference.replace(
+        //   'USR_',
+        //   '',
+        // );
+        // const fromName = this.configService.get<string>('sendGridFromName');
+        // const fromEmail = this.configService.get<string>('sendGridFromEmail');
+        // await this.sendGridService.sendEmail(
+        //   `${fromName} <${fromEmail}>`,
+        //   createdUser?.email,
+        //   `Congratulations! TGUC credit application #${applicationNumber} is approved!`,
+        //   html,
+        //   request.id,
+        // );
+
         this.logger.log(
           'Response status 201',
           `${ApplicationController.name}#apply`,
@@ -363,7 +349,7 @@ export class ApplicationController {
         updatedApplyDto,
         request.id,
       );
-      const application = await this.screenTrackingModel.findOne({
+      const application: any = await this.screenTrackingModel.findOne({
         where: {
           user: updatedApplyDto.userId,
         },
@@ -373,6 +359,11 @@ export class ApplicationController {
       await this.screenTrackingModel.update(application.id, {
         lastScreen: 'connect-bank',
       });
+      await this.applicationService.underwriteBorrower(
+        application,
+        application.user,
+        request.id,
+      );
       return user;
     } catch (error) {
       this.logger.error(
@@ -619,6 +610,30 @@ export class ApplicationController {
       throw error;
     }
   }
+
+  @ApiCreatedResponse({ type: ApplyResponse })
+  @ApiBadRequestResponse({ type: BadRequestResponse })
+  @ApiInternalServerErrorResponse({ type: ErrorResponse })
+  @Post('changeContractorLastScreen')
+  async changeContractorLastScreen(
+    @Body() application: any,
+    @Req() request: Request,
+  ) {
+    try {
+      await this.screenTrackingModel.update(application.screenId, {
+        lastScreen: application.lastScreen,
+      });
+    } catch (error) {
+      this.logger.error(
+        'Error:',
+        `${ApplicationController.name}#changeUserLastScreen`,
+        request.id,
+        error,
+      );
+      throw error;
+    }
+  }
+
   @ApiCreatedResponse({ type: ApplyResponse })
   @ApiBadRequestResponse({ type: BadRequestResponse })
   @ApiInternalServerErrorResponse({ type: ErrorResponse })
@@ -743,14 +758,15 @@ export class ApplicationController {
   @UseGuards(JwtAuthGuard)
   @Patch('updateBusinessData')
   @UsePipes(new ValidationPipe())
-  async updateBusinessData(
-    @Body() body: any,
-    @Req() request: Request,
-  ) {
-    const screenTrackingId = body.screenTrackingId || request.user.screenTracking;
+  async updateBusinessData(@Body() body: any, @Req() request: Request) {
+    const screenTrackingId =
+      body.screenTrackingId || request.user.screenTracking;
     try {
-      const response =
-        await this.applicationService.updateBusinessData(screenTrackingId, body, request.id);
+      const response = await this.applicationService.updateBusinessData(
+        screenTrackingId,
+        body,
+        request.id,
+      );
       this.logger.log(
         'Response status 200',
         `${ApplicationController.name}#updateBusinessData`,
@@ -783,7 +799,10 @@ export class ApplicationController {
   ) {
     try {
       const response =
-        await this.applicationService.getPracticeManagementByScreenTrackingId(screenTrackingId, request.id);
+        await this.applicationService.getPracticeManagementByScreenTrackingId(
+          screenTrackingId,
+          request.id,
+        );
       this.logger.log(
         'Response status 200',
         `${ApplicationController.name}#getPracticeManagementByScreenTrackingId`,

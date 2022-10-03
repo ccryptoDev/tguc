@@ -436,7 +436,7 @@ export class AdminDashboardController {
         await this.adminDashboardService.updateApplicationState(
           contractorEmail,
           request.id,
-          status
+          status,
         );
       this.logger.log(
         'Response status 200',
@@ -656,9 +656,13 @@ export class AdminDashboardController {
     @Req() request: Request & { user: AdminJwtPayload },
   ) {
     try {
+      const practiceManagement = await this.PracticeManagementModel.findOne({
+        id: request?.user?.practiceManagement
+      });
       const context = {
         link: `https://tguc.alchemylms.com/application/apply-borrower/?ref=${request?.user?.id}`,
-        firstName: 'Temeka',
+        contractorBusinessName: practiceManagement?.practiceName,
+        baseUrl: Config().baseUrl,
       };
       const html: string = await this.nunjucksService.htmlToString(
         'emails/application-link.html',

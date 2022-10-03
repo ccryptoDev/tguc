@@ -15,6 +15,7 @@ enum AdminRoles {
   MANAGER_LA = 'Manager',
   SUPER_ADMIN = 'Super Admin',
   USER_SERVICING = 'Merchant Staff',
+  CONTRACTOR = 'Merchant'
 }
 
 export class UpdateAdminDto {
@@ -38,7 +39,7 @@ export class UpdateAdminDto {
   @IsOptional()
   @IsNotEmpty()
   @IsEnum(AdminRoles)
-  role: 'Manager' | 'Super Admin' | 'Merchant Staff';
+  role: 'Manager' | 'Super Admin' | 'Merchant Staff' | 'Merchant';
 
   @ValidateIf((o) => o.role !== 'Super Admin')
   @IsNotEmpty()
@@ -46,5 +47,6 @@ export class UpdateAdminDto {
   practiceManagement: string;
 
   @IsString()
+  @IsOptional()
   password?: string;
 }

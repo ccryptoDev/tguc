@@ -12,6 +12,7 @@ import { TwilioService } from '../../../../sms/services/twilio.service';
 import { NunjucksService } from '../../../../html-parser/services/nunjucks.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import Config from "../../../../app.config";
 
 @Injectable()
 export class ApplicationLinkService {
@@ -80,7 +81,8 @@ export class ApplicationLinkService {
         'emails/application-link.html',
         {
           link: applicationLinkUrl,
-          firstName,
+          contractorBusinessName: practice?.practiceName,
+          baseUrl: Config().baseUrl,
         },
       );
       const from = this.configService.get<string>('sendersEmail');

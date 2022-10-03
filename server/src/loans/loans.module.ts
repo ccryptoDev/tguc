@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { UserModule } from '../user/user.module';
 import { ApplicationService } from './application/services/application.service';
-import { ApplicationCronService } from './application/services/application-cron.service'
+import { ApplicationCronService } from './application/services/application-cron.service';
 import { ApplicationController } from './application/controllers/application.controller';
 import { PaymentManagementCronService } from './payments/payment-management/payment-management-cron.service';
 import { LoanSettingsService } from './loan-settings/services/loan-settings.service';
@@ -35,6 +35,8 @@ import { HtmlParserModule } from '../html-parser/html-parser.module';
 import { CountersModule } from '../counters/counters.module';
 import { AdminModule } from '../admin/admin.module';
 import { SmsModule } from '../sms/sms.module';
+import { ExperianService } from '../user/underwriting/experian/services/experian.service';
+import { ExperianHistory } from '../user/underwriting/experian/entities/experian-history.entity';
 import loanPaymentProConfig from './payments/loanpaymentpro/loanpaymentpro.config';
 import linkConfig from './application/link/link.config';
 
@@ -49,6 +51,7 @@ import linkConfig from './application/link/link.config';
       LoanPaymentProCardToken,
       Agreement,
       LoanInterestRate,
+      ExperianHistory,
     ]),
     ConfigModule.forRoot({
       load: [loanPaymentProConfig, linkConfig],
@@ -75,6 +78,7 @@ import linkConfig from './application/link/link.config';
     LoanpaymentproService,
     ApplicationLinkService,
     AppService,
+    ExperianService,
   ],
   controllers: [
     ApplicationController,

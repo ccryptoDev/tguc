@@ -12,6 +12,9 @@ import { UserActivity } from './activity/entities/activity.entity';
 import { TransUnion } from './underwriting/transunion/entities/transunion.entity';
 import { TransunionService } from './underwriting/transunion/services/transunion.service';
 import { TransunionController } from './underwriting/transunion/controllers/transunion.controller';
+import { MiddeskReport } from './underwriting/middesk/middesk.entity';
+import { MiddeskService } from './underwriting/middesk/middesk.service';
+import { MiddeskController } from './underwriting/middesk/middesk.controller';
 import { ProductService } from './underwriting/product/services/product.service';
 import { ConsentService } from './consent/services/consent.service';
 import { ConsentController } from './consent/controllers/consent.controller';
@@ -47,15 +50,16 @@ import { AccountsService } from './accounts/services/account.service';
 import { AccountsController } from './accounts/controllers/account.controller';
 import galileoConfig from './cards/galileo.config';
 import transunionConfig from './underwriting/transunion/transunion.config';
+import middeskConfig from './underwriting/middesk/middesk.config';
 import productConfig from './underwriting/product/product.config';
 import flinksConfig from './accounts/flinks.config';
+import experianConfig from './underwriting/experian/experian.config';
 import { PlaidService } from './underwriting/plaid/plaid.service';
 import { Plaid } from './underwriting/plaid/plaid.entity';
 import { PlaidController } from './underwriting/plaid/plaid.controller';
 import { EmailModule } from '../email/email.module';
 import { SendGridService } from '../email/services/sendgrid.service';
 import { VerticalsModule } from './verticals/verticals.module';
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -73,9 +77,17 @@ import { VerticalsModule } from './verticals/verticals.module';
       Transactions,
       Account,
       Plaid,
+      MiddeskReport,
     ]),
     ConfigModule.forRoot({
-      load: [galileoConfig, transunionConfig, productConfig, flinksConfig],
+      load: [
+        galileoConfig,
+        transunionConfig,
+        productConfig,
+        flinksConfig,
+        middeskConfig,
+        experianConfig,
+      ],
     }),
     LoggerModule,
     forwardRef(() => AuthenticationModule),
@@ -104,6 +116,7 @@ import { VerticalsModule } from './verticals/verticals.module';
     AccountsService,
     SendGridService,
     PlaidService,
+    MiddeskService,
   ],
   controllers: [
     TransunionController,
@@ -116,6 +129,7 @@ import { VerticalsModule } from './verticals/verticals.module';
     DocumentsController,
     AccountsController,
     PlaidController,
+    MiddeskController,
   ],
   exports: [
     TypeOrmModule,
@@ -131,6 +145,7 @@ import { VerticalsModule } from './verticals/verticals.module';
     OffersService,
     SendGridService,
     PlaidService,
+    MiddeskService,
   ],
 })
 export class UserModule {}

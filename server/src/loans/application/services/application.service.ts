@@ -28,6 +28,9 @@ import { AppService } from '../../../app.service';
 import { SendGridService } from '../../../email/services/sendgrid.service';
 import { NunjucksService } from '../../../html-parser/services/nunjucks.service';
 import { ConfigService } from '@nestjs/config';
+import { MiddeskService } from '../../../user/underwriting/middesk/middesk.service';
+import { ExperianService } from '../../../user/underwriting/experian/services/experian.service';
+import { ProductService } from '../../../user/underwriting/product/services/product.service';
 
 @Injectable()
 export class ApplicationService {
@@ -54,7 +57,10 @@ export class ApplicationService {
     private readonly mailService: SendGridService,
     private readonly nunjucksService: NunjucksService,
     private readonly configService: ConfigService,
-  ) { }
+    private readonly middeskService: MiddeskService,
+    private readonly experianService: ExperianService,
+    private readonly productService: ProductService,
+  ) {}
 
   async createLoan(
     screenTrackingId: string,
@@ -620,18 +626,22 @@ export class ApplicationService {
     }
   }
 
-  async updateContractorApplicationLastStep(screenTrackingId: string, lastLevel: string, requestId: string) {
+  async updateContractorApplicationLastStep(
+    screenTrackingId: string,
+    lastLevel: string,
+    requestId: string,
+  ) {
     let obj;
     switch (lastLevel.length > 0) {
       case true:
         obj = {
-          lastLevel: lastLevel
-        }
+          lastLevel: lastLevel,
+        };
         break;
       default:
         obj = {
-          lastLevel: "apply"
-        }
+          lastLevel: 'apply',
+        };
         break;
     }
     const screenTracking = await this.screenTrackingModel.update(
@@ -655,7 +665,111 @@ export class ApplicationService {
     return screenTracking;
   }
 
-  async updateBusinessData(screenTrackingId: string, data: any, requestId: string){
+  async underwriteContractor(
+    screenTracking: ScreenTracking,
+    user: User,
+    requestId: string,
+  ) {
+    const creditReport = await this.experianService.creditReportInquiry(
+      screenTracking,
+      user,
+      requestId,
+    );
+
+    const stage1Rules = await this.productService.getContractorStage1Rules(
+      user,
+      screenTracking,
+      creditReport,
+      requestId,
+    );
+    const rulesDetails = {
+      approvedRuleMsg: [...stage1Rules.approvedRuleMsg],
+      declinedRuleMsg: [...stage1Rules.declinedRuleMsg],
+      ruleData: {
+        ...stage1Rules.ruleData,
+      },
+      loanApproved: stage1Rules.loanApproved,
+    };
+
+    const screenUpdateObj: any = {
+      creditScore: creditReport.score || 0,
+      lastScreen: rulesDetails.loanApproved
+        ? 'address-information'
+        : 'declined',
+      rulesDetails: rulesDetails,
+    };
+
+    await this.screenTrackingModel.update(
+      { id: screenTracking.id },
+      screenUpdateObj,
+    );
+
+    await this.paymentManagementService.createPaymentManagement(
+      screenTracking,
+      rulesDetails.loanApproved ? 'pending' : 'denied',
+      requestId,
+    );
+    return rulesDetails;
+  }
+
+  async underwriteBorrower(
+    screenTracking: ScreenTracking,
+    user: User,
+    requestId: string,
+  ) {
+    const creditReport = await this.experianService.creditReportInquiry(
+      screenTracking,
+      user,
+      requestId,
+    );
+
+    const stage1Rules = await this.productService.getBorrowerStage1Rules(
+      user,
+      screenTracking,
+      creditReport,
+      requestId,
+    );
+    const rulesDetails = {
+      approvedRuleMsg: [...stage1Rules.approvedRuleMsg],
+      declinedRuleMsg: [...stage1Rules.declinedRuleMsg],
+      ruleData: {
+        ...stage1Rules.ruleData,
+      },
+      loanApproved: stage1Rules.loanApproved,
+      isPending: stage1Rules.isPending,
+    };
+    let applicationStatus: 'approved' | 'pending' | 'denied' | 'qualified' = "approved";
+    let screenUpdateObj: any = {
+      creditScore: creditReport.score || 0,
+      lastLevel: rulesDetails.loanApproved && !rulesDetails.isPending ? 'apply' : 'denied', // TODO: If it's denied we need to update the laststep since seems not been updated
+      rulesDetails: rulesDetails,
+    };
+    if (rulesDetails.isPending) {
+      screenUpdateObj.lastLevel = 'apply';
+      applicationStatus = 'pending';
+    }
+    try {
+      await this.screenTrackingModel.update(
+        { id: screenTracking.id },
+        screenUpdateObj,
+      );
+      } catch (e) {
+      console.log("Error updating object", e);
+    }
+
+    await this.paymentManagementService.createPaymentManagement(
+      screenTracking,
+      rulesDetails.loanApproved ? applicationStatus : 'denied',
+      requestId,
+    );
+    return rulesDetails;
+  }
+
+  async updateBusinessData(
+    screenTrackingId: string,
+    data: any,
+    requestId: string,
+  ) {
     const screenTracking: any = await this.screenTrackingModel.findOne({
       where: {
         id: screenTrackingId,
@@ -676,27 +790,75 @@ export class ApplicationService {
         ),
       );
     }
-    let obj = {
-      stateCode: data.state.value || "",
-      address: data.street.value || "",
-      city: data.city.value || "",
-      email: data.email.value || "",
-      phone: data.phone.value || "",
-      url: data.website.value || "",
-      practiceName : data.name.value || "",
-      zip: data.zip.value || "",
-      yearsInBusiness: data.YearsInBusiness.value || "",
-      tin: data.tin.value || "",
-      contactName: screenTracking.user.firstName + " " + screenTracking.user.lastName,
+    const obj = {
+      stateCode: data.state || '',
+      address: data.street || '',
+      city: data.city || '',
+      email: data.email || '',
+      phone: data.phone || '',
+      url: data.website || '',
+      practiceName: data.name || '',
+      zip: data.zip || '',
+      yearsInBusiness: data.yearsInBusiness || '',
+      tin: data.tin || '',
+      contactName:
+        screenTracking.user.firstName + ' ' + screenTracking.user.lastName,
     };
-    const updatePracticeManagement = await this.practiceManagementModel.update(
+    await this.practiceManagementModel.update(
       { id: screenTracking?.practiceManagement?.id },
       obj,
     );
-    return updatePracticeManagement;
+    const updatedPracticeManagement =
+      await this.practiceManagementModel.findOne({
+        id: screenTracking?.practiceManagement?.id,
+      });
+    const middeskReport = await this.middeskService.getReport(
+      updatedPracticeManagement,
+    );
+    await this.middeskService.create({
+      screenTrackingId,
+      report: middeskReport,
+    });
+    const midDesk = await this.middeskService.findByLoanId(screenTrackingId);
+    const stage2Results = await this.productService.getContractorStage2Rules(
+      screenTracking,
+      updatedPracticeManagement,
+      midDesk,
+      requestId,
+    );
+
+    const rulesDetails = {
+      approvedRuleMsg: [
+        screenTracking.rulesDetails.approvedRuleMsg,
+        ...stage2Results.approvedRuleMsg,
+      ],
+      declinedRuleMsg: [
+        screenTracking.rulesDetails.declinedRuleMsg,
+        ...stage2Results.declinedRuleMsg,
+      ],
+      ruleData: {
+        ...screenTracking.rulesDetails.ruleData,
+        ...stage2Results.ruleData,
+      },
+      // ...stage1Rules.ruleApprovals,
+      // ...stage2Rules.ruleApprovals,
+      loanApproved: stage2Results.loanApproved,
+    };
+
+    await this.screenTrackingModel.update(
+      { id: screenTrackingId },
+      {
+        lastScreen: rulesDetails.loanApproved ? 'document-upload' : 'declined',
+        rulesDetails: rulesDetails,
+      },
+    );
+    return updatedPracticeManagement;
   }
 
-  async getPracticeManagementByScreenTrackingId(screenTrackingId: string, requestId: string) {
+  async getPracticeManagementByScreenTrackingId(
+    screenTrackingId: string,
+    requestId: string,
+  ) {
     const screenTracking: any = await this.screenTrackingModel.findOne({
       where: {
         id: screenTrackingId,
@@ -719,6 +881,5 @@ export class ApplicationService {
     }
 
     return screenTracking.practiceManagement;
-
   }
 }

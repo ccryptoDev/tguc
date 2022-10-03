@@ -21,6 +21,7 @@ import { HtmlParserModule } from './html-parser/html-parser.module';
 import { FileStorageModule } from './file-storage/file-storage.module';
 import appConfig from './app.config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { InstntModule } from './user/underwriting/instnt/instnt.module';
 
 const {
   databasePort,
@@ -61,6 +62,7 @@ const {
     HtmlParserModule,
     FileStorageModule,
     PlaidModule,
+    InstntModule,
   ],
   providers: [AppService],
 })

@@ -241,7 +241,7 @@ export class PaymentManagementService {
       paymentObj,
     );
     const paymentManagement = this.paymentManagementModel.create(paymentObj);
-    await this.paymentManagementModel.save(paymentManagement);
+    return await this.paymentManagementModel.save(paymentManagement);
   }
 
   async setInRepaymentNonPrimeStatus(userId: string, requestId: string) {

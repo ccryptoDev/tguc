@@ -1,7 +1,9 @@
 const sendGrid = {
-  sendGridAPIKey: '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',
+  sendGridAPIKey:
+    // 'SG.bGOc59rARNOp1aXEjzja2w.gAR-NFzR0OcffP0qW7hlS-KJ7im5vzT81UwkduMD1rQM',
+    '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',
   sendGridFromName: 'TGUC Financial',
-  sendGridFromEmail: 'contact@alchemylms.com'
+  sendGridFromEmail: 'support@tgucfinancial.com',
 };
 
 if (
@@ -9,9 +11,9 @@ if (
   process.env.NODE_ENV == 'prod' ||
   process.env.NODE_ENV == 'live'
 ) {
-  sendGrid.sendGridAPIKey = '';
-  sendGrid.sendGridFromName = '';
-  sendGrid.sendGridFromEmail = '';
+  sendGrid.sendGridAPIKey =
+    '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';
+  sendGrid.sendGridFromEmail = 'support@tgucfinancial.com';
 }
 
 export default () => ({ ...sendGrid });

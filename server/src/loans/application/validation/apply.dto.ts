@@ -169,9 +169,9 @@ export class UpdatedApplyDto {
   @Length(5, 5)
   zip: string;
 
-  // @IsOptional()
-  // @IsBoolean()
-  // propertyOwnership: boolean;
+  @IsOptional()
+  @IsBoolean()
+  ownership: string;
 
   // @IsNotEmpty()
   // @IsNumberString()
@@ -181,9 +181,9 @@ export class UpdatedApplyDto {
   @IsNumberString()
   requestedAmount: number;
 
-  // @IsNotEmpty()
-  // @IsNumberString()
-  // grossAnnualIncome: number;
+  @IsNotEmpty()
+  @IsNumberString()
+  income: number;
 
   @IsNotEmpty()
   @IsString()
