@@ -80,7 +80,7 @@ const TableControls = ({
                 cb={() => fetchTable({ search, status })}
               />
             }
-            thead={<Thead />}
+            thead={<Thead role={role} />}
             pagination={pagination}
           />
         </AdminTableWrapper>

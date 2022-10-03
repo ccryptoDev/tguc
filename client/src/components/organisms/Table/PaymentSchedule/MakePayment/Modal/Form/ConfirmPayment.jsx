@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { formatCurrency, formatDate } from "../../../../../../../utils/formats";
-import Buttons from "../../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../../atoms/Buttons/Button";
 
 const tHead = ["Date", "Balance", "Payment", "Fees", "Interest", "Principal"];

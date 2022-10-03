@@ -2,7 +2,7 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import SwitchButtons from "../../../../../Buttons/SwitchType";
 import FormFields from "../Components/FormFields";
-import Buttons from "../../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../../atoms/Buttons/Button";
 
 // display account number according to its length

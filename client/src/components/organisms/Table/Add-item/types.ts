@@ -4,4 +4,5 @@ export type IProps = {
   form: any;
   modalTitle?: string;
   api: any;
+  isButtonShown?: boolean;
 };

@@ -11,6 +11,7 @@ export const input = css`
     background-color: #fff;
     border: 1px solid var(--color-gray-2);
     color: var(--color-grey);
+    line-height: 1.5;
     box-sizing: border-box;
     position: relative;
     font-weight: 400;
@@ -160,7 +161,7 @@ export const PlaceholderLabel = styled.div`
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus,
   select:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+    -webkit-box-shadow: 0 0 0 50px #fff inset !important;
   }
 
   /* ON FIELD FOCUS */

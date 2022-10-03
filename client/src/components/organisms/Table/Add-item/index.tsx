@@ -22,6 +22,7 @@ const TableControls = ({
   form: Form,
   modalTitle = "",
   api,
+  isButtonShown = true,
   ...props
 }: IProps) => {
   const [search, setSearch] = useState<string>("");
@@ -39,13 +40,17 @@ const TableControls = ({
   return (
     <div>
       <Navigation>
-        <Modal
-          button={<TriggerButton>{modalTitle}</TriggerButton>}
-          state={{ payload: { isAgent: false, ...props } }}
-          modalContent={Form}
-          modalTitle={modalTitle}
-          cb={() => fetchTable({ search })}
-        />
+        {isButtonShown ? (
+          <Modal
+            button={<TriggerButton>{modalTitle}</TriggerButton>}
+            state={{ payload: { isAgent: false, ...props } }}
+            modalContent={Form}
+            modalTitle={modalTitle}
+            cb={() => fetchTable({ search })}
+          />
+        ) : (
+          <div />
+        )}
         <SearchField searchHandler={searchHandler} />
       </Navigation>
       <Loader loading={loading}>
