@@ -4,18 +4,26 @@ import { validatePassword } from "../../../../../utils/validators/password";
 export const validateForm = (form) => {
   const newForm = { ...form };
   let isValid = true;
+
+  // VALIDATE PASSWORD
   if (newForm.password.required) {
-    const [passwordValid, password, repassword] = validatePassword({
-      password: newForm.password.value,
-      repassword: newForm.repassword.value,
-    });
-    newForm.password = newForm.password.value;
-    newForm.repassword = newForm.repassword.value;
+    const password = newForm.password.value;
+    const repassword = newForm.repassword.value;
+    const [passwordValid, passwordMessage, repasswordMessage] =
+      validatePassword({
+        password,
+        repassword,
+      });
+
     if (!passwordValid) {
       isValid = false;
+      newForm.password.message = passwordMessage;
+      newForm.repassword.message = repasswordMessage;
     }
   }
-  const [emailValid, email] = validateEmail(newForm.email.value);
+
+  // VALIDATE EMAIL
+  const emailValid = validateEmail(newForm.email.value);
   if (!emailValid) {
     newForm.email.message = "Enter a valid email";
     isValid = false;
@@ -35,11 +43,8 @@ export const validateForm = (form) => {
   });
 
   if (isValid) {
-    // PARSE FORM TO REQUEST BODY FORMAT
-    Object.keys(newForm).forEach((item) => {
-      newForm[item] = newForm[item].value;
-    });
     delete newForm.repassword;
+    if (!newForm.password.required) delete newForm.password;
   }
   return [isValid, newForm];
 };

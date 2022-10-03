@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { MdAccountBalance } from "react-icons/md";
-import Buttons from "../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../atoms/Buttons/Button";
 import { renderFormFields, accountFormInit } from "./config";
 import {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { FaCcMastercard, FaCcVisa } from "react-icons/fa";
 import { toast } from "react-toastify";
-import Buttons from "../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../atoms/Buttons/Button";
 import {
   cardDetailsInit,

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
 import { getRequester } from "../../../../../api/admin-dashboard/requester";

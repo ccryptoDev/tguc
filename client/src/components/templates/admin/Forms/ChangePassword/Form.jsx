@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { cloneDeep } from "lodash";
 import { useHistory } from "react-router-dom";
 import Form from "./Styles";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import { initialForm, fields } from "./config";
@@ -43,7 +43,6 @@ const FormComponent = () => {
       password: form.password.value,
       repassword: form.repassword.value,
     });
-    debugger;
     // if the form is valid the validated form will have the parsed format for the http request, otherwise it will keep the state's format
     if (!isValid) {
       // if not valid display the form with error messages

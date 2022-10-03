@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import { fields, passwordFields, initialForm } from "./config";
 import { validateForm } from "./validation";
@@ -10,6 +10,7 @@ import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
 import CheckBox from "../../../../molecules/Form/Fields/Checkbox/Default";
 import { updateAdminById } from "../../../../../api/admin-dashboard";
 import PasswordRule from "../../../../molecules/Form/Elements/PasswordNote";
+import { parseFormToFormat } from "../../../../../utils/form/parsers";
 
 type IProps = {
   closeModal: any;
@@ -75,20 +76,21 @@ const AddUpdateUser = ({ closeModal, state, cb }: IProps) => {
     if (!updatePassword) form.password.required = false;
     // VALIDATE FORM
     const [isValid, validatedForm] = validateForm(form);
+    setLoading(true);
     if (isValid) {
-      setLoading(true);
+      const payload = parseFormToFormat(validatedForm);
+
       // CHECK IF EMAIL HAS CHANGED
-      if (validatedForm.email === state.payload.email) {
-        delete validatedForm.email;
+      if (payload.email === state.payload.email) {
+        delete payload.email;
       }
       const practiceManagement = "01d4f47b-ea93-48e9-a306-50dd9bac14f8";
       const result = await updateAdminById({
         id: state?.payload?.id,
-        ...validatedForm,
+        ...payload,
         role: state?.payload?.role,
         practiceManagement,
       });
-      setLoading(false);
 
       if (result && !result.error) {
         await cb();
@@ -103,6 +105,7 @@ const AddUpdateUser = ({ closeModal, state, cb }: IProps) => {
         return { ...prevState, ...validatedForm };
       });
     }
+    setLoading(false);
   };
 
   const showPasswordHandler = (e: {

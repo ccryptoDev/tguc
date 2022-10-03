@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import { cloneDeep } from "lodash";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
-import { useTable } from "../../../../../contexts/Table/table";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
-import { fields, passwordFields, initialForm } from "./config";
 import Form from "./Styles";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
-import { getRequester } from "../../../../../api/admin-dashboard/requester";
-import baseUrl from "../../../../../app.config";
 import { approveBorrowerApplication } from "../../../../../api/admin-dashboard";
 
 type IProps = {

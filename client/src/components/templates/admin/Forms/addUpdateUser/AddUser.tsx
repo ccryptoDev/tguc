@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import { fields, initialForm, passwordFields } from "./config";
 import { validateForm } from "./validation";
@@ -9,6 +9,7 @@ import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
 import { addAdmin } from "../../../../../api/admin-dashboard";
 import Form from "./Styles";
 import PasswordRule from "../../../../molecules/Form/Elements/PasswordNote";
+import { parseFormToFormat } from "../../../../../utils/form/parsers";
 
 type IProps = {
   closeModal: any;
@@ -46,19 +47,20 @@ const AddUpdateUser = ({ closeModal, state, cb }: IProps) => {
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     // validate form
     const [isValid, validatedForm] = validateForm(form);
 
+    setLoading(true);
     if (isValid) {
       // parse form back to the api object format
-      setLoading(true);
+      const payload = parseFormToFormat(validatedForm);
       const practiceManagement = "01d4f47b-ea93-48e9-a306-50dd9bac14f8";
       const result = await addAdmin({
         ...state?.payload,
-        ...validatedForm,
+        ...payload,
         practiceManagement,
       });
-      setLoading(false);
       if (result && !result.error) {
         toast.success("the changes have been saved!");
         await cb();
@@ -72,6 +74,7 @@ const AddUpdateUser = ({ closeModal, state, cb }: IProps) => {
         return { ...prevState, ...validatedForm };
       });
     }
+    setLoading(false);
   };
   return (
     <Loader loading={loading ? 1 : 0}>
