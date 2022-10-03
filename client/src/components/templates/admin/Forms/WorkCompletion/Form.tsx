@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { cloneDeep } from "lodash";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import { useTable } from "../../../../../contexts/Table/table";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import { fields, passwordFields, initialForm } from "./config";

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import Form from "./Styles";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
@@ -15,9 +16,7 @@ type IForm = {
 type IProps = {
   closeModal: any;
   state: {
-    data: {
-      id?: string;
-    };
+    id?: string;
   };
   cb: Function;
 };
@@ -103,13 +102,11 @@ const DenyApplicationForm = ({ closeModal, state, cb }: IProps) => {
       return;
     }
     setLoading(true);
-    if (state?.data?.id) {
-      const result: any = await declineBorrowerApplication(
-        state?.data?.id,
-        form
-      );
+    const { id } = state;
+    if (id) {
+      const result: any = await declineBorrowerApplication(id, form);
       if (result && !result.error) {
-        await cb(state?.data?.id); //update UI
+        await cb(id); //update UI
         toast.success("The application was denied.");
         closeModal();
       } else if (result.error) {
@@ -139,11 +136,8 @@ const DenyApplicationForm = ({ closeModal, state, cb }: IProps) => {
         <br />
         <br />
         {denyOptions.map((option: string, index: number) => (
-          <>
-            <label
-              htmlFor={`checkbox${index}`}
-              key={option.toLowerCase().replace(/ /g, "-")}
-            >
+          <div key={uuid()}>
+            <label htmlFor={`checkbox${index}`}>
               <input
                 id={`checkbox${index}`}
                 className="toggle"
@@ -155,7 +149,7 @@ const DenyApplicationForm = ({ closeModal, state, cb }: IProps) => {
               <span style={{ marginLeft: "8px" }}>{option}</span>
             </label>
             <br />
-          </>
+          </div>
         ))}
         <br />
         {form.reasonOptions.indexOf("Other") !== -1 && (

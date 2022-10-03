@@ -53,7 +53,7 @@ const FormComponent = () => {
         // after the token is set, check the user and trigger the dom tree to re-render;
         fetchUser();
       } else if (result.error) {
-        setError("Wrong credintials");
+        setError("Wrong credentials");
         setLoading(false);
       }
     }

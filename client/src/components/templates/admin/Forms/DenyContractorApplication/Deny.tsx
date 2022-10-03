@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../../../../atoms/Buttons/Button";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import Form from "./Styles";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";

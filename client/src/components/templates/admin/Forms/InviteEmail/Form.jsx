@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { cloneDeep } from "lodash";
 import { useHistory } from "react-router-dom";
 import Form from "./Styles";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import ErrorMessage from "../../../../molecules/ErrorMessage/FormError";
 import Loader from "../../../../molecules/Loaders/LoaderWrapper";
 import { initialForm, fields } from "./config";

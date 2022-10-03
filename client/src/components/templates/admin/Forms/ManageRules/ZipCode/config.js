@@ -14,6 +14,7 @@ export const renderZipCodeFields = (form) => [
     label: "Zip Code",
     component: FormattedField,
     message: form.zipCode.message,
+    format: "#####",
   },
   {
     value: form.radius.value,

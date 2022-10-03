@@ -8,7 +8,7 @@ import {
   renderZeroInterestFields,
   zeroInterestFormInit,
 } from "./config";
-import Buttons from "../../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../../atoms/Buttons/Button";
 import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
 import ErrorMessage from "../../../../../molecules/Form/Elements/FormError";

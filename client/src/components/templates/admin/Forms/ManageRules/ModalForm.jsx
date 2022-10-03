@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { cloneDeep } from "lodash";
 import styled from "styled-components";
 import { updateCreditRulesApi } from "../../../../../api/admin-dashboard";
-import Buttons from "../../../../molecules/Buttons/SubmitForm";
+import Buttons from "../../../../molecules/Buttons/ButtonsWrapper";
 import Button from "../../../../atoms/Buttons/Button";
 import { renderRuleForm, rule, validateForm } from "./config";
 import ErrorMessage from "../../../../molecules/Form/Elements/FormError";
