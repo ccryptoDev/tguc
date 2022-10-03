@@ -1,10 +1,11 @@
-const stepName = {
+export const stepName = {
   APPLY: "apply",
   ADDRESS: "address-information",
   DOCUMENT_UPLOAD: "document-upload",
-  WAITING_FOR_APPROVAL: "waiting-approval",
+  WAITING_FOR_APPROVAL: "waiting-for-approve",
   CONTRACT: "sign-contract",
   CONTRACT_SIGNED: "contract-signed",
+  DECLINED: "declined",
 };
 
 export const parseStepNames = (name) => {
@@ -21,6 +22,8 @@ export const parseStepNames = (name) => {
       return 5;
     case stepName.CONTRACT_SIGNED:
       return 6;
+    case stepName.DECLINED:
+      return 7;
     default:
       return 1;
   }

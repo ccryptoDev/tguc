@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import Button from "../../../../../../../atoms/Buttons/Button";
 import { initForm, renderFields } from "../../config";
 import { validateForm, validateDriversLicense } from "../../validation";
 import { parseFormToRequest } from "../../../../../../../../utils/parseForm";
@@ -10,11 +9,19 @@ import UploadDocuments from "./UploadFiles";
 import {
   createNewContractorApplication,
   documentUploadApi,
+  postInstntDecisionApi,
 } from "../../../../../../../../api/application";
 import { login } from "../../../../../../../../api/authorization";
 import Form from "../styles";
 import { formStringToDate } from "../../../../../../../../utils/formats";
 import PasswordNote from "../../../../../../../molecules/Form/Elements/PasswordNote";
+import SubmitButton from "../../../../../../../molecules/Buttons/SubmitButton";
+import {
+  InstntProvider,
+  useInstntData,
+} from "../../../../../../../../contexts/instnt";
+import { useUserData } from "../../../../../../../../contexts/user";
+import { useStepper } from "../../../../../../../../contexts/steps";
 
 const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
   const [form, setForm] = useState(initForm({}));
@@ -24,79 +31,115 @@ const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
     frontSide: "",
     backSide: "",
   });
+  const { goToStep } = useStepper();
+  const { uploadInstntDocuments, instntError, instntRef, instntDecision } =
+    useInstntData();
   const [isFilesError, setIsFilesError] = useState(false);
+  const { fetchUser } = useUserData();
 
-  const onSubmitHandler = async (e: any) => {
-    e.preventDefault();
+  const onSignUpHandler = async () => {
+    setLoading(true);
 
-    // VALIDATE FORM DATA
-    const [isValid, validatedForm] = validateForm(form);
+    // CREATE BODY FOR HTTP REQUEST
+    const payload = parseFormToRequest(form) as any;
 
-    // VALIDATE LICENSE IMAGES
-    const licenseValidationError: boolean = validateDriversLicense(files);
+    const { phone, dateOfBirth } = payload;
 
-    if (isValid && !licenseValidationError) {
-      setLoading(true);
+    const parsedPayload = {
+      ...payload,
+      phones: [phone],
+      dateOfBirth: formStringToDate(dateOfBirth),
+      source: "web",
+    };
 
-      // CREATE BODY FOR HTTP REQUEST
-      const payload = parseFormToRequest(validatedForm) as any;
+    const loginPayload = {
+      email: payload.email,
+      password: payload.password,
+    };
 
-      const { phone, dateOfBirth } = payload;
+    // CREATE APPLICATION
+    const authorization = await createNewContractorApplication(parsedPayload);
+    if (authorization && authorization.error) {
+      toast.error(authorization.error.message);
+      setLoading(false);
+      return;
+    }
 
-      const parsedPayload = {
-        ...payload,
-        phones: [phone],
-        dateOfBirth: formStringToDate(dateOfBirth),
-        source: "web",
+    const { screenTrackingId, userId } = authorization.data;
+    const { formKey, instntjwt, decision } = instntDecision;
+    const instntPayload = {
+      formKey,
+      instntJwt: instntjwt,
+      transactionId: instntRef.current.instnttxnid,
+      decision,
+      screenTrackingId,
+    };
+
+    await postInstntDecisionApi(instntPayload);
+
+    // AUTHORIZE TO THE APPLICATION
+    if (!screenTrackingId || !userId) {
+      toast.error("authorization error");
+      setLoading(false);
+      return;
+    }
+
+    // AUTHORIZE TO THE APPLICATION
+    const { token, id }: any = await login(loginPayload);
+    if (token && id) {
+      // CREATE UPLOAD LICENSE BODY
+
+      const documentPayload = {
+        documentType: "drivers license",
+        driversLicenseFront: files.frontSide,
+        driversLicenseBack: files.backSide,
+        userId,
+        screenTrackingId,
       };
 
-      const loginPayload = {
-        email: payload.email,
-        password: payload.password,
-      };
-
-      // CREATE APPLICATION
-      const authorization = await createNewContractorApplication(parsedPayload);
-      if (authorization && authorization.error) {
-        toast.error(authorization.error.message);
-        setLoading(false);
-        return;
-      }
-
-      const { screenTrackingId, userId } = authorization.data;
-      // AUTHORIZE TO THE APPLICATION
-      if (!screenTrackingId || !userId) {
-        toast.error("authorization error");
-        setLoading(false);
-        return;
-      }
-
-      // AUTHORIZE TO THE APPLICATION
-      const { token, id }: any = await login(loginPayload);
-      if (token && id) {
-        // CREATE UPLOAD LICENSE BODY
-
-        const documentPayload = {
-          documentType: "drivers license",
-          driversLicenseFront: files.frontSide,
-          driversLicenseBack: files.backSide,
-          userId,
-          screenTrackingId,
-        };
-
-        const document: any = await documentUploadApi(documentPayload);
-        if (document && document.data.documentId && !document.error) {
+      const document: any = await documentUploadApi(documentPayload);
+      if (document && document.data.documentId && !document.error) {
+        const userData = await fetchUser();
+        if (userData.screenTracking.rulesDetails.loanApproved) {
           moveToNextStep();
         } else {
-          setForm(document?.error?.message);
+          goToStep(7);
         }
+      } else {
+        setForm(document?.error?.message);
       }
-      setLoading(false);
+    }
+    setLoading(false);
+  };
+
+  const submitForm = (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const [isValid, validatedForm] = validateForm(form);
+    const isLicenseValid: boolean = validateDriversLicense(files);
+
+    if (isValid && isLicenseValid) {
+      const payload = parseFormToRequest(form) as any;
+      uploadInstntDocuments({ form: payload, files });
     } else {
       setForm(validatedForm);
-      setIsFilesError(licenseValidationError);
+      setIsFilesError(!isLicenseValid);
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (instntDecision) {
+      onSignUpHandler();
+    }
+  }, [instntDecision]);
+
+  useEffect(() => {
+    if (instntError) {
+      toast.error(instntError);
+      setLoading(false);
+    }
+  }, [instntError]);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -108,7 +151,7 @@ const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
 
   return (
     <Loader loading={loading}>
-      <Form onSubmit={onSubmitHandler}>
+      <Form onSubmit={submitForm}>
         <div className="contractor-fields-wrapper">
           {renderFields(form).map(({ component: Component, ...field }) => {
             return (
@@ -134,12 +177,25 @@ const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
           value={agreed}
           onChange={(e: any) => setAgreed(e.target.value)}
         />
-        <Button type="submit" variant="contained" disabled={!agreed}>
+        <SubmitButton
+          type="submit"
+          variant="contained"
+          loading={loading}
+          disabled={!agreed}
+        >
           Confirm
-        </Button>
+        </SubmitButton>
       </Form>
     </Loader>
   );
 };
 
-export default FormComponent;
+const Component = (props: any) => {
+  return (
+    <InstntProvider>
+      <FormComponent {...props} />
+    </InstntProvider>
+  );
+};
+
+export default Component;

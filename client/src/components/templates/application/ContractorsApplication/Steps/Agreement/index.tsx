@@ -26,7 +26,6 @@ const DealerAgreement = () => {
   const [agreed, setAgreed] = useState(false);
   const textContent = useRef<any>(null);
   const { user } = useUserData();
-
   const onSubmit = async () => {
     setLoading(true);
     const result = await approveContractorApplication(user.data.email);
@@ -49,7 +48,7 @@ const DealerAgreement = () => {
         note="Please review and check the box confirming acceptance of this dealer agreement"
       />
       <div ref={textContent} className="contract-container">
-        <Content />
+        <Content {...user} />
       </div>
       <hr />
       <Checkbox

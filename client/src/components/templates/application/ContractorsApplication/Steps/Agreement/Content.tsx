@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 const Wrapper = styled.div`
   .note {
@@ -110,7 +111,12 @@ const Wrapper = styled.div`
   }
 `;
 
-const Agreement = () => {
+const Agreement = ({ data }: any) => {
+  const name = `${`${data?.firstName} ${data?.lastName}`}`;
+  const email = data?.email;
+  const today = moment().format("YYYY-MM-DD");
+  const address = `${`${data?.street}, ${data?.city}, ${data?.state} ${data?.zipCode}`}`;
+  const practiceName = data?.practiceManagement?.practiceName;
   return (
     <Wrapper className="contract-container">
       <ul>
@@ -1308,19 +1314,18 @@ const Agreement = () => {
             <tbody>
               <tr>
                 <td>TGUC Financial, Inc.</td>
-                <td>[insert Dealer name]</td>
+                <td>{name}</td>
               </tr>
               <tr>
                 <td>Attn: Dealer Support</td>
-                <td>Attn: [insert]</td>
               </tr>
               <tr>
                 <td>Address: P.O. Box 100071 Denver, CO 80250</td>
-                <td>Address: [insert]</td>
+                <td>Address: {address}</td>
               </tr>
               <tr>
                 <td>Email: support@tgucfinancial.com</td>
-                <td>Email: [insert]</td>
+                <td>Email: {email}</td>
               </tr>
             </tbody>
           </table>
@@ -1343,26 +1348,35 @@ const Agreement = () => {
             </thead>
             <tbody>
               <tr>
-                <td>By:_____________</td>
+                <td />
                 <td>
                   <div>
-                    [insert Dealer’s full legal name], <br /> a [insert
-                    jurisdiction and entity type]
+                    {name} <br /> {practiceName}
                   </div>
-                  <div>By:_____________</div>
                 </td>
               </tr>
               <tr>
-                <td>Name: [insert]</td>
-                <td>Name: [insert]</td>
+                <td>
+                  By:&nbsp;
+                  <span className="underline">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </span>
+                </td>
+                <td>
+                  <div>By: {name}</div>
+                </td>
               </tr>
               <tr>
-                <td>Title: [insert]</td>
-                <td>Title: [insert]</td>
+                <td>Name: Russell Bryant</td>
+                <td>Name: {name}</td>
               </tr>
               <tr>
-                <td>Date: [insert]</td>
-                <td>Date: [insert]</td>
+                <td>Title: CEO</td>
+                <td>Title: Contractor</td>
+              </tr>
+              <tr>
+                <td>Date: {today}</td>
+                <td>Date: {today}</td>
               </tr>
             </tbody>
           </table>

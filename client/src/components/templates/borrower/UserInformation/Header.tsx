@@ -73,14 +73,14 @@ const Header = ({
         </div>
       ) : (
         <>
-          <div className="edit-mode-buttons-mobile">
+          {/*           <div className="edit-mode-buttons-mobile">
             <ActionButton onClick={onEdit} type="edit" />
           </div>
           <div className="edit-mode-buttons-lg">
             <Button type="button" variant="outlined" onClick={onEdit}>
               Edit
             </Button>
-          </div>
+          </div> */}
         </>
       )}
     </Wrapper>

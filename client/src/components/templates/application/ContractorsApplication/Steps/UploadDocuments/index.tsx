@@ -7,9 +7,14 @@ import Container from "../../styles";
 import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
 import { initForm } from "./config";
 import { validate } from "./validation";
-import { documentUploadApi } from "../../../../../../api/application";
+import {
+  documentUploadApi,
+  changeContractorLastScreen,
+} from "../../../../../../api/application";
 import FileUploader from "./Forms";
 import { parseFilesToStrings } from "../../../../../molecules/Form/Fields/UploadDocument/methods";
+import { stepName } from "../config";
+import { useUserData } from "../../../../../../contexts/user";
 
 const Notification = styled.div`
   display: flex;
@@ -67,6 +72,7 @@ const parseDocumentsFormToRequestBody = async (files: any) => {
 const UploadDocuments = ({ moveToNextStep }: any) => {
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<any>(initForm());
+  const { user } = useUserData();
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
@@ -74,7 +80,6 @@ const UploadDocuments = ({ moveToNextStep }: any) => {
     if (isValid) {
       setLoading(true);
       const payload = await parseDocumentsFormToRequestBody(files);
-      setLoading(false);
       const userId = localStorage.getItem("userId") || "";
       const screenTrackingId = localStorage.getItem("screenTrackingId") || "";
       const docArray = [
@@ -103,7 +108,12 @@ const UploadDocuments = ({ moveToNextStep }: any) => {
       }
       const request = createFormData("", docArray, userId, screenTrackingId);
       const result = await documentUploadApi(request);
+      setLoading(false);
       if (result && !result.error) {
+        await changeContractorLastScreen(
+          user?.data?.screenTracking?.id,
+          stepName.WAITING_FOR_APPROVAL
+        );
         moveToNextStep();
       }
     } else {

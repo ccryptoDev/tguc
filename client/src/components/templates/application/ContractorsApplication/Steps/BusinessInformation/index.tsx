@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "../../../../../atoms/Buttons/Button";
 import { initForm, renderFields, renderBusinessAddressFields } from "./config";
@@ -14,6 +14,7 @@ import {
   getPracticeManagementByScreenTrackingId,
 } from "../../../../../../api/application";
 import { useUserData } from "../../../../../../contexts/user";
+import { parseFormToFormat } from "../../../../../../utils/form/parsers";
 
 const Form = styled.form`
   .file-fields-wrapper {
@@ -40,9 +41,9 @@ const Form = styled.form`
 
 const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
   const { loading: userIsLoading } = useStepper();
-  const [form, setForm] = useState(initForm());
+  const [form, setForm] = useState(initForm({}));
   const [loading, setLoading] = useState(false);
-  const { user } = useUserData();
+  const { user, screenTrackingId } = useUserData();
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
@@ -50,9 +51,13 @@ const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
 
     if (isValid) {
       setLoading(true);
-      await mockRequest();
+      const parsedForm = parseFormToFormat(form);
+      const payload = {
+        ...parsedForm,
+        screenTrackingId,
+      };
+      await updateBusinessData(payload);
       setLoading(false);
-      await updateBusinessData(user?.data?.screenTracking?.id, form);
       moveToNextStep();
     } else {
       setForm(validatedForm);
@@ -67,66 +72,14 @@ const FormComponent = ({ moveToNextStep }: { moveToNextStep: any }) => {
     }));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user?.data?.screenTracking?.id) {
       const getPM = async () => {
         const pmData: any = await getPracticeManagementByScreenTrackingId(
           user?.data?.screenTracking?.id
         );
         if (pmData?.data) {
-          setForm((prevState: any) => ({
-            ...prevState,
-            name: {
-              ...prevState.name,
-              value: pmData.data.practiceName,
-              message: "",
-            },
-            YearsInBusiness: {
-              ...prevState.yearsInBusiness,
-              value: pmData.data.yearsInBusiness,
-              message: "",
-            },
-            city: {
-              ...prevState.city,
-              value: pmData.data.city,
-              message: "",
-            },
-            email: {
-              ...prevState.email,
-              value: pmData.data.email,
-              message: "",
-            },
-            phone: {
-              ...prevState.phone,
-              value: pmData.data.phone,
-              message: "",
-            },
-            state: {
-              ...prevState.state,
-              value: pmData.data.stateCode,
-              message: "",
-            },
-            street: {
-              ...prevState.street,
-              value: pmData.data.address,
-              message: "",
-            },
-            tin: {
-              ...prevState.tin,
-              value: pmData.data.tin,
-              message: "",
-            },
-            website: {
-              ...prevState.website,
-              value: pmData.data.url,
-              message: "",
-            },
-            zip: {
-              ...prevState.zip,
-              value: pmData.data.zip,
-              message: "",
-            },
-          }));
+          setForm(initForm(pmData?.data));
         }
       };
       getPM();
