@@ -19,11 +19,17 @@ export const UserProvider = ({ children, applicationId }) => {
       typeof result?.data === "object" &&
       !result?.error
     ) {
-      const { paymentManagements, screenTrackings, ...userData } = result?.data;
+      const {
+        paymentManagements,
+        screenTrackings,
+        practiceManagements,
+        ...userData
+      } = result?.data;
       // EXTRACTING LOAN DATA
       const loanData = getLoanData({
         paymentManagements,
         screenTrackings,
+        practiceManagements,
         id: applicationId,
       });
 

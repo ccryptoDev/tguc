@@ -19,6 +19,9 @@ import Thead from "../../components/templates/admin/Tables/LoanApplications/Thea
 const Dashboard = () => {
   const { user } = useUserData();
   const role = user?.user?.data?.roleName;
+  const userName = user?.user?.data.userName;
+  const userNameCapitalized =
+    userName?.charAt(0).toUpperCase() + userName?.slice(1);
   const { tableData, fetchTable, pagination } = usePaginatedTable({
     api: getLoans,
     payload: { page: 1, perPage: 25, status: tStatus.ALL },
@@ -32,14 +35,14 @@ const Dashboard = () => {
     <Layout route={routes.DASHBOARD}>
       <Container>
         <Heading style={{ marginBottom: "12px" }}>Dashboard</Heading>
-        <Heading3>Welcome, contractor - {user?.user?.data.userName}!</Heading3>
+        <Heading3>Welcome {userNameCapitalized || ""}</Heading3>
         <br />
         <br />
         <Statuses />
         <AdminTableWrapper>
           <Table
-            rows={<Rows items={tableData?.items} role={role} />}
-            thead={<Thead />}
+            rows={<Rows items={tableData?.items} role={role} cb={fetchTable} />}
+            thead={<Thead role={role} />}
             pagination={pagination}
           />
         </AdminTableWrapper>
