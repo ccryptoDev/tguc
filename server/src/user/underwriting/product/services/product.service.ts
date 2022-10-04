@@ -13,6 +13,8 @@ import { ScreenTracking } from '../../../screen-tracking/entities/screen-trackin
 import { User } from '../../../entities/user.entity';
 import { ProductRules } from '../entities/product-rules.entity';
 import { AppService } from '../../../../app.service';
+import { PracticeManagement } from '../../../../admin/dashboard/practice-management/entities/practice-management.entity';
+import { MiddeskReport } from '../../middesk/middesk.entity';
 
 @Injectable()
 export class ProductService {
@@ -602,6 +604,327 @@ export class ProductService {
     this.logger.log(
       'Stage 2 result:',
       `${ProductService.name}#getStage2Rules`,
+      requestId,
+      result,
+    );
+
+    return result;
+  }
+
+  async getContractorStage1Rules(
+    user: User,
+    screenTracking: ScreenTracking,
+    creditReport: any,
+    requestId: string,
+  ) {
+    this.logger.log(
+      'Getting contractor stage 1 rules with params:',
+      `${ProductService.name}#getStage1Rules`,
+      requestId,
+      { creditReport },
+    );
+
+    const rules = {
+      rule0: {
+        ruleId: 's1_bu_0',
+        description: 'Credit Score',
+        declinedIf: 'lt',
+        value: 620,
+        disabled: false,
+        weight: 5,
+      },
+    };
+
+    const ruleUserValueFuncs = {
+      rule0: (creditReport: any) => {
+        return creditReport.score;
+      },
+    };
+
+    const result = {
+      approvedRuleMsg: [],
+      declinedRuleMsg: [],
+      loanApproved: true,
+      ruleApprovals: {},
+      ruleData: {},
+    };
+    Object.keys(rules).forEach((ruleKey) => {
+      const rule = rules[ruleKey];
+      if (
+        !rule.disabled &&
+        ruleUserValueFuncs[ruleKey] &&
+        typeof ruleUserValueFuncs[ruleKey] === 'function'
+      ) {
+        result.ruleData[rule.ruleId] = {
+          description: rule.description,
+          message: 'Not applied',
+          passed: true,
+          ruleId: rule.ruleId,
+          userValue: null,
+        };
+        const userValue = ruleUserValueFuncs[ruleKey](creditReport);
+        const { passed, message } = this.getRulePassedMessage(
+          rule,
+          userValue,
+          requestId,
+        );
+        result.ruleData[rule.ruleId].message = message;
+        result.ruleData[rule.ruleId].passed = passed;
+        result.ruleData[rule.ruleId].userValue = userValue;
+        if (!passed) {
+          result.loanApproved = false;
+        }
+        if (result.ruleData[rule.ruleId].passed) {
+          result.approvedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        } else {
+          result.declinedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        }
+        result.ruleApprovals[rule.ruleId] = result.ruleData[rule.ruleId].passed
+          ? 1
+          : 0;
+      }
+    });
+
+    this.logger.log(
+      'Contractor Stage 1 result:',
+      `${ProductService.name}#getStage1Rules`,
+      requestId,
+      result,
+    );
+
+    return result;
+  }
+
+  async getContractorStage2Rules(
+    screenTracking: ScreenTracking,
+    practiceManagement: PracticeManagement,
+    midDesk: any,
+    requestId: string,
+  ) {
+    this.logger.log(
+      'Getting contractor stage 2 rules with params:',
+      `${ProductService.name}#getStage1Rules`,
+      requestId,
+      { midDesk },
+    );
+
+    const rules = {
+      rule0: {
+        ruleId: 's2_app_0',
+        description: 'Time in Business',
+        declinedIf: 'lt',
+        value: 3,
+        disabled: false,
+        weight: 5,
+      },
+      rule1: {
+        ruleId: 's2_md_1',
+        description: 'EIN',
+        declinedIf: 'ne',
+        value: 'success',
+        disabled: false,
+      },
+      rule2: {
+        ruleId: 's2_md_2',
+        description: 'Business Address',
+        declinedIf: 'ne',
+        value: 'success',
+        disabled: false,
+      },
+      rule3: {
+        ruleId: 's2_md_3',
+        description: 'Business Name',
+        declinedIf: 'ne',
+        value: 'success',
+        disabled: false,
+      },
+    };
+    const middeskReport = JSON.parse(midDesk.report).middesk;
+
+    const ruleUserValueFuncs = {
+      rule0: () => {
+        return Number(practiceManagement.yearsInBusiness);
+      },
+      rule1: () => {
+        const result = middeskReport.review.tasks.filter((obj) => {
+          return obj.key === 'tin';
+        });
+        return result[0]?.status;
+      },
+      rule2: () => {
+        const result = middeskReport.review.tasks.filter((obj) => {
+          return obj.key === 'address_verification';
+        });
+        return result[0]?.status;
+      },
+      rule3: () => {
+        const result = middeskReport.review.tasks.filter((obj) => {
+          return obj.key === 'name';
+        });
+        return result[0]?.status;
+      },
+    };
+
+    const result = {
+      approvedRuleMsg: [],
+      declinedRuleMsg: [],
+      loanApproved: true,
+      ruleApprovals: {},
+      ruleData: {},
+    };
+    Object.keys(rules).forEach((ruleKey) => {
+      const rule = rules[ruleKey];
+      if (
+        !rule.disabled &&
+        ruleUserValueFuncs[ruleKey] &&
+        typeof ruleUserValueFuncs[ruleKey] === 'function'
+      ) {
+        result.ruleData[rule.ruleId] = {
+          description: rule.description,
+          message: 'Not applied',
+          passed: true,
+          ruleId: rule.ruleId,
+          userValue: null,
+        };
+        const userValue = ruleUserValueFuncs[ruleKey](midDesk);
+        const { passed, message } = this.getRulePassedMessage(
+          rule,
+          userValue,
+          requestId,
+        );
+        result.ruleData[rule.ruleId].message = message;
+        result.ruleData[rule.ruleId].passed = passed;
+        result.ruleData[rule.ruleId].userValue = userValue;
+        if (!passed) {
+          result.loanApproved = false;
+        }
+        if (result.ruleData[rule.ruleId].passed) {
+          result.approvedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        } else {
+          result.declinedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        }
+        result.ruleApprovals[rule.ruleId] = result.ruleData[rule.ruleId].passed
+          ? 1
+          : 0;
+      }
+    });
+
+    this.logger.log(
+      'Contractor Stage 2 result:',
+      `${ProductService.name}#getStage2Rules`,
+      requestId,
+      result,
+    );
+
+    return result;
+  }
+
+  async getBorrowerStage1Rules(
+    user: User,
+    screenTracking: ScreenTracking,
+    creditReport: any,
+    requestId: string,
+  ) {
+    this.logger.log(
+      'Getting borrower stage 1 rules with params:',
+      `${ProductService.name}#getStage1Rules`,
+      requestId,
+      { creditReport },
+    );
+
+    const rules = {
+      rule0: {
+        ruleId: 's1_bu_0',
+        description: 'Credit Score',
+        declinedIf: 'lt',
+        value: 600,
+        disabled: false,
+        weight: 5,
+      },
+      rule1: {
+        ruleId: 's1_bu_1',
+        description: 'HomeOwner',
+        declinedIf: 'eq',
+        value: false,
+        disabled: false,
+        weight: 3,
+      },
+      rule2: {
+        ruleId: 's1_bu_2',
+        description: 'Monthly Income > 2000',
+        declinedIf: 'lt',
+        value: 1500,
+        disabled: false,
+        weight: 5,
+      },
+    };
+    let isPending = false;
+    const ruleUserValueFuncs = {
+      rule0: (creditReport: any) => {
+        return creditReport.score;
+      },
+      rule1: () => {
+        return user.propertyOwnership;
+      },
+      rule2: () => {
+        const income = Math.round(user.income / 12);
+        if (income > 1500 && income < 2000) {
+          if (result) {
+            result.isPending =  true;
+          }
+        }
+        return income;
+      }
+    };
+
+    const result = {
+      approvedRuleMsg: [],
+      declinedRuleMsg: [],
+      ruleApprovals: {},
+      ruleData: {},
+      loanApproved : true,
+      isPending: isPending,
+    };
+    Object.keys(rules).forEach((ruleKey) => {
+      const rule = rules[ruleKey];
+      if (
+        !rule.disabled &&
+        ruleUserValueFuncs[ruleKey] &&
+        typeof ruleUserValueFuncs[ruleKey] === 'function'
+      ) {
+        result.ruleData[rule.ruleId] = {
+          description: rule.description,
+          message: 'Not applied',
+          passed: true,
+          ruleId: rule.ruleId,
+          userValue: null,
+        };
+        const userValue = ruleUserValueFuncs[ruleKey](creditReport);
+        const { passed, message } = this.getRulePassedMessage(
+          rule,
+          userValue,
+          requestId,
+        );
+        result.ruleData[rule.ruleId].message = message;
+        result.ruleData[rule.ruleId].passed = passed;
+        result.ruleData[rule.ruleId].userValue = userValue;
+        if (!passed) {
+          result.loanApproved = false;
+        }
+        if (result.ruleData[rule.ruleId].passed) {
+          result.approvedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        } else {
+          result.declinedRuleMsg.push(result.ruleData[rule.ruleId].message);
+        }
+        result.ruleApprovals[rule.ruleId] = result.ruleData[rule.ruleId].passed
+          ? 1
+          : 0;
+      }
+    });
+
+    this.logger.log(
+      'Contractor Stage 1 result:',
+      `${ProductService.name}#getStage1Rules`,
       requestId,
       result,
     );

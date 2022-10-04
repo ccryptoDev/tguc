@@ -24,8 +24,8 @@ if (
 ) {
   plaid.plaidProductionUrl = 'https://production.plaid.com';
   plaid.plaidEnvType = 'production';
-  plaid.plaidClientId = '';
-  plaid.plaidSecretKey = '';
+  plaid.plaidClientId = '61b7d6f795e828001ade68bb';
+  plaid.plaidSecretKey = '974976181bd1ea6b846b098e945091';
   plaid.plaidVersion = '2020-09-14';
   (plaid.plaidClientName = 'TGUC'), (plaid.transactionPeriodDays = 30);
 }
