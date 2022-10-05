@@ -289,6 +289,10 @@ export class PaymentManagementService {
     paymentManagement = await this.paymentManagementModel.save(
       paymentManagement,
     );
+    let sc = await this.screenTrackingModel.update({id: screenTrackingId}, {
+      isCompleted: true,
+      lastScreen: "thank-you"
+    });
     if (paymentManagement.user instanceof User) {
       // Send approved email to borrower
       const html: string = await this.nunjucksService.htmlToString(

@@ -857,6 +857,14 @@ export class ProductService {
         disabled: false,
         weight: 5,
       },
+      rule3: {
+        ruleId: 's1_bu_3',
+        description: 'Age',
+        declinedIf: 'lt',
+        value: 18,
+        disabled: false,
+        weight: 5,
+      },
     };
     let isPending = false;
     const ruleUserValueFuncs = {
@@ -874,6 +882,16 @@ export class ProductService {
           }
         }
         return income;
+      },
+      rule3: () => { // All applicants should be > 18 years
+        const birthday = user.dateOfBirth;
+        const today = new Date();
+        let age = today.getFullYear() - birthday.getFullYear();
+        const m = today.getMonth() - birthday.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthday.getDate())) {
+          age--;
+        }
+        return age;
       }
     };
 

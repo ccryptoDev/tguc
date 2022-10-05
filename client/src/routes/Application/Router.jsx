@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useParams } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { routes as route } from "./routes";
 import NotFound from "../../pages/application/notfound";
 import { UserProvider } from "../../contexts/user";
@@ -16,9 +16,8 @@ import Kukun from "../../pages/application/kukun";
 import LoginRedirect from "../../pages/application/login";
 
 const Routes = () => {
-  const params = useParams();
   return (
-    <UserProvider applicationId={params.id}>
+    <UserProvider>
       <Switch>
         <Route exact path={route.LOGIN} component={LoginRedirect} />
         <Route path={route.HOME} exact component={GetStarted} />

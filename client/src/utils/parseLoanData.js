@@ -2,7 +2,6 @@ export const getLoanData = ({
   screenTrackings,
   paymentManagements,
   practiceManagements,
-  id: screenId,
 }) => {
   const pms = Array.isArray(paymentManagements) ? [...paymentManagements] : [];
   const sts = Array.isArray(screenTrackings) ? [...screenTrackings] : [];
@@ -10,24 +9,26 @@ export const getLoanData = ({
     ? [...practiceManagements]
     : [];
 
-  // IF APPLICTION ID IS PRESENT ON URL
-  if (screenId) {
-    const screenTracking = sts.find((st) => st.id === screenId);
-    const paymentManagement = pms.find(
-      (pm) => pm.screenTrackingId === screenId
-    );
-    const practiceManagement = pms.find(
-      (practice) => practice.id === practiceM
-    );
-    return { screenTracking, paymentManagement, practiceManagement };
-  }
+  // IF APPLICATION ID IS PRESENT ON URL
+  const getScreenId = () => {
+    const array = window.location.pathname.split("/");
+    return array[array.length - 1];
+  };
 
-  // IF APPLICATION ID IS NOT PRESENT ON URL - TAKE THE LAST ITEMS
-  if (pms.length && sts.length) {
-    return {
-      screenTracking: sts[sts.length - 1],
-      paymentManagement: pms[pms.length - 1],
-    };
-  }
-  return null;
+  const screenId = getScreenId();
+
+  const screenTracking =
+    sts.find((st) => st.id === screenId) || sts[sts.length - 1] || null;
+
+  const paymentManagement =
+    pms.find((pm) => pm.screenTrackingId === screenId) ||
+    pms[pms.length - 1] ||
+    null;
+
+  const practiceManagement =
+    practiceM.find((practice) => practice.id === screenId) ||
+    practiceM[practiceM.length - 1] ||
+    null;
+
+  return { screenTracking, paymentManagement, practiceManagement };
 };

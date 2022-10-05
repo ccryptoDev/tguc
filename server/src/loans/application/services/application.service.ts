@@ -737,6 +737,7 @@ export class ApplicationService {
       },
       loanApproved: stage1Rules.loanApproved,
       isPending: stage1Rules.isPending,
+      creditScore: creditReport.score
     };
     let applicationStatus: 'approved' | 'pending' | 'denied' | 'qualified' = "approved";
     let screenUpdateObj: any = {

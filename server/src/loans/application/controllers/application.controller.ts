@@ -359,12 +359,25 @@ export class ApplicationController {
       await this.screenTrackingModel.update(application.id, {
         lastScreen: 'connect-bank',
       });
-      await this.applicationService.underwriteBorrower(
+      const applyBorrowerRules = await this.applicationService.underwriteBorrower(
         application,
         application.user,
         request.id,
       );
-      return user;
+
+      let score = 0;
+      let isApproved = applyBorrowerRules.loanApproved;
+      try {
+        score = parseInt(applyBorrowerRules.creditScore);
+        if (score > 651 && isApproved) {
+          await this.screenTrackingModel.update(application.id, {
+            lastScreen: 'waiting-for-approve',
+          });
+        } // TODO Add logic for pending and denied
+      } catch (e) {
+
+      }
+      return {user, score, isApproved};
     } catch (error) {
       this.logger.error(
         'Error:',

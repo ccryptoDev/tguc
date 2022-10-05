@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
       width: 100%;
     }
 
-    & .page-contentainer {
+    & .page-container {
       max-width: var(--stepper-width);
     }
   }
