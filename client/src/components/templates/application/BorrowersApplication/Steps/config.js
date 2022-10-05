@@ -7,6 +7,7 @@ export const stepNames = {
   CONTRACT: "sign-contract",
   SSN: "social-security-number",
   APPLICATION_COMPLETED: "thank-you",
+  DECLINED: "declined",
 };
 
 export const parseStepNames = (name) => {
@@ -26,6 +27,7 @@ export const parseStepNames = (name) => {
     case stepNames.SSN:
       return 8;
     case stepNames.APPLICATION_COMPLETED:
+    case stepNames.DECLINED:
       return 9;
     default:
       return 1;

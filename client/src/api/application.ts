@@ -656,7 +656,7 @@ export async function finalizeContractApi({
   let response: IResponse = { data: null, error: null };
   try {
     response = await getRequester().post(
-      `${baseUrl}/api/application/finalize  `,
+      `${baseUrl}/api/application/finalize`,
       {
         screenTrackingId,
         userId,

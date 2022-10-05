@@ -37,12 +37,12 @@ const Denied = () => {
   const history = useHistory();
   return (
     <Wrapper>
-      <H3>Loan Declined</H3>
+      <H3>Application Declined</H3>
       <img src={logo} alt="success" className="logo" />
       <Text>
-        We are sorry, but we are unable to approve your request for financing.
-        More information regarding this decision will be delivered to the email
-        address provided on the credit application.
+        Thank you for your interest in TGUC Financial. Unfortunately at this
+        time we are unable to approve your request. Please email
+        info@tgucfinancial.com with any questions.
       </Text>
       <div className="info-wrapper">
         <Email />

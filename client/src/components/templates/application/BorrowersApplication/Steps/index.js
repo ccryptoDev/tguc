@@ -7,9 +7,9 @@ import WaitingToBeApproved from "./WaitingToBeApproved";
 import PaymentDetails from "./PaymentMethods";
 import SSN from "./SSN";
 import Address from "./Address";
-// import Contractor from "./Contractors";
+import Declined from "./WaitingToBeApproved/Declined";
 
-export const steps = () => [
+export const steps = (isDeclined = false) => [
   {
     number: 1,
     name: "Personal Information",
@@ -38,13 +38,6 @@ export const steps = () => [
     completed: false,
     component: WaitingToBeApproved,
   },
-  // {
-  //   number: 5,
-  //   name: "Select Contractor",
-  //   active: false,
-  //   completed: false,
-  //   component: Contractor,
-  // },
   {
     number: 5,
     name: "Select Offer",
@@ -75,9 +68,9 @@ export const steps = () => [
   },
   {
     number: 9,
-    name: "Thank you",
+    name: isDeclined ? "Declined" : "Thank you",
     active: false,
     completed: false,
-    component: LastStep,
+    component: isDeclined ? Declined : LastStep,
   },
 ];

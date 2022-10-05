@@ -11,6 +11,7 @@ import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
 import { IKukunPayload } from "../../../Kukun";
 import { parseFormToRequest } from "../../../../../../utils/parseForm";
 import { updateNewUserApplication } from "../../../../../../api/application";
+import { useStepper } from "../../../../../../contexts/steps";
 
 const Form = styled.form`
   .fields-wrapper {
@@ -44,7 +45,7 @@ const FormComponent = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(initForm());
-
+  const { goToStep } = useStepper();
   useEffect(() => {
     // POPULATE FORM WITH KUKUN DATA
     if (isActive) {
@@ -74,9 +75,14 @@ const FormComponent = ({
       }
       const user = JSON.parse(userToken);
       payload.userId = user.id;
-      await updateNewUserApplication(payload).then(() => {
+      await updateNewUserApplication(payload).then((data) => {
+        if (data.data.score > 650 && data.data.isApproved) {
+          goToStep(5);
+          //move to waiting for approval
+        } else {
+          moveToNextStep();
+        }
         setLoading(false);
-        moveToNextStep();
       });
     } else {
       setForm(validatedForm);

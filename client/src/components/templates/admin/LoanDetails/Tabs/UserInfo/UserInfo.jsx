@@ -58,8 +58,8 @@ const UserInfo = ({ state }) => {
         rows={renderRows({
           ...state?.screenTracking,
           ...state?.paymentManagement,
-          ...state?.practiceManagement,
-          ...state?.screenTracking.user,
+          ...state?.user,
+          businessAddress: state?.practiceManagement,
           contractorReference,
           isAdmin,
           financingStatus: isContractor

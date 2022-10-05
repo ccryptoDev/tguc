@@ -5,6 +5,13 @@ import {
   parsePaymentStatus,
 } from "../../../../../../utils/formats";
 
+const businessAddressString = (address) => {
+  if (address?.address && address?.city && address?.stateCode && address?.zip) {
+    return `${address?.address}, ${address?.city}, ${address?.stateCode}, ${address?.zip}`;
+  }
+  return "--";
+};
+
 // eslint-disable-next-line
 export default ({
   city = "",
@@ -21,11 +28,11 @@ export default ({
   ssnNumber = "--",
   state = "--",
   street = "--",
-  unitApt = "--",
   userReference = "--",
   contractorReference = "--",
   practiceName = "--",
   financingStatus,
+  businessAddress = {},
   isAdmin,
 }) =>
   [
@@ -48,7 +55,12 @@ export default ({
     { label: "Financing Reference Number", value: loanReference, id: "13" },
     { label: "Contractor", value: contractorReference, id: "14" },
     { label: "Contractor Business", value: practiceName, id: "15" },
-    { label: financingStatus, value: parsePaymentStatus(status), id: "16" },
+    {
+      label: "Business Address",
+      value: businessAddressString(businessAddress),
+      id: "16",
+    },
+    { label: financingStatus, value: parsePaymentStatus(status), id: "17" },
   ].filter((item) => {
     if (isAdmin) {
       return item;
