@@ -5,7 +5,7 @@ import { getLoanData } from "../utils/parseLoanData";
 
 export const UserContext = React.createContext();
 
-export const UserProvider = ({ children, applicationId }) => {
+export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({ isAuthorized: false, data: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); //  useState({ message: '' });
@@ -30,7 +30,6 @@ export const UserProvider = ({ children, applicationId }) => {
         paymentManagements,
         screenTrackings,
         practiceManagements,
-        id: applicationId,
       });
 
       setUser((prevState) => ({

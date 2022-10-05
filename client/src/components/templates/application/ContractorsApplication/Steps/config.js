@@ -21,9 +21,8 @@ export const parseStepNames = (name) => {
     case stepName.CONTRACT:
       return 5;
     case stepName.CONTRACT_SIGNED:
-      return 6;
     case stepName.DECLINED:
-      return 7;
+      return 6;
     default:
       return 1;
   }

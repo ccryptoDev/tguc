@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { H3, Text } from "../../../../../atoms/Typography";
 import { Email, Phone } from "../../../Components/InfoBoxes";
-import { useStepper } from "../../../../../../contexts/steps";
-import { useUserData } from "../../../../../../contexts/user";
 
 const Wrapper = styled.div`
   .info-wrapper {
@@ -27,26 +25,6 @@ const Wrapper = styled.div`
 `;
 
 const WaitingForApproval = () => {
-  const [status, setStatus] = React.useState("pending");
-  const { moveToNextStep } = useStepper();
-  const { user } = useUserData();
-
-  // const handleNextStep = () => {
-  //   if (status === "pending") {
-  //     alert("Not authorized");
-  //   } else if (status === "qualified") {
-  //     moveToNextStep();
-  //   } else {
-  //     alert("Not authorized");
-  //   }
-  // };
-
-  React.useEffect(() => {
-    if (user?.data) {
-      setStatus(user.data.paymentManagement.status);
-    }
-  }, [user]);
-
   return (
     <Wrapper>
       <H3>Congrats!!</H3>

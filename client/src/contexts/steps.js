@@ -2,18 +2,27 @@ import React, { useState, useEffect } from "react";
 
 export const StepperContext = React.createContext();
 
-export const StepperProvider = ({ children, steps, initStep = 0 }) => {
+export const StepperProvider = ({
+  children,
+  steps,
+  isDeclined = false,
+  initStep = 0,
+}) => {
   const [state, setState] = useState(steps());
   const [currentStep, setCurrentStep] = useState(0);
 
   const getScreenData = async () => {
     const curStep = initStep;
 
-    const updatedState = state.map((item) => {
+    const updatedState = steps(isDeclined).map((item) => {
       const updatedItem = { ...item };
-      if (item.number < curStep) {
+      if (isDeclined) {
+        // IF DECLINED - REMOVES EDIT BUTTONS FROM EACH STEP
+        updatedItem.completed = false;
+      } else if (item.number < curStep) {
         updatedItem.completed = true;
-      } else if (item.number === curStep) {
+      }
+      if (item.number === curStep) {
         updatedItem.active = true;
       }
       return updatedItem;
@@ -27,7 +36,7 @@ export const StepperProvider = ({ children, steps, initStep = 0 }) => {
     if (initStep) {
       getScreenData();
     }
-  }, [initStep]);
+  }, [initStep, isDeclined]);
 
   const goToStep = (stepNumber) => {
     const updatedState = state.map((item) => {

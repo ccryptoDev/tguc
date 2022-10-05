@@ -5,9 +5,9 @@ import LastStep from "./LastStep";
 // import BankDetails from "./PaymentMethod";
 import WaitingToBeApproved from "./WaitingToBeApproved";
 import BusinessInformation from "./BusinessInformation";
-import denied from "./WaitingToBeApproved/Declined";
+import Denied from "./WaitingToBeApproved/Declined";
 
-export const steps = () => [
+export const steps = (isDeclined = false) => [
   {
     number: 1,
     name: "Personal Information",
@@ -43,25 +43,11 @@ export const steps = () => [
     completed: false,
     component: Contract,
   },
-  // {
-  //   number: 6,
-  //   name: "Bank Details",
-  //   active: false,
-  //   completed: false,
-  //   component: BankDetails,
-  // },
   {
     number: 6,
-    name: "Thank you",
+    name: isDeclined ? "Declined" : "Thank you",
     active: false,
     completed: false,
-    component: LastStep,
-  },
-  {
-    number: 7,
-    name: "Declined",
-    active: false,
-    completed: false,
-    component: denied,
+    component: isDeclined ? Denied : LastStep,
   },
 ];

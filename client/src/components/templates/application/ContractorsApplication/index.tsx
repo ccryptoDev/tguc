@@ -5,7 +5,7 @@ import Stepper from "../../../organisms/Stepper";
 import { StepperProvider } from "../../../../contexts/steps";
 import { steps } from "./Steps";
 import { useUserData } from "../../../../contexts/user";
-import { parseStepNames } from "./Steps/config";
+import { parseStepNames, stepName } from "./Steps/config";
 import { routes } from "../../../../routes/Application/routes";
 
 const Wrapper = styled.div`
@@ -46,7 +46,7 @@ const Wrapper = styled.div`
 
 const Steps = () => {
   return (
-    <Wrapper className="page-contentainer">
+    <Wrapper className="page-container">
       <Stepper />
     </Wrapper>
   );
@@ -56,6 +56,7 @@ const Application = () => {
   const { lastScreen, isAuthorized, user, loading } = useUserData();
   const [initStep, setInitStep] = useState(0);
   const history = useHistory();
+  const isDeclined = lastScreen === stepName.DECLINED;
 
   useEffect(() => {
     if (!loading) {
@@ -81,7 +82,7 @@ const Application = () => {
   }, [loading, isAuthorized]);
 
   return (
-    <StepperProvider steps={steps} initStep={initStep}>
+    <StepperProvider isDeclined={isDeclined} steps={steps} initStep={initStep}>
       <Steps />
     </StepperProvider>
   );
