@@ -111,7 +111,7 @@ const CreditReport = ({ state }) => {
   const report = state?.creditReport;
   const instnt = state?.instnt;
   const practice = state?.practiceManagement;
-
+  const screenTracking = state?.screenTracking;
   return (
     <Wrapper>
       <Heading text="Application Summary" />
@@ -123,7 +123,7 @@ const CreditReport = ({ state }) => {
           {renderTable(midDesk)}
         </>
       ) : (
-        <SummaryTable report={report} />
+        <SummaryTable report={report} screenTracking={screenTracking} />
       )}
 
       <Heading text="Experian US Consumer Credit Report" />

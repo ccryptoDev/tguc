@@ -713,7 +713,7 @@ export class ApplicationService {
   }
 
   async underwriteBorrower(
-    screenTracking: ScreenTracking,
+    screenTracking: any,
     user: User,
     requestId: string,
   ) {
@@ -749,6 +749,7 @@ export class ApplicationService {
       screenUpdateObj.lastLevel = 'apply';
       applicationStatus = 'pending';
     }
+    let lastLevelValue: "apply" | "denied" = rulesDetails.loanApproved && !rulesDetails.isPending ? 'apply' : 'denied';
     try {
       await this.screenTrackingModel.update(
         { id: screenTracking.id },
@@ -757,7 +758,39 @@ export class ApplicationService {
       } catch (e) {
       console.log("Error updating object", e);
     }
-
+    const stage2Rules: any = await this.productService.getStage2Rules(
+      creditReport,
+      screenTracking.practiceManagement.id,
+      requestId,
+      stage1Rules.income,
+      user.requestedAmount
+    );
+    const stage2RulesDetails = {
+      approvedRuleMsg: [
+        ...stage1Rules.approvedRuleMsg,
+        ...stage2Rules.approvedRuleMsg,
+      ],
+      declinedRuleMsg: [
+        ...stage1Rules.declinedRuleMsg,
+        ...stage2Rules.declinedRuleMsg,
+      ],
+      ruleData: {
+        ...stage1Rules.ruleData,
+        ...stage2Rules.ruleData,
+      },
+      isPending: stage1Rules.isPending,
+    };
+    const updateSc = await this.screenTrackingModel.update(
+      { id: screenTracking.id },
+      { rulesDetails: stage2RulesDetails.ruleData,
+        TotalGMI: stage2Rules.TotalGMI,
+        disposableIncome: stage2Rules.disposableIncome,
+        DTI: stage2Rules.DTI,
+        DTIPercent: Math.round(stage2Rules.DTI * 100),
+        PTI: stage2Rules.PTI,
+        PTIPercent: Math.round(stage2Rules.PTI * 100),
+      }
+    );
     await this.paymentManagementService.createPaymentManagement(
       screenTracking,
       rulesDetails.loanApproved ? applicationStatus : 'denied',

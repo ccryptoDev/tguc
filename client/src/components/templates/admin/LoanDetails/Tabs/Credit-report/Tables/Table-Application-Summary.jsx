@@ -9,8 +9,12 @@ const TableWrapper = styled(AdminTableWrapper)`
   }
 `;
 
-const ApplicationSummaryTable = ({ report }) => {
+const ApplicationSummaryTable = ({ report, screenTracking }) => {
   const score = report?.user?.creditScore;
+  const DTI = screenTracking?.DTIPercent;
+  const PTIPercent = screenTracking?.PTIPercent;
+  const TotalGMI = screenTracking?.TotalGMI;
+  const disposableIncome = screenTracking?.disposableIncome;
   return (
     <TableWrapper>
       <table>
@@ -25,25 +29,25 @@ const ApplicationSummaryTable = ({ report }) => {
             <td>
               <b>DTI</b>
             </td>
-            <td>15.5%</td>
+            <td>{DTI}%</td>
           </tr>
           <tr>
             <td>
               <b>PTI</b>
             </td>
-            <td>4.74%</td>
+            <td>{PTIPercent}%</td>
           </tr>
           <tr>
             <td>
               <b>Total GMI</b>
             </td>
-            <td>{formatCurrency(7500)}</td>
+            <td>{formatCurrency(TotalGMI)}</td>
           </tr>
           <tr>
             <td>
               <b>Disposable Income</b>
             </td>
-            <td>{formatCurrency(5615.14)}</td>
+            <td>{formatCurrency(disposableIncome)}</td>
           </tr>
         </tbody>
       </table>

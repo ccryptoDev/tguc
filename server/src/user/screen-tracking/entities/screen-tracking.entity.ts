@@ -211,4 +211,22 @@ export class ScreenTracking {
 
   @Column({ default: false })
   isAwaitingWorkCompletion: boolean;
+
+  @Column({ type: 'double precision', nullable: true })
+  DTI: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  PTI: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  DTIPercent: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  PTIPercent: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  TotalGMI: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  disposableIncome: number;
 }

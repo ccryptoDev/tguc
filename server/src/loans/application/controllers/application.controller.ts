@@ -353,7 +353,7 @@ export class ApplicationController {
         where: {
           user: updatedApplyDto.userId,
         },
-        relations: ['user'],
+        relations: ['user', 'practiceManagement'],
       });
 
       await this.screenTrackingModel.update(application.id, {

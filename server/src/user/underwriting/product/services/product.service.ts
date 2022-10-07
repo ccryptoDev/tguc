@@ -191,11 +191,27 @@ export class ProductService {
 
     return result;
   }
+  getMonthlyIncome(yearlyIncome) {
+    return Math.round(yearlyIncome / 12);
+  }
 
+  getTermsBasedOnLoanAmout(amount) {
+    let term = 0;
+    let nbrAmount: number = parseInt(amount);
+    if (nbrAmount < 5001) {
+      term = 72;
+    }
+    if (nbrAmount < 100000) {
+      term = 120;
+    }
+    return term
+  }
   async getStage2Rules(
     creditReport: any,
     practiceId: string,
     requestId: string,
+    income: number = 0,
+    requestedAmount: number = 0
   ) {
     this.logger.log(
       'Getting stage 2 rules with params:',
@@ -219,7 +235,14 @@ export class ProductService {
           requestId,
         ),
       );
-
+    const monthlyRealEstPayment = Number(((((creditReport.summaries || [])[0] || {}).attributes || []).find(x => x.id === 'realEstatePayment') || {}).value);
+    const revolvingSum = creditReport.tradeline.filter(x => x.revolvingOrInstallment === 'R' && x.openOrClosed === 'O').reduce((acc, cur) => (parseInt(cur.monthlyPaymentAmount) || 0) + acc, 0) || 0;
+    const monthlyDebtPaymentAmt = (monthlyRealEstPayment ? monthlyRealEstPayment : 0) + revolvingSum
+    const monthlyIncome = this.getMonthlyIncome(income);
+    const disposableIncome = monthlyIncome - monthlyDebtPaymentAmt
+    const DTI = monthlyDebtPaymentAmt / monthlyIncome;
+    const monthlyLoanPmtAmt = requestedAmount / this.getTermsBasedOnLoanAmout(requestedAmount);
+    const PTI = monthlyLoanPmtAmt / monthlyIncome;
     const ruleUserValueFuncs = {
       // No hit
       rule0: (creditReport: any) => {
@@ -559,6 +582,12 @@ export class ProductService {
       ruleApprovals: {},
       ruleData: {},
       totalAdjWeight: 0,
+      monthlyDebtPaymentAmt: monthlyDebtPaymentAmt,
+      TotalGMI: monthlyIncome,
+      disposableIncome: disposableIncome,
+      DTI: DTI,
+      monthlyLoanPmtAmt: monthlyLoanPmtAmt,
+      PTI: PTI,
     };
     Object.keys(rules).forEach((ruleKey) => {
       const rule = rules[ruleKey];
@@ -902,6 +931,7 @@ export class ProductService {
       ruleData: {},
       loanApproved : true,
       isPending: isPending,
+      income: user.income,
     };
     Object.keys(rules).forEach((ruleKey) => {
       const rule = rules[ruleKey];
