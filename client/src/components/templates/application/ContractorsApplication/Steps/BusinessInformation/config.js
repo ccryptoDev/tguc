@@ -14,6 +14,7 @@ export const initForm = ({
   phone = "",
   website = "",
   zip = "",
+  annualRevenue = "",
 }) => {
   return {
     name: { value: practiceName || "", message: "", required: true },
@@ -25,6 +26,7 @@ export const initForm = ({
     city: { value: city || "", message: "", required: true },
     state: { value: stateCode || "", message: "", required: true },
     zip: { value: zip || "", message: "", required: true },
+    annualRevenue: { value: annualRevenue || "", message: "", required: true },
     yearsInBusiness: {
       value: yearsInBusiness || "",
       message: "",
@@ -120,5 +122,15 @@ export const renderFields = (form) => [
     label: "Years in Business",
     format: "##",
     message: form.yearsInBusiness.message,
+  },
+  {
+    value: form.annualRevenue.value,
+    name: "annualRevenue",
+    component: FormattedField,
+    placeholder: "enter annualRevenue",
+    message: form.annualRevenue.message,
+    label: "Annual Revenue",
+    prefix: "$",
+    thousandSeparator: true,
   },
 ];
