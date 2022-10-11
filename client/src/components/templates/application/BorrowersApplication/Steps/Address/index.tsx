@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import Button from "../../../../../atoms/Buttons/Button";
 import { initForm, renderFields } from "./config";
 import { validateForm } from "./validation";
@@ -11,7 +12,7 @@ import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
 import { IKukunPayload } from "../../../Kukun";
 import { parseFormToRequest } from "../../../../../../utils/parseForm";
 import { updateNewUserApplication } from "../../../../../../api/application";
-import { useStepper } from "../../../../../../contexts/steps";
+import { useUserData } from "../../../../../../contexts/user";
 
 const Form = styled.form`
   .fields-wrapper {
@@ -36,16 +37,11 @@ const Form = styled.form`
   }
 `;
 
-const FormComponent = ({
-  moveToNextStep,
-  isActive,
-}: {
-  moveToNextStep: any;
-  isActive: boolean;
-}) => {
+const FormComponent = ({ isActive }: { isActive: boolean }) => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(initForm());
-  const { goToStep } = useStepper();
+  const { fetchUser } = useUserData();
+
   useEffect(() => {
     // POPULATE FORM WITH KUKUN DATA
     if (isActive) {
@@ -67,7 +63,6 @@ const FormComponent = ({
     const [isValid, validatedForm] = validateForm(form);
 
     if (isValid) {
-      setLoading(true);
       const payload = parseFormToRequest(validatedForm) as any;
       const userToken: any = window.localStorage.getItem("userToken");
       if (!userToken) {
@@ -75,15 +70,16 @@ const FormComponent = ({
       }
       const user = JSON.parse(userToken);
       payload.userId = user.id;
-      await updateNewUserApplication(payload).then((data) => {
-        if (data.data.score > 650 && data.data.isApproved) {
-          goToStep(5);
-          //move to waiting for approval
-        } else {
-          moveToNextStep();
-        }
+      setLoading(true);
+      const result = await updateNewUserApplication(payload);
+      setLoading(false);
+      if (result && !result.error) {
+        setLoading(true);
+        await fetchUser();
         setLoading(false);
-      });
+      } else {
+        toast.error(result?.error?.message || "something went wrong");
+      }
     } else {
       setForm(validatedForm);
     }

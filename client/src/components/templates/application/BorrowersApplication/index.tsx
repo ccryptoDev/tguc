@@ -71,7 +71,7 @@ const Application = () => {
         setInitStep(1);
       }
     }
-  }, [loading, isAuthorized]);
+  }, [loading, isAuthorized, user?.data?.screenTracking?.lastScreen]);
 
   return (
     <StepperProvider steps={steps} initStep={initStep} isDeclined={isDeclined}>

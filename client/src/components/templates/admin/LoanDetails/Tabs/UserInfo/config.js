@@ -34,6 +34,7 @@ export default ({
   financingStatus,
   businessAddress = {},
   isAdmin,
+  annualRevenue = "--",
 }) =>
   [
     { label: "User Reference", value: userReference, id: "1" },
@@ -55,6 +56,7 @@ export default ({
     { label: "Financing Reference Number", value: loanReference, id: "13" },
     { label: "Contractor", value: contractorReference, id: "14" },
     { label: "Contractor Business", value: practiceName, id: "15" },
+    { label: "Annual Revenue", value: annualRevenue, id: "15" },
     {
       label: "Business Address",
       value: businessAddressString(businessAddress),
