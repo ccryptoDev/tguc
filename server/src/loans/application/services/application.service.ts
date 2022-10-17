@@ -744,6 +744,7 @@ export class ApplicationService {
       creditScore: creditReport.score || 0,
       lastLevel: rulesDetails.loanApproved && !rulesDetails.isPending ? 'apply' : 'denied', // TODO: If it's denied we need to update the laststep since seems not been updated
       rulesDetails: rulesDetails,
+      lastScreen: (rulesDetails.loanApproved && rulesDetails.isPending) ? 'waiting-for-approve' : 'offers'
     };
     if (rulesDetails.isPending) {
       screenUpdateObj.lastLevel = 'apply';
@@ -767,23 +768,19 @@ export class ApplicationService {
     );
     const stage2RulesDetails = {
       approvedRuleMsg: [
-        ...stage1Rules.approvedRuleMsg,
-        ...stage2Rules.approvedRuleMsg,
-      ],
+        ...stage1Rules.approvedRuleMsg],
       declinedRuleMsg: [
         ...stage1Rules.declinedRuleMsg,
-        ...stage2Rules.declinedRuleMsg,
       ],
       ruleData: {
         ...stage1Rules.ruleData,
-        ...stage2Rules.ruleData,
       },
       isPending: stage1Rules.isPending,
     };
+
     const updateSc = await this.screenTrackingModel.update(
       { id: screenTracking.id },
-      { rulesDetails: stage2RulesDetails.ruleData,
-        TotalGMI: stage2Rules.TotalGMI,
+      { TotalGMI: stage2Rules.TotalGMI,
         disposableIncome: stage2Rules.disposableIncome,
         DTI: stage2Rules.DTI,
         DTIPercent: Math.round(stage2Rules.DTI * 100),
@@ -791,6 +788,9 @@ export class ApplicationService {
         PTIPercent: Math.round(stage2Rules.PTI * 100),
       }
     );
+    if (applicationStatus != 'pending' && stage2Rules.manualReview) { // Validate pending jobs
+      applicationStatus = 'pending';
+    }
     await this.paymentManagementService.createPaymentManagement(
       screenTracking,
       rulesDetails.loanApproved ? applicationStatus : 'denied',

@@ -25,7 +25,7 @@ export const InstntProvider = ({ children }) => {
     const formData = {
       dob: parseDate2(dateOfBirth), // parse to format YYYY-MM-DD
       mobileNumber: phone,
-      email: "test123@gmail.com",
+      email,
       nationalId: ssnNumber,
       firstName,
       middleName: "",

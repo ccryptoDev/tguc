@@ -241,8 +241,139 @@ export class ProductService {
     const monthlyIncome = this.getMonthlyIncome(income);
     const disposableIncome = monthlyIncome - monthlyDebtPaymentAmt
     const DTI = monthlyDebtPaymentAmt / monthlyIncome;
+    const DTIPercent = Math.round(DTI * 100);
     const monthlyLoanPmtAmt = requestedAmount / this.getTermsBasedOnLoanAmout(requestedAmount);
     const PTI = monthlyLoanPmtAmt / monthlyIncome;
+    const PTIPercent = Math.round(PTI * 100);
+    const score = parseInt(creditReport.score);
+    // Pricing Matrix start
+    let manualReview = false;
+    let maxApproved = 0;
+    // Rule 1
+    if ( requestedAmount > 60000) { // At this point we already validated the minumum amount
+      manualReview = true;
+    }
+
+    let tier = 0;
+    if (score >= 760) {
+      tier = 1; // A+
+      maxApproved = 60000;
+    }
+    if (score >= 730 && score <= 759) {
+      tier = 2; // A
+      maxApproved = 45000;
+    }
+    if (score >= 700 && score <= 729) {
+      tier = 3; // B
+      maxApproved = 30000;
+    }
+    if (score >= 660 && score <= 699) {
+      tier = 4; // C
+      maxApproved = 20000;
+    }
+    if (score >= 620 && score <= 659){
+      tier = 5; // D
+    }
+    if (score <= 619) {
+      tier = 6; // E
+    }
+    if (requestedAmount > maxApproved) { // this  check if the current Loan Amount is lower that the allowed max
+      manualReview = true;
+    }
+    if (DTIPercent > 60) { // Validating DTI < 60 for all tiers, except tier C needs < 55
+      manualReview = true;
+    }
+    switch(tier) {
+      case 1: // Tier A+
+        if (disposableIncome <= 999){
+          manualReview = true;
+        }
+        if (disposableIncome <= 2500) {
+          if (PTIPercent > 5) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome > 2500) {
+          if (PTIPercent > 15) {
+            manualReview = true;
+          }
+        }
+        // tier 1 rules
+        break;
+      case 2: // Tier A
+        if (disposableIncome <= 999){
+          manualReview = true;
+        }
+        if (disposableIncome <= 2500) {
+          if (PTIPercent > 3) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome <= 5000) {
+          if (PTIPercent > 5) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome > 5000) {
+          if (PTIPercent > 15) {
+            manualReview = true;
+          }
+        }
+        break;
+      case 3: // Tier B
+        if (disposableIncome <= 999){
+          manualReview = true;
+        }
+        if (disposableIncome <= 2500) {
+          if (PTIPercent > 3) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome <= 5000) {
+          if (PTIPercent > 5) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome > 5000) {
+          if (PTIPercent > 15) {
+            manualReview = true;
+          }
+        }
+        break;
+      case 4: // Tier C
+        if (disposableIncome < 2500) {
+          manualReview = true;
+        }
+        if (disposableIncome <= 5000) {
+          if (PTIPercent > 3) {
+            manualReview = true;
+          }
+          if (DTIPercent > 55) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome <= 10000) {
+          if (PTIPercent > 5) {
+            manualReview = true;
+          }
+        }
+        if (disposableIncome > 10000) {
+          if (PTIPercent > 10) {
+            manualReview = true;
+          }
+        }
+        break;
+      case 5: // Tier D
+        manualReview = true;
+        break;
+      case 6: // Tier E
+        manualReview = true;
+        break;
+      default:
+        break;
+    }
+
+    // Pricing Matrix ends
     const ruleUserValueFuncs = {
       // No hit
       rule0: (creditReport: any) => {
@@ -588,6 +719,7 @@ export class ProductService {
       DTI: DTI,
       monthlyLoanPmtAmt: monthlyLoanPmtAmt,
       PTI: PTI,
+      manualReview: manualReview,
     };
     Object.keys(rules).forEach((ruleKey) => {
       const rule = rules[ruleKey];
