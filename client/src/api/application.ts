@@ -540,6 +540,20 @@ export async function updateBusinessData(body: IUpdateBusinessData) {
   return response;
 }
 
+export async function addCardApi(body: any) {
+  let response: IResponse = { data: null, error: null };
+  try {
+    response = await getRequester().post(
+      `${baseUrl}/api/application/addCard`,
+      body
+    );
+    console.log("response", response);
+  } catch (error) {
+    response.error = error;
+  }
+  return response;
+}
+
 export async function getPracticeManagementByScreenTrackingId(
   screenTrackingId: string
 ) {
@@ -596,7 +610,18 @@ export async function fetchBorrowerOfferApi({
   }
   return response;
 }
-
+export async function setOfferApi(data: any) {
+  let response: IResponse = { data: null, error: null };
+  try {
+    response = await getRequester().post(
+      `${baseUrl}/api/application/setOfferData `,
+      data
+    );
+  } catch (err) {
+    response.error = err;
+  }
+  return response;
+}
 export async function selectOfferApi({
   loanId,
   promoSelected,
@@ -604,8 +629,8 @@ export async function selectOfferApi({
   screenTrackingId,
 }: {
   loanId: string;
-  promoSelected?: boolean;
-  skipAutoPay?: boolean;
+  promoSelected: boolean;
+  skipAutoPay: boolean;
   screenTrackingId: string;
 }) {
   let response: IResponse = { data: null, error: null };
