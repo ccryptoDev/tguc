@@ -9,12 +9,13 @@ import SSN from "./SSN";
 import Address from "./Address";
 import Declined from "./WaitingToBeApproved/Declined";
 
-export const steps = (isDeclined = false) => [
+export const steps = (isDeclined = false, isEditable) => [
   {
     number: 1,
     name: "Personal Information",
     active: false,
     completed: false,
+    editable: isEditable,
     component: PersonalInfo,
   },
   {
@@ -22,6 +23,7 @@ export const steps = (isDeclined = false) => [
     name: "Address Information",
     active: false,
     completed: false,
+    editable: isEditable,
     component: Address,
   },
   {
@@ -29,6 +31,7 @@ export const steps = (isDeclined = false) => [
     name: "Connect Bank",
     active: false,
     completed: false,
+    editable: isEditable,
     component: ConnectBank,
   },
   {
@@ -36,6 +39,7 @@ export const steps = (isDeclined = false) => [
     name: "Waiting for Approval",
     active: false,
     completed: false,
+    editable: isEditable,
     component: WaitingToBeApproved,
   },
   {
@@ -43,6 +47,7 @@ export const steps = (isDeclined = false) => [
     name: "Select Offer",
     active: false,
     completed: false,
+    editable: isEditable,
     component: Offer,
   },
   {
@@ -50,6 +55,7 @@ export const steps = (isDeclined = false) => [
     name: "Payment Details",
     active: false,
     completed: false,
+    editable: isEditable,
     component: PaymentDetails,
   },
   {
@@ -57,6 +63,7 @@ export const steps = (isDeclined = false) => [
     name: "Sign Contract",
     active: false,
     completed: false,
+    editable: isEditable,
     component: Contract,
   },
   {
@@ -64,6 +71,7 @@ export const steps = (isDeclined = false) => [
     name: "Social Security Number",
     active: false,
     completed: false,
+    editable: isEditable,
     component: SSN,
   },
   {
@@ -71,6 +79,7 @@ export const steps = (isDeclined = false) => [
     name: isDeclined ? "Declined" : "Thank you",
     active: false,
     completed: false,
+    editable: isEditable,
     component: isDeclined ? Declined : LastStep,
   },
 ];
