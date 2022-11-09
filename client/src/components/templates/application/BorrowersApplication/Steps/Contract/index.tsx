@@ -6,19 +6,15 @@ import { toast } from "react-toastify";
 import PromissoryNote from "./Ric";
 import SignaturePad from "./SignaturePad";
 import {
-  fetchRicApi,
-  saveSignature,
-  createRicApi,
-  fetchContractApi,
+  fetchContractDataApi,
   finalizeContractApi,
-} from "../../../../../../api/application";
+  saveSignatureApi,
+} from "../../../../../../api/contract";
 import { useUserData } from "../../../../../../contexts/user";
 import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
 import ErrorMessage from "../../../../../molecules/Form/Elements/FormError";
-import { mockRequest } from "../../../../../../utils/mockRequest";
-import { useStepper } from "../../../../../../contexts/steps";
-import Header from "./Header";
 import Button from "../../../../../atoms/Buttons/Button";
+import { parseCanvasString } from "../../../../../../utils/base64";
 
 const Styles = styled.div`
   width: 100%;
@@ -94,19 +90,17 @@ const Contract = ({
 }) => {
   const [signature, setSignature] = useState<string | null>(null);
   const sigCanvas = useRef<any>({});
-  const ricContent = useRef<any>();
   const [ricData, setRicData] = useState();
   const [error, setError] = useState("");
-  const [formLaoding, setFormLoading] = useState(false);
-  const { screenTrackingId, user, userId } = useUserData();
+  const [formLoading, setFormLoading] = useState(false);
+  const { screenTrackingId, user, fetchUser } = useUserData();
   const [loading, setLoading] = useState(false);
-  const { moveToNextStep } = useStepper();
   const textContent = useRef<any>();
 
-  const fetchRic = async () => {
+  const fetchContractData = async () => {
     const userSignature = user?.data?.doc?.signature;
     if (screenTrackingId) {
-      const result = await fetchContractApi(screenTrackingId);
+      const result = await fetchContractDataApi();
       if (result && result?.data && !result.error) {
         setRicData(result.data);
         setSignature(userSignature);
@@ -118,33 +112,39 @@ const Contract = ({
   };
 
   useEffect(() => {
-    if (screenTrackingId && isActive && !completed) fetchRic();
+    if (screenTrackingId && isActive && !completed) fetchContractData();
   }, [user.data, screenTrackingId, isActive, completed]);
 
   const save = async () => {
     if (!sigCanvas.current.isEmpty()) {
-      setFormLoading(true);
-      await mockRequest();
       const sigURI = sigCanvas.current.getTrimmedCanvas().toDataURL();
       setSignature(sigURI);
       const payload = {
-        userId: user?.data?.id,
-        data: sigURI.replace(",", "removeit").split("removeit")[1],
+        screenTrackingId,
+        imgBase64: parseCanvasString(sigURI),
       };
-      // await saveSignature(payload);
-      // await fetchUser();
-      toast.success("signature has been saved");
+      setFormLoading(true);
+      const result = await saveSignatureApi(payload);
       setFormLoading(false);
+      if (result && !result.error) {
+        await fetchUser();
+        toast.success("signature has been saved");
+      } else {
+        toast.error("could not save the signature");
+      }
     }
   };
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    await finalizeContractApi({ screenTrackingId, userId });
-
+    const result = await finalizeContractApi();
     setLoading(false);
-    moveToNextStep();
+    if (result && !result.error) {
+      await fetchUser();
+    } else {
+      toast.error("could not finalize the contract");
+    }
   };
 
   const handlePrint = useReactToPrint({
@@ -158,7 +158,7 @@ const Contract = ({
           <div ref={textContent} className="contract-container">
             <PromissoryNote ricData={ricData} signature={signature} />
           </div>
-          <Loader loading={formLaoding}>
+          <Loader loading={formLoading}>
             {!signature && <SignaturePad sigCanvas={sigCanvas} save={save} />}
           </Loader>
           <div className="buttons-wrapper">
