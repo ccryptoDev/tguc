@@ -40,7 +40,7 @@ const Form = styled.form`
 const FormComponent = ({ isActive }: { isActive: boolean }) => {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(initForm());
-  const { fetchUser } = useUserData();
+  const { fetchUser, userId } = useUserData();
 
   useEffect(() => {
     // POPULATE FORM WITH KUKUN DATA
@@ -64,14 +64,12 @@ const FormComponent = ({ isActive }: { isActive: boolean }) => {
 
     if (isValid) {
       const payload = parseFormToRequest(validatedForm) as any;
-      const userToken: any = window.localStorage.getItem("userToken");
-      if (!userToken) {
-        return;
-      }
-      const user = JSON.parse(userToken);
-      payload.userId = user.id;
       setLoading(true);
-      const result = await updateNewUserApplication(payload);
+      const result: any = await updateNewUserApplication({
+        ...payload,
+        userId,
+      });
+      //Get offers data for next screen;
       setLoading(false);
       if (result && !result.error) {
         setLoading(true);
