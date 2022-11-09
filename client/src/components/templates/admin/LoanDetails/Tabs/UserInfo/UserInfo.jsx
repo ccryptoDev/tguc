@@ -65,6 +65,8 @@ const UserInfo = ({ state }) => {
           financingStatus: isContractor
             ? "Contractor Application Status"
             : "Financing Status",
+          practiceName: state?.practiceManagement.practiceName,
+          annualRevenue: state?.practiceManagement?.annualRevenue,
         })}
       />
       {state?.screenTracking &&
