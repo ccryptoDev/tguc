@@ -86,10 +86,18 @@ type IStepProps = {
   name: string;
   completed: boolean;
   active: boolean;
+  editable: boolean;
   children: any;
 };
 
-const Step = ({ number, name, completed, active, children }: IStepProps) => {
+const Step = ({
+  number,
+  name,
+  completed,
+  editable,
+  active,
+  children,
+}: IStepProps) => {
   const { goToStep } = useStepper();
 
   const renderStepIcon = () => {
@@ -116,7 +124,7 @@ const Step = ({ number, name, completed, active, children }: IStepProps) => {
           }}
         >
           {name}
-          {completed && !active ? (
+          {completed && !active && editable ? (
             <button
               type="button"
               className="step-edit-btn"
