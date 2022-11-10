@@ -84,22 +84,8 @@ const Form = ({ signature }: { signature: any }) => {
         <div className="label">Borrower Signature</div>
       </div>
       <div className="field-wrapper">
-        <div className="field">
-          {signature ? <img src={signatureimg} alt="user's signature" /> : ""}
-        </div>
-        <div className="label">Cosigner Signature</div>
-      </div>
-      <div className="field-wrapper">
         <div className="field">Temeka Adams</div>
         <div className="label">Borrower Full Name</div>
-      </div>
-      <div className="field-wrapper">
-        <div className="field">Patricia Jones</div>
-        <div className="label">Cosigner Full Name</div>
-      </div>
-      <div className="field-wrapper">
-        <div className="field">{moment().format(dateFormat)}</div>
-        <div className="label">Date</div>
       </div>
       <div className="field-wrapper">
         <div className="field">{moment().format(dateFormat)}</div>
