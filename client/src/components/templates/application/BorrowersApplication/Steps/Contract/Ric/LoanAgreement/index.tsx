@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const LoanAgreement = () => {
+const LoanAgreement = ({ ...props }) => {
   return (
     <Wrapper>
       <div className="creditor-field">
@@ -45,7 +45,7 @@ const LoanAgreement = () => {
       <div className="heading text-center">
         <b>LOAN AGREEMENT</b>
       </div>
-      <Form />
+      <Form {...props} />
       <Introduction />
       <Agreement />
     </Wrapper>
