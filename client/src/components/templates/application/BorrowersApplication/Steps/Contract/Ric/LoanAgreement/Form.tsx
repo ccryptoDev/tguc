@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import moment from "moment";
-import { dateFormat } from "../../../../../../../../utils/formats";
+import { formatDate } from "../../../../../../../../utils/formats";
 
 const Wrapper = styled.div`
   display: flex;
@@ -46,20 +45,25 @@ const Wrapper = styled.div`
   }
 `;
 
-const Form = () => {
+const Form = ({
+  userData = {},
+  date = "",
+  screenTracking = {},
+  selectedOffer = {},
+}: any) => {
   return (
     <Wrapper>
       <div className="field-wrapper">
         <div className="label">Date:</div>
-        <div className="field">{moment().format(dateFormat)}</div>
+        <div className="field">{formatDate(date)}</div>
       </div>
       <div className="field-wrapper">
         <div className="label">Term:</div>
-        <div className="field">12 months</div>
+        <div className="field">{selectedOffer?.term} months</div>
       </div>
       <div className="field-wrapper">
         <div className="label">Amount Financed:</div>
-        <div className="field">%2,000</div>
+        <div className="field">$2,000</div>
       </div>
       <div className="field-wrapper">
         <div className="label">Borrower Name:</div>
@@ -67,30 +71,30 @@ const Form = () => {
       </div>
       <div className="field-wrapper">
         <div className="label">Borrower Address:</div>
-        <div className="field">8180 Briarwood St Stanton, AL 90680</div>
+        <div className="field">
+          {userData?.street} {userData?.city ? `${userData?.city},` : ""}{" "}
+          {userData?.state} {userData?.zipCode}
+        </div>
       </div>
       <div className="field-wrapper">
         <div className="label">Loan #:</div>
-        <div className="field">1243</div>
+        <div className="field">{screenTracking?.applicationReference}</div>
       </div>
-      <div className="field-wrapper">
+      {/* <div className="field-wrapper">
         <div className="label">Cosigner Name:</div>
         <div className="field">Patricia Jones</div>
       </div>
       <div className="field-wrapper">
         <div className="label">Cosigner Address:</div>
         <div className="field">8180 Briarwood St Stanton, AL 90680</div>
-      </div>
-      <div className="field-wrapper placeholder-field" />
+      </div> */}
       <div className="field-wrapper">
         <div className="label">Service Provider Name:</div>
         <div className="field" />
       </div>
       <div className="field-wrapper">
         <div className="label">Service Provider Address:</div>
-        <div className="field">
-          4362 Blue Diamond Rd #102-348 Las Vegas, NV 89139
-        </div>
+        <div className="field" />
       </div>
       <div className="field-wrapper" />
     </Wrapper>
