@@ -12,13 +12,13 @@ const Ric = ({ ricData = {}, signature }) => {
   return (
     <Wrapper>
       <div className="section">
-        <TruthInLending maturityDate={maturityDate} offer={ricData} />
+        <TruthInLending {...ricData} />
       </div>
       <div className="section">
         <Itemization />
       </div>
       <div className="section">
-        <LoanAgreement />
+        <LoanAgreement {...ricData} />
       </div>
       <div className="section">
         <SignatureForm signature={signature} />
