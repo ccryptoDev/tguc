@@ -1,6 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import styled from "styled-components";
+import { v4 as uuid } from "uuid";
+import {
+  formatCurrency,
+  formatDate,
+} from "../../../../../../../../utils/formats";
 
 const Wrapper = styled.div`
   font-size: 14px;
@@ -111,7 +116,21 @@ const Wrapper = styled.div`
   }
 `;
 
-function TruthInLending({ maturityDate = "--", offer }) {
+const renderPaymentSchedule = ({
+  regularPayments = {},
+  lastPayment = {},
+  totalPayments = {},
+}) => {
+  return [regularPayments, lastPayment, totalPayments];
+};
+
+function TruthInLending({
+  paymentScheduleInfo = {
+    regularPayments: {},
+    lastPayment: {},
+    totalPayments: {},
+  },
+}) {
   return (
     <Wrapper>
       <div className="section-frame">
@@ -206,16 +225,17 @@ function TruthInLending({ maturityDate = "--", offer }) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    {offer?.schedule?.length ? offer?.schedule?.length - 1 : ""}
-                  </td>
-                  <td>${offer?.monthlyPayment}</td>
-                  <td>
-                    Monthly, beginning 30 days after the first date any of your
-                    loan proceeds are disbursed.
-                  </td>
-                </tr>
+                {renderPaymentSchedule(paymentScheduleInfo).map(
+                  ({ numberOfPayments = "", amount = "", due = "" }) => {
+                    return (
+                      <tr key={uuid()}>
+                        <td>{numberOfPayments}</td>
+                        <td>{formatCurrency(amount)}</td>
+                        <td>{due}</td>
+                      </tr>
+                    );
+                  }
+                )}
               </tbody>
             </table>
           </div>
