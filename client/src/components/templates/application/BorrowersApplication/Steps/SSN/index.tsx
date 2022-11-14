@@ -24,10 +24,10 @@ const Wrapper = styled.div`
 const SocialSecurityNumber = ({ moveToNextStep }: { moveToNextStep: any }) => {
   const [form, setForm] = useState(initForm());
   const [loading, setLoading] = useState(false);
+
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
-    const [isValid, updatedForm] = validateForm(form);
-    if (isValid) {
+    if (form.ssn.value.length === 9) {
       setLoading(true);
 
       const userToken: any = window.localStorage.getItem("userToken");
@@ -42,7 +42,10 @@ const SocialSecurityNumber = ({ moveToNextStep }: { moveToNextStep: any }) => {
       setLoading(false);
       moveToNextStep();
     } else {
-      setForm(updatedForm);
+      setForm((prevState) => ({
+        ...prevState,
+        ssn: { ...prevState.ssn, message: "Enter a valid number" },
+      }));
     }
   };
 
