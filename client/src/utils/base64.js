@@ -18,3 +18,7 @@ export function getBase64(file) {
     };
   });
 }
+
+export function parseCanvasString(value) {
+  return value.replace("data:", "").replace(/^.+,/, "");
+}

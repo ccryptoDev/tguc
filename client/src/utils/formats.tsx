@@ -11,6 +11,7 @@ export const formatCurrency = (value: number | string) =>
       displayType="text"
       thousandSeparator
       prefix="$"
+      decimalScale={2}
     />
   ) : (
     <>--</>

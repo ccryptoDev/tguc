@@ -11,7 +11,7 @@ export const urlRegexp =
 export const accountNumberRegexp = /^(\d{5,17})$/;
 
 export const ssnRegexp =
-  /^(?!000|666|9\d{2})[0-8][0-9]{2}(?!00)[0-9]{2}(?!0000)[0-9]{4}$/;
+  /^(?!219-09-9999|078-05-1120)(?!666|000|9\d{2})d{3}-(?!00)\d{2}-(?!0{4})\d{4}$/;
 
 export const ssnLastFourRegexp = /^(?!0000)[0-9]{4}$/;
 
