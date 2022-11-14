@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import Offer from "./Offer";
-import { mockRequest } from "../../../../../../utils/mockRequest";
 import Loader from "../../../../../molecules/Loaders/LoaderWrapper";
-import Calculator from "./Calculator";
 import { H3, Text } from "../../../../../atoms/Typography";
 import { formatCurrency } from "../../../../../../utils/formats";
 import Button from "../../../../../atoms/Buttons/Button";
 import Placeholder from "./OffersPlaceholder";
-import {
-  fetchBorrowerOfferApi,
-  selectOfferApi,
-} from "../../../../../../api/application";
+import { setOfferApi } from "../../../../../../api/application";
 import { useUserData } from "../../../../../../contexts/user";
 
 const Wrapper = styled.div`
@@ -46,65 +42,48 @@ const Wrapper = styled.div`
   }
 `;
 
-// mock data
-const mockOffers = [
-  { apr: 780, term: 8, payment: 784.22, amount: 1200 },
-  { apr: 720, term: 12, payment: 712.83, amount: 1200 },
-  { apr: 720, term: 16, payment: 651.59, amount: 1200 },
-  { apr: 600, term: 20, payment: 591.98, amount: 1200 },
-  { apr: 780, term: 24, payment: 532.68, amount: 1200 },
-];
-
 const ChooseProviderForm = ({
   moveToNextStep,
   isActive,
-  completed,
 }: {
   moveToNextStep: any;
   isActive: boolean;
-  completed: boolean;
 }) => {
   const [selectedOffer, setSelectedOffer] = useState(0);
-  const [maxAmount, setMaxAmount] = useState<string | number>("");
+  const [amountApproved, setAmountApproved] = useState(0);
   const [offers, setOffers] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const { screenTrackingId, user } = useUserData();
+  const { screenTrackingId, user, fetchUser } = useUserData();
   const userName = user?.data?.firstName;
 
-  const fetchOffers = async () => {
-    setLoading(true);
-    // const result = await fetchBorrowerOfferApi({
-    //   screenTrackingId,
-    //   amount: +user?.data?.paymentManagement?.requestedAmount,
-    // });
-    setOffers(mockOffers);
-    setLoading(false);
-  };
-
   useEffect(() => {
-    if (isActive && !completed) fetchOffers();
-  }, [isActive, completed]);
+    if (user?.data && isActive) {
+      const screenTr = user.data?.screenTracking;
+      if (Array.isArray(screenTr?.offers)) {
+        setOffers(screenTr.offers);
+      } else {
+        toast.error("No offers available for this application");
+      }
+      if (screenTr?.maxAmountApproved) {
+        setAmountApproved(screenTr?.maxAmountApproved);
+      } else {
+        toast.error("Pre-qualified amount was not found");
+      }
+    }
+  }, [user?.data, isActive]);
 
-  const onSubmit = async (offer: any) => {
+  const onSubmit = async () => {
     setLoading(true);
-    const payload = {
-      loanId: offer?.id,
-      promoSelected: false,
-      skipAutoPay: false,
-      screenTrackingId,
-    };
-    // const result = await selectOfferApi(payload);
+    const selected = offers.find((offer: any) => {
+      return offer.term === selectedOffer;
+    });
 
-    setLoading(false);
-    moveToNextStep();
-  };
-
-  const calculateOffers = async (amount: string) => {
-    setLoading(true);
-    // const result = await fetchBorrowerOfferApi({
-    //   screenTrackingId,
-    //   amount: +amount,
-    // });
+    const result = await setOfferApi(selected);
+    if (result && !result.error) {
+      await fetchUser();
+    } else {
+      toast.error("something went wrong");
+    }
     setLoading(false);
   };
 
@@ -120,10 +99,8 @@ const ChooseProviderForm = ({
         </Text>
         <Text className="bold prequalified">
           You are pre-qualified for up to
-          {formatCurrency(maxAmount)}
+          {formatCurrency(amountApproved)}
         </Text>
-
-        <Calculator financedAmount={maxAmount} cb={calculateOffers} />
         <Text className="bold">Fixed Rate Payment Plans</Text>
         <div className="offer-wrapper">
           {offers.length < 1 && loading ? <Placeholder /> : ""}
