@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Text, Caption } from "../../../../../atoms/Typography";
+import { formatCurrency } from "../../../../../../utils/formats";
 
 const Button = styled.button`
   display: flex;
@@ -12,8 +13,11 @@ const Button = styled.button`
 
   .offer {
     &-heading {
-      margin-bottom: 6px;
-      font-weight: 700;
+      &,
+      & span {
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
     }
 
     &-description {
@@ -81,11 +85,11 @@ const Offer = ({
       className={`offer ${active ? "selected" : ""}`}
     >
       <div className="offer-content">
-        <Text className="offer-heading">${payment}/ mo</Text>
+        <Text className="offer-heading">{formatCurrency(amount)} / mo</Text>
         <Caption className="offer-description">
           <span>{term} months term</span>
-          <span>{apr}% APR</span>
-          <span>${amount} Financed</span>
+          {apr ? <span>{apr}% APR</span> : ""}
+          {payment ? <span>{formatCurrency(payment)} Financed</span> : ""}
         </Caption>
       </div>
       <div className="offer-indicator" />
