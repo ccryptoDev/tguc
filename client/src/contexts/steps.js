@@ -13,8 +13,8 @@ export const StepperProvider = ({
 
   const getScreenData = async () => {
     const curStep = initStep;
-
-    const updatedState = steps(isDeclined).map((item) => {
+    const isEditable = curStep < 7;
+    const updatedState = steps(isDeclined, isEditable).map((item) => {
       const updatedItem = { ...item };
       if (isDeclined) {
         // IF DECLINED - REMOVES EDIT BUTTONS FROM EACH STEP
