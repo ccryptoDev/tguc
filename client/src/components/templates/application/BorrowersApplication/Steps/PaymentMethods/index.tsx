@@ -28,7 +28,7 @@ const PaymentMethod = ({ moveToNextStep }: { moveToNextStep: any }) => {
           <Tabs buttons={tabs} activeTab={activeTab} onChange={setActiveTab} />
         </TabsWrapper>
         {activeTab === tabNames.AUTOPAY ? (
-          <AutoPay moveToNextStep={moveToNextStep} />
+          <AutoPay />
         ) : (
           <Invoice moveToNextStep={moveToNextStep} />
         )}
