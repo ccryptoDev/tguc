@@ -74,3 +74,14 @@ export const renderBillingAddress = (form) => [
     message: form.zipCode.message,
   },
 ];
+
+export const populateBillingAddress = (data = {}, form = {}) => {
+  const newForm = { ...form };
+  newForm.firstName.value = data?.firstName;
+  newForm.lastName.value = data?.lastName;
+  newForm.street.value = data?.street;
+  newForm.city.value = data?.city;
+  newForm.state.value = data?.state;
+  newForm.zipCode.value = data?.zipCode;
+  return newForm;
+};
