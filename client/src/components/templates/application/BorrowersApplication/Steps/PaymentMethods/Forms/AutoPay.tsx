@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import Button from "../../../../../../atoms/Buttons/Button";
-import { initForm } from "./config";
+import { initForm, populateBillingAddress } from "./config";
 import { validate as validateCardForm } from "./Card/validate";
 import { validate as validateHomeAddress } from "./validateAddress";
 import Container from "../../../styles";
-import { mockRequest } from "../../../../../../../utils/mockRequest";
 import Loader from "../../../../../../molecules/Loaders/LoaderWrapper";
 import Card from "./Card";
 import BillingAddress from "./BillingAddress";
+import { addCardApi } from "../../../../../../../api/application";
+import { parseFormToFormat } from "../../../../../../../utils/form/parsers";
+import { useUserData } from "../../../../../../../contexts/user";
 
 const Form = styled.form`
   .fields-wrapper {
@@ -28,10 +31,42 @@ const Form = styled.form`
   }
 `;
 
-const PaymentMethod = ({ moveToNextStep }: { moveToNextStep: any }) => {
+const payload = (data: any) => {
+  return {
+    screenTracking: data.screenTrackingId,
+    cardNumber: data.cardNumber,
+    cardName: data.fullName,
+    accountNumber: data.accountNumber,
+    routingNumber: data.routingNumber,
+    financialInstitution: data.financialInstitution,
+    accountType: data.accountType,
+    manualPayment: data.manualPayment,
+    expiryDate: data.expirationDate,
+    securityCode: data.securityCode,
+    billingAddress1: data.street,
+    billingCity: data.city,
+    billingFirstName: data.firstName,
+    billingLastName: data.lastName,
+    billingState: data.state,
+    billingZip: data.zipCode,
+  };
+};
+
+const PaymentMethod = () => {
   const [form, setForm] = useState(initForm());
   const [isHomeAddress, setIsHomeAddress] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user, screenTrackingId, fetchUser } = useUserData();
+
+  useEffect(() => {
+    const billingAddressHandler = () => {
+      const updatedForm: any = populateBillingAddress(user.data, form);
+      setForm(updatedForm);
+    };
+    if (isHomeAddress) {
+      billingAddressHandler();
+    }
+  }, [isHomeAddress]);
 
   const onSubmitHandler = async (e: any) => {
     e.preventDefault();
@@ -40,16 +75,18 @@ const PaymentMethod = ({ moveToNextStep }: { moveToNextStep: any }) => {
       const [isAddressValid, updatedForm] = validateHomeAddress(form);
       if (isAddressValid) {
         setLoading(true);
-        await mockRequest();
+        const parsedForm = parseFormToFormat(updatedForm);
 
-        const userToken: any = window.localStorage.getItem("userToken");
-        if (!userToken) {
-          return;
+        const result = await addCardApi({
+          ...payload(parsedForm),
+          screenTrackingId,
+        });
+        if (result && !result.error) {
+          await fetchUser();
+        } else {
+          toast.error("something went wrong");
         }
-        const user = JSON.parse(userToken);
-
         setLoading(false);
-        moveToNextStep();
       } else {
         setForm(updatedForm);
       }
