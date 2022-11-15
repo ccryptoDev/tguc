@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumberString,
   IsOptional,
+  IsPositive,
   IsString,
   Length,
   Matches,
@@ -69,4 +70,8 @@ export default class UpdatePracticeManagementDto {
   @IsNumberString()
   @Length(5, 5)
   zip: string;
+
+  @IsPositive()
+  annualRevenue: number;
+
 }
