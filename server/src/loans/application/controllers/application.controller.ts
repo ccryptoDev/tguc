@@ -353,7 +353,7 @@ export class ApplicationController {
         where: {
           user: updatedApplyDto.userId,
         },
-        relations: ['user', 'practiceManagement'],
+        relations: ['user', 'user.referredBy', 'practiceManagement'],
       });
 
       await this.screenTrackingModel.update(application.id, {
@@ -367,17 +367,30 @@ export class ApplicationController {
 
       let score = 0;
       let isApproved = applyBorrowerRules.loanApproved;
+      let isPending = applyBorrowerRules.isPending;
       try {
         score = parseInt(applyBorrowerRules.creditScore);
         if (score > 651 && isApproved) {
+          if (isPending) {
+            await this.screenTrackingModel.update(application.id, {
+              lastScreen: 'waiting-for-approve',
+            });
+          } else if (!isPending) {
+            await this.screenTrackingModel.update(application.id, {
+              lastScreen: 'select-offer',
+            });
+          }
+        } else if (score >= 600 && score < 650 && isApproved) {
           await this.screenTrackingModel.update(application.id, {
-            lastScreen: 'waiting-for-approve',
+            lastScreen: 'connect-bank',
           });
-        } // TODO Add logic for pending and denied
+        }
       } catch (e) {
 
       }
-      return {user, score, isApproved};
+      let offersData = applyBorrowerRules.offersData;
+      let defaultTerms = applyBorrowerRules.defaultOfferTerm;
+      return {user, score, isApproved, offersData, defaultTerms};
     } catch (error) {
       this.logger.error(
         'Error:',
