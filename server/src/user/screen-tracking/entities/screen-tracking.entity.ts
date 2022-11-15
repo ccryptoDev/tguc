@@ -229,4 +229,7 @@ export class ScreenTracking {
 
   @Column({ type: 'double precision', nullable: true })
   disposableIncome: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  maxAmountApproved: number;
 }
