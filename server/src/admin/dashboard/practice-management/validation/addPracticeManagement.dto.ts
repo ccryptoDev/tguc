@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumberString,
   IsOptional,
+  IsPositive,
   IsString,
   IsUUID,
   Length,
@@ -77,4 +78,7 @@ export default class AddPracticeManagementDto {
   @Transform(({ value }: TransformFnParams) => value.trim())
   @Length(5, 5)
   zip: string;
+
+  @IsPositive()
+  annualRevenue: number;
 }
