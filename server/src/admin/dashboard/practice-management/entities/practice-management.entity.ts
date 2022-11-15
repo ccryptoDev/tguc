@@ -8,19 +8,19 @@ import {
 
 @Entity()
 export class PracticeManagement {
-  @Column({default: ""})
+  @Column({ default: "" })
   address: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   city: string;
 
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   contactName: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   email: string;
 
   @PrimaryGeneratedColumn('uuid')
@@ -29,30 +29,33 @@ export class PracticeManagement {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   location: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   phone: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   practiceName: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   stateCode: string;
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt: Date;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   url: string;
 
-  @Column({default: ""})
+  @Column({ default: "" })
   zip: string;
 
-  @Column({nullable: true, default: 0})
+  @Column({ nullable: true, default: 0 })
   yearsInBusiness: number;
 
-  @Column({nullable: true, default: 0})
+  @Column({ nullable: true, default: 0 })
   tin: string;
+
+  @Column({ type: 'double precision', nullable: true })
+  annualRevenue: number;
 }
