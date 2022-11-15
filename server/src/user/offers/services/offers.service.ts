@@ -704,7 +704,32 @@ export class OffersService {
 
     return result;
   }
-
+  async setOfferData(screenTrackingId, offerData, requestId) {
+    const screenTracking: ScreenTracking =
+      await this.screenTrackingModel.findOne({
+        id: screenTrackingId,
+      });
+      if (!screenTracking) {
+        this.logger.error(
+          'Screen tracking not found',
+          `${OffersService.name}#selectOffer`,
+          requestId,
+        );
+        throw new NotFoundException(
+          this.appService.errorHandler(
+            404,
+            `Screen tracking id ${screenTrackingId} not found`,
+            requestId,
+          ),
+        );
+      }
+      const result = await this.screenTrackingModel.update(
+        {id: screenTrackingId},
+        {offerData: offerData,
+        lastScreen: 'payment-details'},
+        );
+      return result;
+  }
   async selectOffer(selectOfferDto: SelectOfferDto, requestId: string) {
     const { loanId, promoSelected, screenTrackingId, skipAutoPay } =
       selectOfferDto;
