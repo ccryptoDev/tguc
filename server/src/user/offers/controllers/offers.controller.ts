@@ -72,6 +72,43 @@ export class OffersController {
   @ApiBadRequestResponse({ type: BadRequestResponse })
   @ApiUnauthorizedResponse()
   @ApiInternalServerErrorResponse({ type: ErrorResponse })
+  @Post('setOfferData')
+  @HttpCode(201)
+  @UsePipes(new ValidationPipe())
+  async setOfferData(
+    @Body() data: any,
+    @Req() request: Request,
+  ) {
+    let sctid = request.user.screenTracking;
+    this.logger.log(
+      'Selecting offer with params:',
+      `${OffersController.name}#selectOffer`,
+      request.id,
+      data,
+    );
+
+    try {
+      const response = await this.offersService.setOfferData(sctid, data, request.id);
+      this.logger.log(
+        'Response status 204',
+        `${OffersController.name}#selectOffer`,
+        request.id,
+      );
+      return response;
+    } catch (error) {
+      this.logger.error(
+        'Error:',
+        `${OffersController.name}#selectOffer`,
+        request.id,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  @ApiBadRequestResponse({ type: BadRequestResponse })
+  @ApiUnauthorizedResponse()
+  @ApiInternalServerErrorResponse({ type: ErrorResponse })
   @Post('selectOffer')
   @HttpCode(204)
   @UsePipes(new ValidationPipe())
