@@ -15,6 +15,7 @@ import { ProductRules } from '../entities/product-rules.entity';
 import { AppService } from '../../../../app.service';
 import { PracticeManagement } from '../../../../admin/dashboard/practice-management/entities/practice-management.entity';
 import { MiddeskReport } from '../../middesk/middesk.entity';
+import { OffersService } from '../../../../../src/user/offers/services/offers.service';
 
 @Injectable()
 export class ProductService {
@@ -24,6 +25,7 @@ export class ProductService {
     private readonly configService: ConfigService,
     private readonly appService: AppService,
     private readonly logger: LoggerService,
+    private readonly offersService: OffersService,
   ) {}
 
   async createPartnerRules(
@@ -197,21 +199,23 @@ export class ProductService {
 
   getTermsBasedOnLoanAmout(amount) {
     let term = 0;
-    let nbrAmount: number = parseInt(amount);
+    const nbrAmount: number = parseInt(amount);
     if (nbrAmount < 5001) {
       term = 72;
     }
     if (nbrAmount < 100000) {
       term = 120;
     }
-    return term
+    return term;
   }
+
   async getStage2Rules(
     creditReport: any,
     practiceId: string,
     requestId: string,
-    income: number = 0,
-    requestedAmount: number = 0
+    income = 0,
+    requestedAmount = 0,
+    user: any = null,
   ) {
     this.logger.log(
       'Getting stage 2 rules with params:',
@@ -219,30 +223,31 @@ export class ProductService {
       requestId,
       { creditReport, practiceId },
     );
-    const productRules = await this.getProductRulesValue(
-      this.configService.get<string>('productId'),
-      practiceId,
-      requestId,
+
+    const monthlyRealEstPayment = Number(
+      (
+        (((creditReport.summaries || [])[0] || {}).attributes || []).find(
+          (x) => x.id === 'realEstatePayment',
+        ) || {}
+      ).value,
     );
-    const rules = productRules.rules;
-    if (!rules || !Object.keys(rules).length)
-      throw new InternalServerErrorException(
-        this.appService.errorHandler(
-          500,
-          `product rules not found for productId: ${this.configService.get<string>(
-            'productId',
-          )} and practiceId: ${practiceId}`,
-          requestId,
-        ),
-      );
-    const monthlyRealEstPayment = Number(((((creditReport.summaries || [])[0] || {}).attributes || []).find(x => x.id === 'realEstatePayment') || {}).value);
-    const revolvingSum = creditReport.tradeline.filter(x => x.revolvingOrInstallment === 'R' && x.openOrClosed === 'O').reduce((acc, cur) => (parseInt(cur.monthlyPaymentAmount) || 0) + acc, 0) || 0;
-    const monthlyDebtPaymentAmt = (monthlyRealEstPayment ? monthlyRealEstPayment : 0) + revolvingSum
+    const revolvingSum =
+      creditReport.tradeline
+        .filter(
+          (x) => x.revolvingOrInstallment === 'R' && x.openOrClosed === 'O',
+        )
+        .reduce(
+          (acc, cur) => (parseInt(cur.monthlyPaymentAmount) || 0) + acc,
+          0,
+        ) || 0;
+    const monthlyDebtPaymentAmt =
+      (monthlyRealEstPayment ? monthlyRealEstPayment : 0) + revolvingSum;
     const monthlyIncome = this.getMonthlyIncome(income);
-    const disposableIncome = monthlyIncome - monthlyDebtPaymentAmt
+    const disposableIncome = monthlyIncome - monthlyDebtPaymentAmt;
     const DTI = monthlyDebtPaymentAmt / monthlyIncome;
     const DTIPercent = Math.round(DTI * 100);
-    const monthlyLoanPmtAmt = requestedAmount / this.getTermsBasedOnLoanAmout(requestedAmount);
+    const monthlyLoanPmtAmt =
+      requestedAmount / this.getTermsBasedOnLoanAmout(requestedAmount);
     const PTI = monthlyLoanPmtAmt / monthlyIncome;
     const PTIPercent = Math.round(PTI * 100);
     const score = parseInt(creditReport.score);
@@ -250,7 +255,8 @@ export class ProductService {
     let manualReview = false;
     let maxApproved = 0;
     // Rule 1
-    if ( requestedAmount > 60000) { // At this point we already validated the minumum amount
+    if (requestedAmount > 60000) {
+      // At this point we already validated the minumum amount
       manualReview = true;
     }
 
@@ -271,21 +277,23 @@ export class ProductService {
       tier = 4; // C
       maxApproved = 20000;
     }
-    if (score >= 620 && score <= 659){
+    if (score >= 620 && score <= 659) {
       tier = 5; // D
     }
     if (score <= 619) {
       tier = 6; // E
     }
-    if (requestedAmount > maxApproved) { // this  check if the current Loan Amount is lower that the allowed max
+    if (requestedAmount > maxApproved) {
+      // this  check if the current Loan Amount is lower that the allowed max
       manualReview = true;
     }
-    if (DTIPercent > 60) { // Validating DTI < 60 for all tiers, except tier C needs < 55
+    if (DTIPercent > 60) {
+      // Validating DTI < 60 for all tiers, except tier C needs < 55
       manualReview = true;
     }
-    switch(tier) {
+    switch (tier) {
       case 1: // Tier A+
-        if (disposableIncome <= 999){
+        if (disposableIncome <= 999) {
           manualReview = true;
         }
         if (disposableIncome <= 2500) {
@@ -301,7 +309,7 @@ export class ProductService {
         // tier 1 rules
         break;
       case 2: // Tier A
-        if (disposableIncome <= 999){
+        if (disposableIncome <= 999) {
           manualReview = true;
         }
         if (disposableIncome <= 2500) {
@@ -321,7 +329,7 @@ export class ProductService {
         }
         break;
       case 3: // Tier B
-        if (disposableIncome <= 999){
+        if (disposableIncome <= 999) {
           manualReview = true;
         }
         if (disposableIncome <= 2500) {
@@ -372,8 +380,84 @@ export class ProductService {
       default:
         break;
     }
+    // Get Terms from monthly amount
+    maxApproved = maxApproved * 1.5;
+    let termOffers = [];
+    let defaultTerm = 120;
+    if (requestedAmount > 2500 && requestedAmount < 5001) {
+      termOffers = [36, 48, 60, 72];
+      defaultTerm = 72;
+    } else if (requestedAmount > 5000 && requestedAmount < 10001) {
+      termOffers = [36, 48, 60, 120];
+    } else if (requestedAmount > 10000 && requestedAmount <= 100000) {
+      termOffers = [60, 96, 120, 180];
+    } else {
+      throw new Error('Invalid amount');
+    }
+    // apr
+    const offersFromContractor = user?.referredBy?.offers?.offersForm || {
+      optionsA: { value: 10.99 },
+      optionsAPlus: { value: 9.99 },
+      optionsB: { value: 12.99 },
+      optionsC: { value: 14.99 },
+      optionsD: { value: 16.99 },
+      optionsE: { value: 19.99 },
+    }; // 2badcc23-de15-460e-a90f-29c050be96ca
+    const tierMap = {
+      2: 'optionsA',
+      1: 'optionsAPlus',
+      3: 'optionsB',
+      4: 'optionsC',
+      5: 'optionsD',
+      6: 'optionsE',
+    };
+    const tierStr = tierMap[tier];
+    const { value } = offersFromContractor[tierStr];
+    const apr = parseFloat(value);
+    //END APR
+    const offerTermsToBorrower: any = [];
+    for (let i = 0; i < termOffers.length; i++) {
+      const term = termOffers[i];
+      const monthlyAmount = await this.offersService.calcMonthlyPayment(
+        apr,
+        requestedAmount,
+        0,
+        term,
+        requestId,
+      );
+      offerTermsToBorrower.push({
+        amount: monthlyAmount.monthlyPayment,
+        term: term,
+        apr: apr,
+        payment: monthlyAmount.totalLoanAmount,
+      });
+    }
 
+    const calculateDefault = await this.offersService.calcMonthlyPayment(
+      apr,
+      requestedAmount,
+      0,
+      defaultTerm,
+      requestId,
+    );
+    const defaultCalculation = {
+      defaultAmount: calculateDefault.monthlyPayment,
+      defaultTerm: defaultTerm,
+      apr: apr,
+    };
     // Pricing Matrix ends
+
+    // TODO enable stage 2 underwriting
+    const rules = {
+      rule1: {
+        ruleId: 's2_bu_0',
+        description: 'No-hit',
+        declinedIf: 'eq',
+        value: true,
+        disabled: true,
+      },
+    };
+
     const ruleUserValueFuncs = {
       // No hit
       rule0: (creditReport: any) => {
@@ -384,327 +468,15 @@ export class ProductService {
         return fileHitIndicator === 'regularNoHit';
       },
       // Months of credit history
-      rule1: (creditReport: any) => {
-        let userValue = 0;
-        const inFileSinceDate =
-          creditReport?.product?.subject?.subjectRecord?.fileSummary
-            ?.inFileSinceDate?._;
-        if (inFileSinceDate) {
-          userValue = moment()
-            .startOf('day')
-            .diff(
-              moment(inFileSinceDate, 'YYYY-MM-DD').startOf('day'),
-              'months',
-            );
-        }
-        return userValue;
-      },
       // Active trade lines
-      rule2: (creditReport: any) => {
-        let trades =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit?.trade;
-        if (trades && !Array.isArray(trades)) {
-          trades = [trades];
-        }
-
-        if (trades && trades.length) {
-          const ecoaIgnore = ['authorizeduser', 'terminated', 'deceased'];
-          const industryIgnore = ['E', 'M'];
-          const goodRatings = ['01'];
-          trades = trades.filter((trade: any) => {
-            let keepIt = true;
-            const accountRating = trade.accountRating;
-            const isClosed: boolean = trade.dateClosed != null;
-            const isPaidOut: boolean = trade.datePaidOut != null;
-            const industryCode = trade.subscriber.industryCode
-              ? trade.subscriber.industryCode
-              : '-';
-            if (
-              industryIgnore.indexOf(
-                `${industryCode}`.toUpperCase().substr(0, 1),
-              ) >= 0 ||
-              ecoaIgnore.indexOf(trade.ECOADesignator.toLowerCase()) >= 0 ||
-              goodRatings.indexOf(accountRating) === -1 ||
-              isPaidOut ||
-              isClosed
-            )
-              keepIt = false;
-            return keepIt;
-          });
-
-          return trades.length;
-        }
-        return 0;
-      },
       // Revolving trade lines
-      rule3: (creditReport: any) => {
-        let trades =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit?.trade;
-        if (trades && !Array.isArray(trades)) trades = [trades];
-
-        if (trades && trades.length) {
-          const ecoaIgnore = ['authorizeduser', 'terminated', 'deceased'];
-          const industryIgnore = ['E', 'M'];
-          const goodRatings = ['01'];
-          trades = trades.filter((trade: any) => {
-            let keepIt = true;
-            const accountRating = trade.accountRating;
-            const isClosed: boolean =
-              (trade.dateClosed ? trade.dateClosed : null) !== null;
-            const isPaidOut: boolean =
-              (trade.datePaidOut ? trade.datePaidOut : null) !== null;
-            const portfolioType = trade.portfolioType;
-            const ecoaDesignator = trade.ECOADesignator;
-            const industryCode = trade.subscriber.industryCode
-              ? trade.subscriber.industryCode
-              : '-';
-            if (
-              industryIgnore.indexOf(industryCode) !== -1 ||
-              ecoaIgnore.indexOf(ecoaDesignator.toLowerCase()) !== -1 ||
-              goodRatings.indexOf(accountRating) === -1 ||
-              isPaidOut ||
-              isClosed ||
-              portfolioType.toLowerCase() !== 'revolving'
-            )
-              keepIt = false;
-            return keepIt;
-          });
-
-          return trades.length;
-        }
-        return 0;
-      },
       // Inquiries in the last 6 months
-      rule4: (creditReport: any) => {
-        const inquiryStartDate = moment().startOf('day').subtract(6, 'months');
-        let inquiries =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.inquiry || [];
-        if (!Array.isArray(inquiries)) {
-          inquiries = [inquiries];
-        }
-        let count = 0;
-        inquiries.forEach((inquiry: any) => {
-          let inquiryDate = inquiry.date?._;
-          if (inquiryDate) {
-            inquiryDate = moment(inquiryDate, 'YYYY-MM-DD').startOf('day');
-            if (inquiryDate.isSameOrAfter(inquiryStartDate)) count++;
-          }
-        });
-        return count;
-      },
       // Bankruptcies in the last 24 months
-      rule5: (creditReport: any) => {
-        const bankruptcyStartDate = moment()
-          .startOf('day')
-          .subtract(24, 'months');
-        const bankruptcyTypes =
-          this.configService.get<string[]>('bankruptcyTypes');
-        let publicRecords =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.publicRecord || [];
-        if (!Array.isArray(publicRecords)) {
-          publicRecords = [publicRecords];
-        }
-        let count = 0;
-        publicRecords.forEach((publicRecord) => {
-          if (
-            publicRecord.type &&
-            bankruptcyTypes.indexOf(publicRecord.type) > -1
-          ) {
-            let bankruptcyDate = publicRecord.dateFiled?._;
-            if (bankruptcyDate) {
-              bankruptcyDate = moment(bankruptcyDate, 'YYYY-MM-DD').startOf(
-                'day',
-              );
-              if (bankruptcyDate.isSameOrAfter(bankruptcyStartDate)) count++;
-            }
-          }
-        });
-        return count;
-      },
       // Foreclosures in the last 24 months
-      rule6: (creditReport: any) => {
-        const foreclosureStartDate = moment()
-          .startOf('day')
-          .subtract(24, 'months');
-        const foreclosureTypes =
-          this.configService.get<string[]>('foreclosureTypes');
-        let publicRecords =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.publicRecord || [];
-        if (!Array.isArray(publicRecords)) {
-          publicRecords = [publicRecords];
-        }
-        let count = 0;
-        publicRecords.forEach((publicRecord: any) => {
-          if (
-            publicRecord.type &&
-            foreclosureTypes.indexOf(publicRecord.type) > -1
-          ) {
-            let bankruptcyDate = publicRecord.dateFiled?._;
-            if (bankruptcyDate) {
-              bankruptcyDate = moment(bankruptcyDate, 'YYYY-MM-DD').startOf(
-                'day',
-              );
-              if (bankruptcyDate.isSameOrAfter(foreclosureStartDate)) count++;
-            }
-          }
-        });
-        return count;
-      },
       // Public records in the last 24 months
-      rule7: (creditReport: any) => {
-        const publicRecordStartDate = moment()
-          .startOf('day')
-          .subtract(24, 'months');
-        let publicRecords =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.publicRecord || [];
-        if (!Array.isArray(publicRecords)) {
-          publicRecords = [publicRecords];
-        }
-        let collectionRecords =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.collection || [];
-        if (!Array.isArray(collectionRecords)) {
-          collectionRecords = [collectionRecords];
-        }
-        let count = 0;
-        publicRecords.forEach((publicRecord: any) => {
-          let publicRecordDate = publicRecord.dateFiled?._;
-          if (publicRecordDate) {
-            publicRecordDate = moment(publicRecordDate, 'YYYY-MM-DD').startOf(
-              'day',
-            );
-            if (publicRecordDate.isSameOrAfter(publicRecordStartDate)) {
-              count++;
-            }
-          }
-        });
-        collectionRecords.forEach((collectionRecord: any) => {
-          let collectionRecordDate = collectionRecord.dateFiled?._;
-          if (collectionRecordDate) {
-            collectionRecordDate = moment(
-              collectionRecordDate,
-              'YYYY-MM-DD',
-            ).startOf('day');
-            if (collectionRecordDate.isSameOrAfter(publicRecordStartDate))
-              count++;
-          }
-        });
-        return count;
-      },
       // Trades with 60+ DPD in the Last 24 Months
-      rule8: (creditReport: any) => {
-        const now = moment();
-        let trades =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.trade || [];
-        if (trades && !Array.isArray(trades)) {
-          trades = [trades];
-        }
-        let count = 0;
-        trades.forEach((trade: any) => {
-          let tradeDate = trade.paymentHistory?.paymentPattern?.startDate?._;
-          const tradeText = trade.paymentHistory?.paymentPattern?.text;
-          if (tradeDate && tradeText) {
-            tradeDate = moment(tradeDate, 'YYYY-MM-DD').startOf('day');
-            const monthDiff = Math.abs(tradeDate.diff(now));
-            if (
-              monthDiff < 24 &&
-              monthDiff >= 0 &&
-              (tradeText.indexOf('3') > -1 ||
-                tradeText.indexOf('K') > -1 ||
-                tradeText.indexOf('G') > -1 ||
-                tradeText.indexOf('L') > -1)
-            )
-              count++;
-          }
-        });
-        return count;
-      },
       // Trades with 60+ DPD in the Last 6 Months
-      rule9: (creditReport: any) => {
-        const now = moment();
-        let trades =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.trade || [];
-        if (trades && !Array.isArray(trades)) {
-          trades = [trades];
-        }
-        let count = 0;
-        trades.forEach((trade: any) => {
-          let tradeDate = trade.paymentHistory?.paymentPattern?.startDate?._;
-          const tradeText = trade.paymentHistory?.paymentPattern?.text;
-          if (tradeDate && tradeText) {
-            tradeDate = moment(tradeDate, 'YYYY-MM-DD').startOf('day');
-            const monthDiff = Math.abs(tradeDate.diff(now));
-            if (
-              monthDiff < 6 &&
-              monthDiff >= 0 &&
-              (tradeText.indexOf('3') > -1 ||
-                tradeText.indexOf('K') > -1 ||
-                tradeText.indexOf('G') > -1 ||
-                tradeText.indexOf('L') > -1)
-            )
-              count++;
-          }
-        });
-        return count;
-      },
       // Utilization of Revolving Trades
-      rule10: (creditReport: any) => {
-        const utilizationStartDate = moment()
-          .startOf('day')
-          .subtract(6, 'months');
-        let trades =
-          creditReport?.product?.subject?.subjectRecord?.custom?.credit
-            ?.trade || [];
-        if (trades && !Array.isArray(trades)) {
-          trades = [trades];
-        }
-
-        let totalRevolvingCreditLimit = 0;
-        let totalRevolvingBalance = 0;
-        trades.forEach((trade: any) => {
-          const portfolioType = trade.portfolioType;
-          const currentBalance = parseFloat(trade.currentBalance);
-          const ecoaDesignator = trade.ECOADesignator;
-          const creditLimit = parseFloat(trade.creditLimit);
-          let dateEffective = trade.dateEffective?._;
-          if (dateEffective) {
-            dateEffective = moment(dateEffective, 'YYYY-MM-DD').startOf('day');
-          }
-          if (
-            currentBalance === 0 &&
-            (trade.hasOwnProperty('datePaidOut') ||
-              trade.hasOwnProperty('dateClosed'))
-          )
-            return;
-          if (
-            portfolioType.toLowerCase() === 'revolving' &&
-            dateEffective &&
-            dateEffective.isAfter(utilizationStartDate) &&
-            ['jointContractLiability', 'authorizedUser', 'terminated'].indexOf(
-              ecoaDesignator,
-            ) === -1 &&
-            creditLimit > 0
-          ) {
-            totalRevolvingCreditLimit += creditLimit;
-            if (currentBalance > 0) {
-              totalRevolvingBalance += currentBalance;
-            }
-          }
-        });
-
-        let userValue = 0;
-        if (totalRevolvingCreditLimit) {
-          userValue = totalRevolvingBalance / totalRevolvingCreditLimit;
-        }
-
-        return userValue;
-      },
     };
 
     const result = {
@@ -720,6 +492,9 @@ export class ProductService {
       monthlyLoanPmtAmt: monthlyLoanPmtAmt,
       PTI: PTI,
       manualReview: manualReview,
+      offerTermsToBorrower,
+      defaultCalculation,
+      maxAmountApproved: maxApproved,
     };
     Object.keys(rules).forEach((ruleKey) => {
       const rule = rules[ruleKey];
@@ -1027,7 +802,7 @@ export class ProductService {
         weight: 5,
       },
     };
-    let isPending = false;
+    let isPending = false; // TODO Never updated?
     const ruleUserValueFuncs = {
       rule0: (creditReport: any) => {
         return creditReport.score;
@@ -1039,12 +814,13 @@ export class ProductService {
         const income = Math.round(user.income / 12);
         if (income > 1500 && income < 2000) {
           if (result) {
-            result.isPending =  true;
+            result.isPending = true;
           }
         }
         return income;
       },
-      rule3: () => { // All applicants should be > 18 years
+      rule3: () => {
+        // All applicants should be > 18 years
         const birthday = user.dateOfBirth;
         const today = new Date();
         let age = today.getFullYear() - birthday.getFullYear();
@@ -1053,7 +829,7 @@ export class ProductService {
           age--;
         }
         return age;
-      }
+      },
     };
 
     const result = {
@@ -1061,7 +837,7 @@ export class ProductService {
       declinedRuleMsg: [],
       ruleApprovals: {},
       ruleData: {},
-      loanApproved : true,
+      loanApproved: true,
       isPending: isPending,
       income: user.income,
     };
